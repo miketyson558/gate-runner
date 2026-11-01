@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#f3efe6">
+<title>ぽかぽかパズル 1000</title>
+<style>
+:root{--ink:#263b3a;--muted:#71817a;--cream:#f3efe6;--paper:#fffdf8;--green:#709982;--green2:#e0ecdf;--coral:#e78d73;--gold:#e8bd68}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:ui-rounded,"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif}
+button,select{font:inherit}button{cursor:pointer;border:0}
+.app{max-width:760px;margin:auto;padding:14px 14px 30px}
+header{display:flex;align-items:center;justify-content:space-between;padding:5px 2px 14px}.brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:900}.logo{width:39px;height:39px;border-radius:14px;background:#dce9dc;display:grid;place-items:center;font-size:22px}.tag{font-size:11px;color:#668273;background:#e3ecdf;border-radius:99px;padding:8px 11px;font-weight:800}
+.hero{border-radius:23px;padding:17px 19px;background:linear-gradient(120deg,#dfeddf,#f8e5d4);margin-bottom:13px}.eyebrow{font-size:10px;letter-spacing:.16em;color:#668273;font-weight:900}h1{font-size:23px;line-height:1.35;margin:5px 0}.hero p{font-size:12px;color:#60756b;margin:0}
+.layout{display:grid;grid-template-columns:1fr;gap:13px}.panel{background:var(--paper);border:1px solid #e9e3d8;border-radius:22px;padding:14px;box-shadow:0 9px 25px #344b3b12}
+.panelhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.panelhead strong{font-size:14px}.muted{font-size:11px;color:var(--muted)}
+.settings{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field label{display:block;font-size:10px;color:var(--muted);font-weight:800;margin:0 0 5px 3px}.field select{width:100%;border:1px solid #e5dfd4;background:#f8f6f0;color:var(--ink);padding:10px;border-radius:12px;font-size:13px}
+.progressline{height:7px;background:#eeeae1;border-radius:9px;overflow:hidden;margin:10px 0 4px}.progressline span{height:100%;display:block;background:var(--green);width:0;transition:width .2s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:9px}.stat{background:#f5f2eb;border-radius:12px;text-align:center;padding:8px 3px}.stat small{display:block;color:var(--muted);font-size:9px}.stat b{font-size:16px}
+.playarea{display:grid;grid-template-columns:1fr;gap:12px}.boardwrap{background:#eae5da;padding:8px;border-radius:17px;overflow:hidden}.board{width:100%;aspect-ratio:1;display:grid;grid-template-rows:repeat(10,minmax(0,1fr));gap:1px;background:#d5d0c5;touch-action:manipulation;user-select:none}.cell{min-width:0;min-height:0;position:relative;background:#f7f3e9;overflow:hidden;border:0;padding:0}.cell img{width:100%;height:100%;display:block;pointer-events:none}.cell.filled{background:#fff}.cell.over{outline:2px solid var(--coral);outline-offset:-2px}
+.traytitle{display:flex;justify-content:space-between;align-items:center;margin:0 1px 7px}.tray{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;max-height:230px;overflow:auto;padding:2px;overscroll-behavior:contain}.piece{aspect-ratio:1;position:relative;border-radius:5px;overflow:hidden;background:#eee7d9;border:1px solid #d9d2c5;touch-action:pan-y;user-select:none}.piece img{width:100%;height:100%;display:block;pointer-events:none}.piece.dragging{opacity:.35}.piece.selected{outline:3px solid var(--coral);outline-offset:-3px}
+.actions{display:flex;gap:7px;margin-top:10px}.primary,.secondary{border-radius:13px;padding:12px 8px;font-size:12px;font-weight:900;flex:1}.primary{background:var(--green);color:white}.secondary{background:#f0ede5;color:#5d7067}
+.stagebar{display:flex;gap:7px;align-items:center;justify-content:space-between;margin-bottom:9px}.stagebar strong{font-size:14px}.stagebar button{background:#f0ede5;border-radius:10px;padding:7px 10px;font-size:11px;color:#60736a;font-weight:800}
+.stagegrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-height:260px;overflow:auto}.stage{background:#f4f1e9;border-radius:11px;padding:9px 2px;text-align:center;color:var(--ink);font-size:11px;font-weight:800;border:1px solid transparent}.stage.done{background:#e1eddf;color:#527b61}.stage.current{border-color:var(--coral);background:#fff2eb}.stage:disabled{opacity:.35;cursor:not-allowed}
+.note{font-size:11px;color:var(--muted);line-height:1.6;margin:9px 1px 0}.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);opacity:0;transition:.2s;background:#263b3a;color:white;border-radius:99px;padding:11px 16px;font-size:12px;z-index:8;white-space:nowrap;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal{display:none;position:fixed;inset:0;background:#1b302e88;z-index:10;place-items:center;padding:20px}.modal.show{display:grid}.dialog{background:var(--paper);border-radius:23px;padding:24px;text-align:center;width:min(100%,340px)}.dialog .emoji{font-size:48px}.dialog h2{margin:7px}.dialog p{font-size:13px;color:var(--muted);line-height:1.6}.dialog button{width:100%;margin-top:8px}
+@media(min-width:650px){.app{padding:20px}.layout{grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr)}.playarea{grid-template-columns:1fr 1fr}.tray{grid-template-columns:repeat(4,1fr);max-height:440px}.stagegrid{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body><main class="app">
+<header><div class="brand"><div class="logo">🧩</div>ぽかぽかパズル</div><div class="tag">全1,000ステージ</div></header>
+<section class="hero"><div class="eyebrow">YOUR LITTLE PUZZLE GARDEN</div><h1>じっくり、ぴったり。<br>1,000枚の景色を完成させよう。</h1><p>オリジナルの絵柄で遊ぶ、広告・懸賞なしのパズル。</p></section>
+<div class="layout">
+<section class="panel">
+ <div class="panelhead"><strong>🌷 パズル設定</strong><span class="muted" id="category">自然・風景</span></div>
+ <div class="settings">
+  <div class="field"><label>ステージ</label><select id="stageSelect"></select></div>
+  <div class="field"><label>ピース数</label><select id="pieceSelect"><option value="9">9ピース（3×3・かんたん）</option><option value="10">10ピース（かんたん）</option><option value="16">16ピース（4×4・かんたん）</option><option value="20">20ピース（かんたん）</option><option value="25">25ピース（5×5・かんたん）</option><option value="30">30ピース（かんたん）</option><option value="40">40ピース（かんたん）</option><option value="50">50ピース（かんたん）</option><option value="100">100ピース (10×10)</option><option value="144">144ピース (12×12)</option><option value="196">196ピース (14×14)</option><option value="256">256ピース (16×16)</option></select></div>
+ </div>
+ <div class="panelhead" style="margin:13px 1px 5px"><strong id="puzzleName">春の丘 #001</strong><span class="muted" id="progressText">0% 完成</span></div>
+ <div class="progressline"><span id="progressBar"></span></div>
+ <div class="stats"><div class="stat"><small>配置済み</small><b id="placed">0/100</b></div><div class="stat"><small>手数</small><b id="moves">0</b></div><div class="stat"><small>タイム</small><b id="time">00:00</b></div></div>
+ <div class="actions"><button class="primary" id="restart">↻ この問題をやり直す</button><button class="secondary" id="preview">👀 完成図</button></div>
+ <div class="actions">
+  <label class="secondary" style="display:flex;align-items:center;justify-content:center;cursor:pointer">📷 写真を選ぶ<input id="photoInput" type="file" accept="image/*" style="display:none"></label>
+  <button class="secondary" id="clearPhoto">写真を解除</button>
+  <button class="secondary" id="favoriteBtn">☆ お気に入り</button>
+ </div>
+ <p class="note">ピースをタップして選択し、盤面の同じ位置をタップすると配置できます。写真を選ぶと、自分の写真でも遊べます。</p>
+</section>
+<section class="panel">
+ <div class="panelhead"><strong>🧩 ピースを配置</strong><span class="muted" id="remaining">残り 100</span></div>
+ <div class="playarea">
+  <div><div class="muted" style="margin:0 0 6px 2px">完成エリア</div><div class="boardwrap"><div class="board" id="board"></div></div></div>
+  <div><div class="traytitle"><strong style="font-size:12px">ピース置き場</strong><span class="muted">タップ / ドラッグ</span></div><div class="tray" id="tray"></div></div>
+ </div>
+</section>
+</div>
+<section class="panel" style="margin-top:13px">
+ <div class="stagebar"><strong>🏡 ステージセレクト</strong><span class="muted" id="stageCount">1 / 1000</span></div>
+ <div class="stagegrid" id="stageGrid"></div>
+ <p class="note">最初はステージ1からスタート。クリアすると次のステージが解放されます。進行状況はこの端末のブラウザに保存されます。</p>
+</section>
+<section class="panel" style="margin-top:13px">
+ <div class="panelhead"><strong>⭐ お気に入り</strong><span class="muted">この端末に保存</span></div>
+ <div id="favoritesList" class="stagegrid"></div>
+ <div class="panelhead" style="margin:16px 0 8px"><strong>🏆 クリア履歴</strong><span class="muted">最近の記録</span></div>
+ <div id="historyList" class="muted">まだクリア記録はありません。</div>
+</section>
+<div class="muted" style="text-align:center;margin:14px 0 0;font-size:10px">© ぽかぽかパズル · オリジナルイラスト生成 · 端末内保存</div>
+</main>
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal"><div class="dialog"><div class="emoji">🎉</div><h2>ステージクリア！</h2><p id="winText">すべてのピースがそろいました！</p><button class="primary" id="next">次のステージへ →</button><button class="secondary" id="close">ステージ一覧に戻る</button></div></div>
+<script>
+const $=id=>document.getElementById(id);
+const N=1000, names=['春の丘','星降る夜','海辺のカフェ','森の小道','花咲く庭','雪の山小屋','夕焼けの港','虹の谷','月夜の湖','小鳥の街','風車の草原','秋色の並木道','南国の浜辺','雲の上の城','ひまわり畑','静かな水辺','森の図書館','光るキノコの森','レモンの小径','夢色の遊園地'];
+const cats=['自然・風景','夜空・宇宙','街・建物','花・植物','海・水辺','ファンタジー','季節の景色','かわいい動物'];
+let stage=1,cols=10,rows=10,tiles=[],placed=new Set(),moves=0,seconds=0,timer=null,started=false,selected=null,dragging=null,completed=0;
+let customPhoto='', favorites=[], historyItems=[];
+try{
+ completed=+(localStorage.getItem('pokaCompleted')||0);
+ customPhoto=localStorage.getItem('pokaCustomPhoto')||'';
+ favorites=JSON.parse(localStorage.getItem('pokaFavorites')||'[]');
+ historyItems=JSON.parse(localStorage.getItem('pokaHistory')||'[]');
+}catch(e){completed=0;customPhoto='';favorites=[];historyItems=[]}
+function saveProgress(){
+ try{localStorage.setItem('pokaSave',JSON.stringify({stage,cols,rows,placed:[...placed],moves,seconds}))}catch(e){}
+}
+function renderFavorites(){
+ const el=$('favoritesList'); if(!el)return; el.innerHTML='';
+ if(!favorites.length){el.textContent='お気に入りはまだありません。パズル画面の「☆ お気に入り」を押して保存できます。';el.className='muted';return}
+ el.className='stagegrid';
+ favorites.forEach((f,i)=>{
+  const b=document.createElement('button');b.className='stage';b.textContent='★ '+(f.name||('お気に入り '+(i+1)));
+  b.onclick=()=>{customPhoto=f.custom?(f.src||''):'';try{if(customPhoto)localStorage.setItem('pokaCustomPhoto',customPhoto);else localStorage.removeItem('pokaCustomPhoto')}catch(e){}loadStage(f.stage||stage);toast('お気に入りを開きました')};
+  el.append(b);
+ });
+}
+function renderHistory(){
+ const el=$('historyList'); if(!el)return;
+ if(!historyItems.length){el.textContent='まだクリア記録はありません。';return}
+ el.innerHTML=historyItems.slice(0,10).map(x=>`<div style="padding:7px 2px;border-bottom:1px solid #eee8dc">🏅 ${x.name}　${x.time}　${x.moves}手</div>`).join('');
+}
+
+const stageSelect=$('stageSelect');for(let i=1;i<=N;i++){let o=document.createElement('option');o.value=i;o.textContent=`ステージ ${i} · ${names[(i-1)%names.length]}`;stageSelect.append(o)}
+function rng(seed){let x=seed|0;return()=>{x=(x*1664525+1013904223)>>>0;return x/4294967296}}
+function sceneSVG(id){let r=rng(id*7919+23),h1=Math.floor(r()*360),h2=(h1+65+Math.floor(r()*90))%360,accent=['#f5c86f','#f39a83','#f4e7b6','#c6a6d8','#f1a8bd'][Math.floor(r()*5)],kind=Math.floor(r()*8);
+let sky=`hsl(${h1},48%,${58+Math.floor(r()*13)}%)`,land=`hsl(${h2},34%,${38+Math.floor(r()*14)}%)`,land2=`hsl(${(h2+22)%360},36%,${48+Math.floor(r()*10)}%)`;
+let suns=Array.from({length:4},(_,i)=>{let x=25+r()*250,y=25+r()*120,rad=2+r()*5;return `<circle cx="${x}" cy="${y}" r="${rad}" fill="#fff7df" opacity=".65"/>`}).join('');
+let hills=`<path d="M0 205 Q${40+r()*50} ${90+r()*60} 120 190 T300 175 V300 H0Z" fill="${land2}"/><path d="M0 240 Q80 ${145+r()*50} 165 225 T300 205 V300 H0Z" fill="${land}"/>`;
+let motif='';
+if(kind===0||kind===3||kind===6){motif=`<circle cx="${65+r()*170}" cy="${45+r()*70}" r="${20+r()*13}" fill="${accent}"/>`+Array.from({length:10},(_,i)=>{let x=r()*300,y=190+r()*100;return `<path d="M${x} ${y}v-35" stroke="#3d755d" stroke-width="3"/><circle cx="${x}" cy="${y-38}" r="${5+r()*5}" fill="${i%2?accent:'#fff0c9'}"/>`}).join('')}
+else if(kind===1){motif=`<circle cx="225" cy="65" r="24" fill="#f5e8c0"/>`+Array.from({length:35},()=>`<circle cx="${r()*300}" cy="${r()*190}" r="${1+r()*2}" fill="#fff8d9"/>`).join('')}
+else if(kind===2||kind===7){motif=Array.from({length:7},(_,i)=>{let x=12+i*43,w=25+r()*14,y=135+r()*35;return `<rect x="${x}" y="${y}" width="${w}" height="${300-y}" rx="3" fill="${i%2?'#f1cda1':'#e9d9b8'}"/><path d="M${x+5} ${y+15}h5v9h-5zm12 0h5v9h-5z" fill="#779b9a"/>`}).join('')}
+else{motif=Array.from({length:8},()=>{let x=r()*300,y=170+r()*100;return `<path d="M${x} ${y}q-18-22 0-34q18 12 0 34" fill="${accent}"/>`}).join('')}
+return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><defs><linearGradient id="g${id}" x2="0" y2="1"><stop stop-color="${sky}"/><stop offset="1" stop-color="#f7dfb7"/></linearGradient></defs><rect width="300" height="300" fill="url(#g${id})"/>${suns}${hills}${motif}<path d="M0 278Q75 250 150 278T300 270V300H0" fill="#315f55" opacity=".5"/></svg>`}
+function makeImage(id){return customPhoto || ('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(sceneSVG(id)))}
+function puzzleName(id){return names[(id-1)%names.length]+' #'+String(id).padStart(3,'0')}
+function toast(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1700)}
+function startClock(){if(timer)return;timer=setInterval(()=>{seconds++;$('time').textContent=fmt(seconds);saveProgress()},1000)}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function reset(){clearInterval(timer);timer=null;started=false;seconds=0;moves=0;placed=new Set();selected=null;dragging=null;tiles=Array.from({length:cols*rows},(_,i)=>i);$('time').textContent='00:00';$('moves').textContent='0';$('modal').classList.remove('show');draw();saveProgress()}
+function draw(){let board=$('board'),tray=$('tray'),total=cols*rows;board.style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;board.style.gridTemplateRows=`repeat(${rows},minmax(0,1fr))`;board.innerHTML='';tray.innerHTML='';
+let src=makeImage(stage);
+for(let i=0;i<total;i++){let cell=document.createElement('div');cell.className='cell'+(placed.has(i)?' filled':'');cell.dataset.pos=i;
+if(placed.has(i)){let img=document.createElement('img');img.src=src;img.draggable=false;img.style.width=(cols*100)+'%';img.style.height=(rows*100)+'%';img.style.maxWidth='none';img.style.maxHeight='none';img.style.position='absolute';img.style.left=(-(i%cols)*100)+'%';img.style.top=(-Math.floor(i/cols)*100)+'%';cell.append(img)}
+cell.addEventListener('dragover',e=>{e.preventDefault();cell.classList.add('over')});cell.addEventListener('dragleave',()=>cell.classList.remove('over'));cell.addEventListener('drop',e=>{e.preventDefault();cell.classList.remove('over');let v=+(e.dataTransfer.getData('text/plain')||dragging);place(v,i)});cell.addEventListener('click',()=>{if(selected!==null)place(selected,i)});board.append(cell)}
+let remaining=tiles.filter(i=>!placed.has(i));for(let k=remaining.length-1;k>0;k--){let j=Math.floor(Math.random()*(k+1));[remaining[k],remaining[j]]=[remaining[j],remaining[k]];}
+remaining.forEach(i=>{let p=document.createElement('div');p.className='piece'+(selected===i?' selected':'');p.draggable=true;p.dataset.piece=i;let img=document.createElement('img');img.src=src;img.draggable=false;img.style.width=(cols*100)+'%';img.style.height=(rows*100)+'%';img.style.maxWidth='none';img.style.maxHeight='none';img.style.position='absolute';img.style.left=(-(i%cols)*100)+'%';img.style.top=(-Math.floor(i/cols)*100)+'%';p.append(img);
+p.addEventListener('dragstart',e=>{dragging=i;e.dataTransfer.setData('text/plain',String(i));e.dataTransfer.effectAllowed='move';setTimeout(()=>p.classList.add('dragging'),0)});p.addEventListener('dragend',()=>{dragging=null;p.classList.remove('dragging')});p.addEventListener('click',()=>{selected=selected===i?null:i;drawTraySelection()});tray.append(p)});
+updateStats()}
+function drawTraySelection(){document.querySelectorAll('.piece').forEach(p=>p.classList.toggle('selected',+p.dataset.piece===selected))}
+function place(piece,pos){if(!Number.isInteger(piece)||placed.has(piece))return;if(piece!==pos){toast('そこじゃないみたい。絵柄を見て探してね');return}if(placed.has(pos))return;placed.add(pos);selected=null;moves++;if(!started){started=true;startClock()}saveProgress();draw();if(placed.size===cols*rows)win()}
+function updateStats(){let total=cols*rows,n=placed.size,pct=Math.round(n/total*100);$('placed').textContent=n+'/'+total;$('remaining').textContent='残り '+(total-n);$('progressText').textContent=pct+'% 完成';$('progressBar').style.width=pct+'%';$('moves').textContent=moves;$('stageCount').textContent=stage+' / 1000';$('puzzleName').textContent=puzzleName(stage);$('category').textContent=cats[(stage-1)%cats.length]}
+function win(){
+ clearInterval(timer);timer=null;completed=Math.max(completed,stage);
+ const record={stage,name:puzzleName(stage),moves,time:fmt(seconds),date:new Date().toLocaleDateString('ja-JP')};
+ historyItems.unshift(record);historyItems=historyItems.slice(0,30);
+ try{localStorage.setItem('pokaCompleted',completed);localStorage.setItem('pokaHistory',JSON.stringify(historyItems));localStorage.removeItem('pokaSave')}catch(e){}
+ renderStages();renderHistory();$('winText').textContent=`${puzzleName(stage)} 完成！ ${moves}手・${fmt(seconds)}でクリア！`;$('next').textContent=stage===N?'最初からもう一度':'次のステージへ →';$('modal').classList.add('show')
+}
+function renderStages(){let g=$('stageGrid');g.innerHTML='';let start=Math.max(1,Math.min(stage-10,N-39));for(let i=start;i<Math.min(N,start+40);i++){let b=document.createElement('button');b.className='stage'+(i<=completed?' done':'')+(i===stage?' current':'');b.textContent=(i<=completed?'✓ ':'')+i;b.disabled=i>completed+1;b.onclick=()=>loadStage(i);g.append(b)}}
+function loadStage(s){stage=s;stageSelect.value=s;reset();renderStages()}
+stageSelect.onchange=()=>loadStage(+stageSelect.value);
+$('pieceSelect').onchange=()=>{let n=+$('pieceSelect').value;if(n===9){cols=3;rows=3}else if(n===16){cols=4;rows=4}else if(n===25){cols=5;rows=5}else if(n===10){cols=5;rows=2}else if(n===20){cols=5;rows=4}else if(n===30){cols=6;rows=5}else if(n===40){cols=8;rows=5}else if(n===50){cols=10;rows=5}else{cols=Math.sqrt(n);rows=cols}reset();toast(n+'ピースに変更しました')};
+$('restart').onclick=()=>{reset();toast('同じステージをリセットしました')};
+$('preview').onclick=()=>{let w=window.open('','_blank');if(w){w.document.write(`<title>完成図</title><meta name="viewport" content="width=device-width"><body style="margin:0;background:#263b3a;display:grid;place-items:center;min-height:100vh"><img style="width:min(94vw,600px);border-radius:12px" src="${makeImage(stage)}"></body>`)}else toast('ブラウザのポップアップを許可してください')};
+$('next').onclick=()=>{if(stage<N)loadStage(stage+1);else loadStage(1);$('modal').classList.remove('show')};
+$('close').onclick=()=>$('modal').classList.remove('show');
+$('photoInput').onchange=async e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ if(!file.type.startsWith('image/')){toast('画像ファイルを選んでください');return}
+ if(file.size>12*1024*1024){toast('12MB以下の写真を選んでください');return}
+ try{
+  const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});
+  const img=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=data});
+  const canvas=document.createElement('canvas'),scale=Math.min(1,1000/Math.max(img.width,img.height));
+  canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);
+  canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+  customPhoto=canvas.toDataURL('image/jpeg',0.78);
+  localStorage.setItem('pokaCustomPhoto',customPhoto);
+  loadStage(stage);toast('写真をパズルに設定しました');
+ }catch(err){toast('写真を読み込めませんでした')}
+ e.target.value='';
+};
+$('clearPhoto').onclick=()=>{customPhoto='';try{localStorage.removeItem('pokaCustomPhoto')}catch(e){}loadStage(stage);toast('オリジナルの絵柄に戻しました')};
+$('favoriteBtn').onclick=()=>{
+ const src=makeImage(stage),name=customPhoto?'自分の写真':puzzleName(stage);
+ if(favorites.some(f=>f.src===src)){toast('この絵柄は登録済みです');return}
+ favorites.unshift({src,name,stage,custom:!!customPhoto});favorites=favorites.slice(0,12);
+ try{localStorage.setItem('pokaFavorites',JSON.stringify(favorites))}catch(e){favorites.pop();toast('保存容量がいっぱいです');return}
+ renderFavorites();toast('お気に入りに保存しました');
+};
+let startupSave=null;try{startupSave=JSON.parse(localStorage.getItem('pokaSave')||'null')}catch(e){}
+loadStage(1);
+renderFavorites();renderHistory();
+try{
+ const saved=startupSave;
+ if(saved&&saved.stage>=1&&saved.stage<=N&&[2,3,4,5,6,8,10,12,14,16].includes(saved.cols)){
+  stage=saved.stage;cols=saved.cols;rows=saved.rows||cols;stageSelect.value=stage;$('pieceSelect').value=String(cols*rows);
+  placed=new Set((saved.placed||[]).filter(n=>Number.isInteger(n)&&n>=0&&n<cols*rows));
+  moves=Number(saved.moves)||0;seconds=Number(saved.seconds)||0;
+  $('time').textContent=fmt(seconds);$('moves').textContent=moves;draw();
+  if(placed.size){started=true;startClock();toast('前回の続きから再開しました')}
+ }
+}catch(e){}
+</script></body></html>
