@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffeff7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ぬりえスマイル">
+<title>ぬりえスマイル 🌈 Deluxe Edition</title>
+<style>
+:root{--pink:#ff78ad;--purple:#9a7be8;--ink:#594b69;--cream:#fffaf0}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;background:#f6f2ea;color:#23253a;min-height:100vh}
+button{font:inherit;cursor:pointer}main{max-width:760px;margin:auto;padding:14px 14px 38px}
+.top{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 12px}.brand{font-weight:900;color:#23253a;font-size:17px}.pill{border:0;border-radius:12px;padding:9px 13px;background:#fff;box-shadow:0 3px 10px #9e7da522;color:var(--ink)}
+.hero{position:relative;overflow:hidden;border-radius:24px;padding:22px 16px 24px;text-align:center;background:linear-gradient(135deg,#23253a,#3a2d63 60%,#7a3b6b);box-shadow:0 12px 30px #23253a44}
+.hero:before,.hero:after{content:"✦";position:absolute;color:#ffd76a;font-size:35px;opacity:.9}.hero:before{top:13px;left:18px}.hero:after{right:22px;bottom:20px}
+h1{font-size:clamp(29px,7vw,43px);line-height:1.2;margin:4px 0 8px;color:#fff;font-weight:1000;letter-spacing:4px}
+.sub{font-weight:700;margin:5px 0 12px;color:#e9e3ff}
+.cast{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:10px 0 16px}
+.cast>div{aspect-ratio:1;border-radius:18px;display:grid;place-items:center;background:#2d2f4a!important;cursor:pointer}
+.cast svg{width:92%;height:92%}
+.start{border:0;border-radius:14px;padding:15px 27px;background:linear-gradient(90deg,#ff5a4f,#ff9a3c);color:white;font-size:20px;font-weight:900;box-shadow:0 5px 0 #b83a33}
+.start:active{transform:translateY(4px);box-shadow:0 2px 0 #b83a33}
+.features{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:17px}.feature{background:#ffffff1f;color:#fff;border-radius:8px;padding:7px 11px;font-size:12px;font-weight:800}
+.section{margin:20px 2px 10px;font-size:20px;font-weight:900}.section span{color:#ef79a8}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.stat{background:#fff;border-radius:16px;padding:11px 8px;font-weight:900;font-size:13px;border:1px solid #e3dccd;box-shadow:0 2px 0 #e3dccd;text-align:center}.stat b{display:block;color:#ff5a4f;font-size:21px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.cat{border:1px solid #e3dccd;border-radius:16px;padding:14px 9px;text-align:center;background:#fff;box-shadow:0 2px 0 #e3dccd;color:var(--ink);font-weight:900;min-height:88px}
+.cat .icon{display:block;width:76px;height:76px;border-radius:50%;margin:0 auto 6px;border:3px solid #fff;box-shadow:0 3px 0 rgba(0,0,0,.09)}
+.cat svg{width:100%;height:100%;display:block}
+.cat small{font-size:11px;color:#998ba1;display:block;margin-top:4px}
+.pages{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.page{background:white;border:1px solid #e3dccd;border-radius:16px;padding:12px;text-align:left;color:var(--ink);box-shadow:0 2px 0 #e3dccd}.page .thumb{height:85px;border-radius:13px;background:#2d2f4a;display:grid;place-items:center}
+.page svg{height:80px;width:auto;display:block}
+.page b{display:block;margin-top:7px}.page small{color:#9b8da2}
+.panel{background:white;border:1px solid #e3dccd;border-radius:16px;padding:13px;box-shadow:0 2px 0 #e3dccd}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}.back{border:0;border-radius:12px;padding:9px 13px;background:#f8edf7;color:#725d7c;font-weight:800}
+#stage{position:relative;width:100%;max-width:520px;aspect-ratio:1;margin:auto;background:#fff;border:2px solid #23253a;border-radius:10px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#stage canvas,#stage #lines,#stage svg{position:absolute;inset:0;width:100%;height:100%;display:block}#lines{pointer-events:none}
+.tools{margin-top:12px}.tl{padding:9px 11px;font-size:13px;border-radius:12px}.tl.sel{background:#ff5a4f;color:#fff}
+.palette{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin:14px 0 8px}.swatch{aspect-ratio:1;border:2px solid white;border-radius:50%;box-shadow:0 0 0 1px #ddd}.swatch.selected{outline:3px solid #66547a;outline-offset:2px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.action{border:0;border-radius:12px;padding:11px 14px;background:#f3edff;color:#66547a;font-weight:900}.action.primary{background:#ff5a4f;color:white}
+.hidden{display:none!important}.hint{text-align:center;color:#6b6e85;font-size:12px;line-height:1.6}.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#23253a;color:#fff;font-weight:800;padding:12px 22px;border-radius:14px;box-shadow:0 8px 24px #00000033;z-index:200;opacity:0;transition:.25s;pointer-events:none;max-width:86vw;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.saved-list{display:flex;gap:9px;overflow:auto}.saved-item{min-width:100px;background:white;border-radius:14px;padding:8px;font-size:12px}
+.spark{position:fixed;z-index:99;pointer-events:none;font-size:22px;animation:sp .8s ease-out forwards}
+@keyframes sp{0%{transform:translate(-50%,-50%) scale(.4);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% - 46px)) scale(1.3) rotate(40deg);opacity:0}}
+.parade{display:flex;gap:10px;overflow-x:auto;padding:6px 2px 14px;-webkit-overflow-scrolling:touch}
+.parade button{flex:0 0 96px;aspect-ratio:1;border:0;border-radius:18px;display:grid;place-items:center;padding:3px;background:#2d2f4a!important}
+.parade svg{width:100%;height:100%;display:block}
+.pill.off{opacity:.55}
+.cast>div{animation:bob 3s ease-in-out infinite}
+.cast>div:nth-child(2n){animation-delay:.45s}.cast>div:nth-child(3n){animation-delay:.9s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-8px) rotate(1.5deg)}}
+#logo{display:inline-block;animation:pop 2.4s ease-in-out infinite}
+@keyframes pop{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
+@media(min-width:560px){.grid,.pages{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{padding:30px}}
+</style>
+</head>
+<body><main>
+<div class="top"><div class="brand"><span id="logo" style="display:inline-block;width:30px;height:30px;vertical-align:middle"></span> ぬりえスマイル</div><span><button class="pill" id="musicBtn" onclick="toggleMusic()">🎵 ON</button> <button class="pill" onclick="showSaved()">💖 アルバム</button></span></div>
+<section id="home">
+<div class="hero">
+<div style="font-size:13px;font-weight:900;color:#ffd76a;letter-spacing:3px">COLORING STUDIO DELUXE</div>
+<h1 id="ttl">ぬりえスマイル</h1>
+<div class="sub">鳥山明風・ディズニー風・JK人気キャラ満載！</div>
+<div class="cast" id="cast"></div>
+<button class="start" onclick="showCategories()">🎨 ぬりえを始める</button><br><button class="pill" style="margin-top:12px" onclick="$('imp').click()">📷 携帯の画像をぬりえに</button><input id="imp" type="file" accept="image/*" hidden onchange="importArt(this)">
+<div class="features"><span class="feature">🌟 2000作品以上</span><span class="feature">🔥 鳥山明風タッチ</span><span class="feature">🏰 ディズニー風</span><span class="feature">💖 JK厳選キャラ</span><span class="feature">📱 壁紙にできる</span></div>
+</div>
+<div class="stats"><div class="stat"><b id="total">0</b>ぬりえ</div><div class="stat"><b>96</b>カラー</div><div class="stat"><b>0</b>広告・懸賞</div></div>
+<h2 class="section">🎪 キャラクターパレード</h2><div class="parade" id="parade"></div>
+<h2 class="section">💝 おすすめセレクション</h2>
+<div class="grid">
+<button class="cat" id="reco1" onclick="openPage(31,0)"></button>
+<button class="cat" id="reco2" onclick="openPage(43,0)"></button>
+</div>
+</section>
+<section id="categories" class="hidden">
+<div class="toolbar"><button class="back" onclick="showHome()">← ホーム</button><span>テーマ選択</span></div>
+<h2 class="section">テーマ・スタイルを選ぶ</h2><div id="catgrid" class="grid"></div>
+</section>
+<section id="pages" class="hidden">
+<div class="toolbar"><button class="back" onclick="showCategories()">← カテゴリー</button><b id="categoryTitle"></b></div>
+<p class="hint">好きな絵を選んでください（すべて異なる構図デザインです）。</p><div id="pagegrid" class="pages"></div>
+</section>
+<section id="editor" class="hidden">
+<div class="toolbar"><button class="back" onclick="showPages()">← もどる</button><b id="pageTitle">ぬりえ</b><button class="back" onclick="resetPage()">↻ リセット</button></div>
+<div class="panel"><div id="stage"><canvas id="paint" width="800" height="800"></canvas><div id="lines"><svg id="drawing" viewBox="0 0 400 400"></svg></div></div>
+<p class="hint">色を選んで、なぞって塗るか 🪣 でタッチしてひとぬり</p>
+<div class="actions tools"><button class="action tl" id="sz10" onclick="setSize(10)">細</button><button class="action tl sel" id="sz22" onclick="setSize(22)">中</button><button class="action tl" id="sz46" onclick="setSize(46)">太</button><button class="action tl" id="bkt" onclick="toggleBucket()">🪣 ぬる</button><button class="action tl" id="ers" onclick="toggleErase()">🧽 消す</button><button class="action tl sel" id="ins" onclick="toggleInside()">🔒 はみ出し防止</button></div><div id="palette" class="palette"></div>
+<div class="actions"><button class="action" onclick="undo()">↶ 一つ戻す</button><button class="action" onclick="clearAll()">🗑 全部消す</button><button class="action primary" onclick="saveArtwork()">💾 作品を保存</button><button class="action" onclick="downloadArtwork()">📥 画像をダウンロード</button><button class="action" onclick="saveWallpaper()">📱 壁紙にする</button></div>
+</div>
+</section>
+<section id="saved" class="hidden">
+<div class="toolbar"><button class="back" onclick="showHome()">← ホーム</button><b>💖 作品アルバム</b></div>
+<p class="hint">この端末に保存した作品だよ。</p><div id="savedList" class="saved-list"></div>
+</section>
+<p class="hint" style="margin-top:22px">ぬりえスマイル 🌈 たのしく、じゆうに、ぬってみよう！</p>
+</main>
+<script>
+const categories=[
+["どうぶつ","🐾"],["ねこ","🐱"],["うさぎ","🐰"],["ゆうしゃ","⚔️"],["かくとうか","🥋"],["ヒーロー","🦸"],["ドラゴン","🐉"],["きょうりゅう","🦕"],["ロボット","🤖"],["メカ","🛸"],["おうさま","👑"],["おひめさま","👸"],["まほうつかい","🧙"],["うちゅうじん","👽"],["かいじゅう","👾"],["ゆうれい","👻"],["きゃわいい","🎀"],["スイーツ","🍰"],["さかな","🐟"],["むし","🦋"],["風景","🏝️"],["のりもの","🚙"],["ファッション","👗"],["忍者","🥷"],["妖精","🧚"],["ユニコーン","🦄"],["スポーツ","⚽"],["アイドル","🎤"],["おまつり","🎆"],["フルーツ","🍎"],
+["格闘家バトル【鳥山明風】","🥊"],["宇宙の戦士【鳥山明風】","🚀"],["ヒーロー戦記【鳥山明風】","🦸"],["魔王と悪役【鳥山明風】","😈"],["ちびっこ冒険【鳥山明風】","🧒"],["恐竜とメカ【鳥山明風】","🦖"],
+["プリンセス物語【ディズニー風】","👸"],["人魚の海【ディズニー風】","🧜‍♀️"],["おとぎのお城【ディズニー風】","🏰"],["森のなかま【ディズニー風】","🦌"],["ようせいの花園【ディズニー風】","🧚"],
+["韓国風カフェ・Y2K【JK人気】","☕"],["地雷系・量産型っ子【JK人気】","🖤"],["推し活・アイドル【JK人気】","💫"],["ストリート女子【JK人気】","🛹"],["平成レトロ・ギャル【JK人気】","💖"],["おしゃかわウサギ【JK人気】","🐰"],["エモい夜空・星屑【JK人気】","🌌"],["推しアニマル【JK人気】","🧸"]
+];
+const $=id=>document.getElementById(id);let currentCat=0,currentPage=0,chosen="#ff5f9e";
+function hideAll(){["home","categories","pages","editor","saved"].forEach(x=>$(x).classList.add("hidden"))}
+function showHome(){hideAll();$("home").classList.remove("hidden")}
+function showCategories(){hideAll();$("categories").classList.remove("hidden")}
+function showSaved(){hideAll();$("saved").classList.remove("hidden");renderSaved()}
+function selectCategory(i){currentCat=i;$("categoryTitle").textContent=categories[i][1]+" "+categories[i][0];$("pagegrid").innerHTML=DES[i].map((d,n)=>`<button class="page" onclick="openPage(${i},${n})"><div class="thumb"><svg viewBox="0 0 400 400">${colorize(shapeSVG(i,n),n+i)}</svg></div><b>${d[0]}</b><small>塗る</small></button>`).join("");hideAll();$("pages").classList.remove("hidden")}
+function showPages(){selectCategory(currentCat)}
+const colors=[];for(let h=0;h<360;h+=15){for(let l of [42,58,72])colors.push(`hsl(${h},82%,${l}%)`)}colors.push("#222222","#555555","#888888","#bbbbbb","#eeeeee","#ffffff","#8b5a2b","#d9a066","#ffd9b8","#f6e6d2","#ffb6c1","#a8d8ff","#4a2545","#7b5aa6","#33619e","#1f7a62","#7a9a2e","#a8642a","#c94f82","#6b4a35","#3a3a5c","#f2c94c","#e08a3c","#cfeaff"); 
+$("palette").innerHTML=colors.map((c,i)=>`<button class="swatch ${i===0?"selected":""}" style="background:${c}" aria-label="色${i+1}" onclick="chooseColor(this,'${c}')"></button>`).join("");
+function chooseColor(el,c){chosen=c;erase=false;updTools();sfx("pick");document.querySelectorAll(".swatch").forEach(x=>x.classList.remove("selected"));el.classList.add("selected")}
+const PAL=["#ff8fb8","#ffd45e","#7fd8ff","#a8e87a","#c9a7ff","#ffab6e","#ff7b7b","#6fe0c0"];
+const F='fill="#fff" stroke="#333" stroke-width="7" stroke-linejoin="round"';
+const sh=(x,y,a,b)=>{if(a<28||b<28)return"";const q=(t,k)=>`${(x+a*k*Math.cos(t)).toFixed(1)} ${(y+b*k*Math.sin(t)).toFixed(1)}`;return `<path d="M${x-a*.62} ${y-b*.1}Q${x-a*.6} ${y-b*.55} ${x-a*.2} ${y-b*.7}" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" opacity=".85" style="pointer-events:none"/><path d="M${q(.25,.8)}A${a*.8} ${b*.8} 0 0 1 ${q(1.6,.8)}" fill="none" stroke="#000" stroke-width="9" stroke-linecap="round" opacity=".12" style="pointer-events:none"/><path d="M${q(.3,.68)}A${a*.68} ${b*.68} 0 0 1 ${q(1.5,.68)}M${q(.5,.55)}A${a*.55} ${b*.55} 0 0 1 ${q(1.3,.55)}" fill="none" stroke="#333" stroke-width="3.5" stroke-dasharray="0.1 8" stroke-linecap="round" opacity=".4" style="pointer-events:none"/>`};
+const E=(x,y,a,b,r=0)=>`<g transform="rotate(${r} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="${a}" ry="${b}" ${F}/>${sh(x,y,a,b)}</g>`,C=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" ${F}/>${sh(x,y,r,r)}`,P=d=>`<path d="${d}" ${F}/>`,RT=(x,y,w,h,r=8)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ${F}/>`;
+const L=d=>`<path d="${d}" fill="none" stroke="#333" stroke-width="6" stroke-linecap="round" style="pointer-events:none"/>`,D=(x,y,r=8)=>r>=8?`<ellipse cx="${x}" cy="${y}" rx="${r*1.05}" ry="${r*1.4}" fill="#333" style="pointer-events:none"/><circle cx="${x-r*.35}" cy="${y-r*.55}" r="${r*.42}" fill="#FFF" style="pointer-events:none"/><circle cx="${x+r*.3}" cy="${y+r*.55}" r="${r*.2}" fill="#FFF" style="pointer-events:none"/>`:`<circle cx="${x}" cy="${y}" r="${r}" fill="#333" style="pointer-events:none"/>`;
+const ck=(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="13" ry="8" fill="#ff9fb8" opacity=".55" style="pointer-events:none"/>`;
+const g=(x,y,s=32)=>ck(x-s*1.55,y+16)+ck(x+s*1.55,y+16)+D(x-s,y)+D(x+s,y)+L(`M${x-14} ${y+26}Q${x} ${y+42} ${x+14} ${y+26}`);
+const S=(x,y,r)=>{let p=[];for(let k=0;k<10;k++){const t=-Math.PI/2+k*Math.PI/5,q=k%2?r*.45:r;p.push((x+Math.cos(t)*q).toFixed(0)+" "+(y+Math.sin(t)*q).toFixed(0))}return P("M"+p.join("L")+"Z")};
+const PET=(n,x,y,d,a,b)=>Array.from({length:n},(_,k)=>{const t=k*2*Math.PI/n;return E(Math.round(x+Math.cos(t)*d),Math.round(y+Math.sin(t)*d),a,b,k*360/n)}).join("");
+const stem=(x,y)=>RT(x-8,y,16,395-y,6);
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const NP=["もふもふ","ぴかぴか","くるくる","ふわふわ","もこもこ","きらきら","まるまる","ぷにぷに","もっちり","さくら","ほしぞら","みるく","あめいろ","なつぞら","こがね","そらいろ","うみいろ","ゆきいろ","はるかぜ","あきいろ","めろん","いちご","あおぞら","みどり","つきよ","ひかり","かぜ","ゆめ","にじいろ","スーパー"];
+const NS=["ちゃん","たん","まる","りん","ぴょん","もん","み","か","な","ぽ","ルン","ミン","パン","やん","け","ず","のん","ごん","じん","のすけ"];
+const N2=["☆","♪","♥","✿","☀","☘","❀","♕","⚡","☁"];
+
+function THAIR(x,y,r,R){
+ const n=3+((R()*4)|0),a0=Math.PI*1.06,a1=Math.PI*1.94;let p="";
+ for(let k=0;k<=n;k++){const t=a0+(a1-a0)*k/n;
+  p+=(k?"L":"M")+(x+Math.cos(t)*r*1.14).toFixed(0)+" "+(y+Math.sin(t)*r*1.14).toFixed(0);
+  if(k<n){const tm=t+(a1-a0)/(n*2),ln=r*(1.5+R()*.55),an=tm+(R()-.5)*.3;
+   p+="L"+(x+Math.cos(an)*ln).toFixed(0)+" "+(y+Math.sin(an)*ln).toFixed(0);}}
+ return P(p+"Z")}
+function FCE(x,y,r,o,R){
+ let g="",h=o.h,e=o.e,fx=o.fx||[];
+ const ex=R()<.2?1:(R()<.45?2:0);
+ if(h==="long")g+=P(`M${x-r*1.05} ${y-r*.2}Q${x-r*1.3} ${y+r*.9} ${x-r*.75} ${y+r*1.25}L${x-r*.5} ${y-r*.1}Z`)+P(`M${x+r*1.05} ${y-r*.2}Q${x+r*1.3} ${y+r*.9} ${x+r*.75} ${y+r*1.25}L${x+r*.5} ${y-r*.1}Z`);
+ if(h==="pony")g+=P(`M${x+r*.5} ${y-r*.7}Q${x+r*1.7} ${y-r*.9} ${x+r*1.9} ${y-r*.1}Q${x+r*1.2} ${y-r*.35} ${x+r*.6} ${y-r*.35}Z`);
+ if(h==="twin")g+=P(`M${x-r*.95} ${y-r*.3}Q${x-r*1.75} ${y-r*.5} ${x-r*1.7} ${y+r*.3}Q${x-r*1.15} ${y+r*.1} ${x-r*.8} ${y-r*.05}Z`)+P(`M${x+r*.95} ${y-r*.3}Q${x+r*1.75} ${y-r*.5} ${x+r*1.7} ${y+r*.3}Q${x+r*1.15} ${y+r*.1} ${x+r*.8} ${y-r*.05}Z`);
+ if(e==="cat")g+=P(`M${x-r*.92} ${y-r*.6}L${x-r*.72} ${y-r*1.42}L${x-r*.22} ${y-r*.82}Z`)+P(`M${x+r*.92} ${y-r*.6}L${x+r*.72} ${y-r*1.42}L${x+r*.22} ${y-r*.82}Z`);
+ if(e==="bunny")g+=E(x-r*.44,y-r*1.12,r*.19,r*.6,-8)+E(x+r*.44,y-r*1.12,r*.19,r*.6,8);
+ if(e==="bear")g+=C(x-r*.66,y-r*.82,r*.25)+C(x+r*.66,y-r*.82,r*.25);
+ if(e==="round")g+=C(x-r*.84,y-r*.58,r*.16)+C(x+r*.84,y-r*.58,r*.16);
+ if(e==="elf")g+=P(`M${x-r*.98} ${y-r*.02}L${x-r*1.52} ${y-r*.42}L${x-r*.7} ${y-r*.6}Z`)+P(`M${x+r*.98} ${y-r*.02}L${x+r*1.52} ${y-r*.42}L${x+r*.7} ${y-r*.6}Z`);
+ if(e==="horn")g+=P(`M${x-r*.3} ${y-r*.92}L${x-r*.12} ${y-r*1.72}L${x+r*.14} ${y-r*.9}Z`);
+ if(fx.includes("horns"))g+=`<path d="M${x-r*.42} ${y-r*.9}Q${x-r*1} ${y-r*1.28} ${x-r*.72} ${y-r*1.62}" fill="none" stroke="#333" stroke-width="9" stroke-linecap="round"/><path d="M${x+r*.42} ${y-r*.9}Q${x+r*1} ${y-r*1.28} ${x+r*.72} ${y-r*1.62}" fill="none" stroke="#333" stroke-width="9" stroke-linecap="round"/>`;
+ if(fx.includes("antenna"))g+=L(`M${x-r*.38} ${y-r*.9}L${x-r*.64} ${y-r*1.5}M${x+r*.38} ${y-r*.9}L${x+r*.64} ${y-r*1.5}`)+C(x-r*.64,y-r*1.57,r*.1)+C(x+r*.64,y-r*1.57,r*.1);
+ g+=(fx.includes("square")?RT(x-r*.94,y-r*.94,r*1.88,r*1.88,r*.32):C(x,y,r));
+ if(h==="spike")g+=THAIR(x,y,r,R);
+ if(h==="cap")g+=P(`M${x-r*1.02} ${y-r*.06}Q${x} ${y-r*1.44} ${x+r*1.02} ${y-r*.06}Q${x+r*.5} ${y-r*.5} ${x} ${y-r*.54}Q${x-r*.5} ${y-r*.5} ${x-r*1.02} ${y-r*.06}Z`);
+ if(h==="curly")g+=C(x-r*.52,y-r*.9,r*.27)+C(x-r*.02,y-r*1.02,r*.29)+C(x+r*.48,y-r*.9,r*.27);
+ const er=Math.max(8,r*.17),ey=y+r*.12;
+ if(ex===2)g+=L(`M${x-r*.5} ${ey}Q${x-r*.28} ${ey-r*.26} ${x-r*.06} ${ey}M${x+r*.06} ${ey}Q${x+r*.28} ${ey-r*.26} ${x+r*.5} ${ey}`);
+ else{g+=D(x-r*.3,ey,er);g+=(ex===1?L(`M${x+r*.1} ${ey}Q${x+r*.29} ${ey-r*.2} ${x+r*.48} ${ey}`):D(x+r*.3,ey,er));}
+ g+=`<path d="M${x-r*.46} ${ey-er-9}L${x-r*.16} ${ey-er-11}M${x+r*.16} ${ey-er-11}L${x+r*.46} ${ey-er-9}" fill="none" stroke="#333" stroke-width="7" stroke-linecap="round"/>`;
+ g+=ck(x-r*.68,y+r*.36)+ck(x+r*.68,y+r*.36);
+ g+=L(`M${x+r*.03} ${y+r*.3}q${r*.05} ${r*.07} 0 ${r*.12}`);
+ if(fx.includes("mask"))g+=RT(x-r*.82,y+r*.42,r*1.64,r*.36,r*.17);
+ else if(fx.includes("catmouth"))g+=L(`M${x} ${y+r*.48}V${y+r*.56}M${x} ${y+r*.56}Q${x-r*.1} ${y+r*.64} ${x-r*.2} ${y+r*.58}M${x} ${y+r*.56}Q${x+r*.1} ${y+r*.64} ${x+r*.2} ${y+r*.58}`);
+ else{const mo=R();
+  if(mo<.25)g+=C(x,y+r*.54,r*.11);
+  else if(mo<.55)g+=P(`M${x-r*.19} ${y+r*.46}Q${x} ${y+r*.7} ${x+r*.19} ${y+r*.46}Q${x} ${y+r*.58} ${x-r*.19} ${y+r*.46}Z`);
+  else g+=L(`M${x-r*.16} ${y+r*.5}Q${x} ${y+r*.64} ${x+r*.16} ${y+r*.5}`);}
+ if(fx.includes("whiskers"))g+=L(`M${x-r*.94} ${y+r*.04}H${x-r*.46}M${x-r*.9} ${y+r*.2}L${x-r*.44} ${y+r*.12}M${x+r*.94} ${y+r*.04}H${x+r*.46}M${x+r*.9} ${y+r*.2}L${x+r*.44} ${y+r*.12}`);
+ const a=o.a;
+ if(a==="bow")g+=P(`M${x} ${y-r-4}L${x-r*.5} ${y-r-32}L${x-r*.36} ${y-r-4}L${x-r*.5} ${y-r+24}L${x} ${y-r+8}L${x+r*.5} ${y-r+24}L${x+r*.36} ${y-r-4}L${x+r*.5} ${y-r-32}Z`)+C(x,y-r-2,r*.1);
+ if(a==="crown")g+=P(`M${x-r*.42} ${y-r-4}V${y-r-34}L${x-r*.2} ${y-r-14}L${x} ${y-r-40}L${x+r*.2} ${y-r-14}L${x+r*.42} ${y-r-34}V${y-r-4}Z`)+C(x,y-r-10,r*.07);
+ if(a==="tiara")g+=P(`M${x-r*.28} ${y-r*.7}L${x-r*.16} ${y-r*1.04}L${x} ${y-r*.76}L${x+r*.16} ${y-r*1.04}L${x+r*.28} ${y-r*.7}Z`)+C(x,y-r*.86,r*.06);
+ if(a==="headband")g+=RT(x-r*.84,y-r*.4,r*1.68,r*.15,r*.07)+L(`M${x-r*.83} ${y-r*.34}L${x-r*1.2} ${y-r*.16}M${x-r*.83} ${y-r*.24}L${x-r*1.15} ${y-r*.02}`);
+ if(a==="hat")g+=P(`M${x-r*.48} ${y-r*.46}Q${x} ${y-r*2} ${x+r*.48} ${y-r*.46}Z`)+RT(x-r*.6,y-r*.52,r*1.2,r*.16,r*.07);
+ if(a==="starpin")g+=S(x-r*.56,y-r*.64,r*.11)+S(x+r*.54,y-r*.48,r*.09);
+ if(a==="halo")g+=C(x,y-r-24,r*.24);
+ return g}
+function BODY(x,y,w,h,t){
+ if(t==="none")return"";
+ if(t==="round")return E(x,y,w,h*.92);
+ if(t==="dress")return P(`M${x-w*.42} ${y-h*.66}H${x+w*.42}L${x+w} ${y+h}Q${x} ${y+h*1.18} ${x-w} ${y+h}Z`);
+ if(t==="hero")return P(`M${x-w} ${y-h*.5}Q${x} ${y-h*.9} ${x+w} ${y-h*.5}L${x+w} ${y+h*.6}Q${x} ${y+h*.85} ${x-w} ${y+h*.6}Z`);
+ if(t==="robe")return P(`M${x-w*.44} ${y-h*.7}H${x+w*.44}L${x+w*.9} ${y+h*1.7}Q${x} ${y+h*1.9} ${x-w*.9} ${y+h*1.7}Z`);
+ return E(x,y,w,h*.92)}
+function vface(cx,cy,ss,R){const ex=R()<.25?1:(R()<.55?2:0);let g="";
+ if(ex===2)g+=L(`M${cx-ss*1.7} ${cy}Q${cx-ss*.8} ${cy-ss*.7} ${cx-ss*.1} ${cy}M${cx+ss*.1} ${cy}Q${cx+ss*.8} ${cy-ss*.7} ${cx+ss*1.7} ${cy}`);
+ else{g+=D(cx-ss,cy,ss*.55)+(ex===1?L(`M${cx+ss*.3} ${cy}Q${cx+ss*.9} ${cy-ss*.5} ${cx+ss*1.6} ${cy}`):D(cx+ss,cy,ss*.55));}
+ g+=L(`M${cx-ss*.7} ${cy+ss*1.3}Q${cx} ${cy+ss*2} ${cx+ss*.7} ${cy+ss*1.3}`);
+ g+=ck(cx-ss*2,cy+ss*.5)+ck(cx+ss*2,cy+ss*.5);
+ return g}
+function TTORSO(x,y,w,h,t,R){
+ if(t==="gi")return P(`M${x-w*.85} ${y}Q${x} ${y-16} ${x+w*.85} ${y}L${x+w*.72} ${y+h}Q${x} ${y+h+14} ${x-w*.72} ${y+h}Z`)+L(`M${x-w*.5} ${y-4}L${x} ${y+30}L${x+w*.5} ${y-4}`)+RT(x-w*.6,y+h-24,w*1.2,15,7);
+ if(t==="armor")return P(`M${x-w*.85} ${y}Q${x} ${y-16} ${x+w*.85} ${y}L${x+w*.72} ${y+h}Q${x} ${y+h+14} ${x-w*.72} ${y+h}Z`)+C(x-w*.92,y+8,17)+C(x+w*.92,y+8,17)+L(`M${x-w*.6} ${y+34}H${x+w*.6}M${x-w*.45} ${y+50}H${x+w*.45}`);
+ if(t==="dress")return P(`M${x-w*.5} ${y}H${x+w*.5}L${x+w*1.15} ${y+h}Q${x} ${y+h+16} ${x-w*1.15} ${y+h}Z`);
+ if(t==="robe")return P(`M${x-w*.5} ${y}H${x+w*.5}L${x+w} ${y+h+70}Q${x} ${y+h+88} ${x-w} ${y+h+70}Z`)+RT(x-w*.45,y+h*.4,w*.9,14,6);
+ if(t==="hero")return P(`M${x-w*.85} ${y}Q${x} ${y-16} ${x+w*.85} ${y}L${x+w*.72} ${y+h}Q${x} ${y+h+14} ${x-w*.72} ${y+h}Z`)+RT(x-w*.5,y+h-24,w,15,7)+S(x,y+h*.4,14);
+ if(t==="casual")return P(`M${x-w*.8} ${y}Q${x} ${y-14} ${x+w*.8} ${y}L${x+w*.6} ${y+h*.62}H${x-w*.6}Z`)+P(`M${x-w*.62} ${y+h*.62}H${x+w*.62}L${x+w*.5} ${y+h}Q${x} ${y+h+12} ${x-w*.5} ${y+h}Z`);
+ if(t==="hoodie")return P(`M${x-w*.82} ${y}Q${x} ${y-16} ${x+w*.82} ${y}L${x+w*.62} ${y+h}Q${x} ${y+h+14} ${x-w*.62} ${y+h}Z`)+P(`M${x-w*.42} ${y-6}Q${x} ${y-26} ${x+w*.42} ${y-6}Q${x+w*.2} ${y+8} ${x} ${y+8}Q${x-w*.2} ${y+8} ${x-w*.42} ${y-6}Z`)+L(`M${x-12} ${y+16}V${y+34}M${x+12} ${y+16}V${y+34}`)+RT(x-w*.45,y+h-32,w*.9,14,7);
+ if(t==="yukata")return P(`M${x-w*.52} ${y}H${x+w*.52}L${x+w*.88} ${y+h+34}Q${x} ${y+h+50} ${x-w*.88} ${y+h+34}Z`)+L(`M${x-w*.3} ${y-2}L${x+w*.08} ${y+34}L${x+w*.44} ${y+4}`)+RT(x-w*.55,y+h-10,w*1.1,15,7);
+ if(t==="jacket")return P(`M${x-w*.82} ${y}Q${x} ${y-14} ${x+w*.82} ${y}L${x+w*.64} ${y+h}Q${x} ${y+h+14} ${x-w*.64} ${y+h}Z`)+L(`M${x-w*.34} ${y-2}L${x} ${y+26}L${x+w*.34} ${y-2}M${x} ${y+26}V${y+h*.9}`)+RT(x-w*.4,y+h*.5,w*.8,13,6);
+ if(t==="suit")return P(`M${x-w*.8} ${y}Q${x} ${y-14} ${x+w*.8} ${y}L${x+w*.66} ${y+h}Q${x} ${y+h+12} ${x-w*.66} ${y+h}Z`)+L(`M${x-w*.3} ${y-2}L${x} ${y+24}L${x+w*.3} ${y-2}M${x} ${y+24}V${y+h*.7}M${x-w*.34} ${y+18}L${x+w*.34} ${y+18}`);
+ return E(x,y+h/2,w*.85,h/2+6)}
+
+function ARM(x1,y1,x2,y2){const mx=(x1+x2)/2,my=(y1+y2)/2,len=Math.hypot(x2-x1,y2-y1)/2+9,ang=Math.atan2(y2-y1,x2-x1)*180/Math.PI-90;return E(mx,my,9.5,len,ang)}
+function LEG(x1,y1,x2,y2){const mx=(x1+x2)/2,my=(y1+y2)/2,len=Math.hypot(x2-x1,y2-y1)/2+9,ang=Math.atan2(y2-y1,x2-x1)*180/Math.PI-90;return E(mx,my,11,len,ang)}
+const BOOT=(x,y)=>P(`M${x-13} ${y-8}h26v14q0 10-10 10h-22q-10 0-10-10Z`);
+const FIST=(x,y,s=13)=>C(x,y,s);
+
+const AR={
+mascot(o,R){const x=200,y=196,r=92+R()*12;let g="";
+ if(o.fx.includes("tail"))g+=P(`M${x+56} 316Q${x+128} 316 ${x+118} 372L${x+96} 350L${x+82} 372Z`);
+ if(o.fx.includes("wings"))g+=P(`M${x-52} 292Q${x-160} 236 ${x-148} 168Q${x-92} 226 ${x-44} 262Z`)+P(`M${x+52} 292Q${x+160} 236 ${x+148} 168Q${x+92} 226 ${x+44} 262Z`);
+ g+=BODY(x,312,52,42,o.b);
+ g+=E(x-56,308,14,28)+E(x+56,308,14,28);
+ g+=E(x-24,352,19,12)+E(x+24,352,19,12);
+ if(o.b==="hero")g+=RT(x-24,322,48,12,6)+S(x,304,15);
+ if(o.b==="dress")g+=P(`M${x-24} 348Q${x} 360 ${x+24} 348`);
+ g+=FCE(x,y,r,o,R);return g},
+bust(o,R){const x=200,y=198,r=98+R()*10;let g="";
+ g+=P(`M96 354Q96 258 ${x} 254Q304 258 304 354Z`);
+ g+=FCE(x,y,r,o,R);
+ g+=P(`M${x-36} ${y+r*.9}Q${x} ${y+r*1.1} ${x+36} ${y+r*.9}L${x+24} ${y+r*1.26}Q${x} ${y+r*1.38} ${x-24} ${y+r*1.26}Z`);
+ return g},
+quad(o,R){const bx=192,by=248;let g="";
+ if(o.fx.includes("wings"))g+=P(`M${bx-66} ${by-36}Q${bx-160} ${by-96} ${bx-150} ${by-160}Q${bx-96} ${by-92} ${bx-52} ${by-56}Z`)+P(`M${bx+40} ${by-40}Q${bx+140} ${by-100} ${bx+128} ${by-166}Q${bx+72} ${by-96} ${bx+30} ${by-58}Z`);
+ g+=E(bx-52,306,12,32)+E(bx-18,306,12,32)+E(bx+18,306,12,32)+E(bx+52,306,12,32);
+ if(o.fx.includes("tail"))g+=P(`M${bx-82} ${by-10}Q${bx-146} ${by-46} ${bx-126} ${by+14}Q${bx-104} ${by+30} ${bx-82} ${by-10}Z`);
+ g+=E(bx,by,84,54);
+ if(o.fx.includes("horns"))g+=P(`M${bx-58} ${by-40}L${bx-46} ${by-66}L${bx-30} ${by-44}L${bx-14} ${by-70}L${bx+4} ${by-44}L${bx+20} ${by-68}L${bx+32} ${by-42}Z`);
+ g+=FCE(bx+80,by-56,44,o,R);return g},
+mech(o,R){let g="";
+ g+=L(`M200 92L200 60`)+C(200,52,10);
+ g+=E(122,150,10,24)+E(278,150,10,24);
+ g+=RT(138,94,124,110,30);
+ g+=RT(160,124,28,36,12)+RT(212,124,28,36,12);
+ g+=L(`M184 186Q200 198 216 186`);
+ g+=E(128,262,13,34)+E(272,262,13,34);
+ g+=RT(148,216,104,88,22);
+ g+=C(200,258,20)+L(`M170 234H230M170 282H230`);
+ g+=C(168,328,21)+C(232,328,21);
+ return g},
+float(o,R){const x=200,y=166,r=80+R()*8;let g="";
+ g+=P(`M${x-r} ${y+26}V${y+128}L${x-r*.72} ${y+100}L${x-r*.44} ${y+130}L${x-r*.14} ${y+102}L${x+r*.14} ${y+132}L${x+r*.42} ${y+104}L${x+r*.66} ${y+130}L${x+r*.88} ${y+102}L${x+r} ${y+128}V${y+26}Q${x} ${y-r*.3} ${x-r} ${y+26}Z`);
+ g+=E(x-r-10,y+28,12,24,-35)+E(x+r+10,y+28,12,24,35);
+ g+=FCE(x,y,r,{...o,h:"none"},R);return g},
+pair(o,R){let g="";
+ g+=E(124,272,40,34)+E(276,264,34,28);
+ g+=E(84,268,11,22)+E(164,268,11,22)+E(242,260,10,19)+E(310,260,10,19);
+ g+=E(104,312,18,11)+E(144,312,18,11)+E(258,300,16,10)+E(294,300,16,10);
+ g+=FCE(124,216,56,o,R)+FCE(276,214,48,{...o,h:o.h2||o.h,e:o.e2||o.e},R);
+ g+=P(`M200 108C184 108 175 122 186 134L200 148L214 134C225 122 216 108 200 108Z`);
+ return g},
+scene(o,R){const v=(R()*12)|0,rx=(a2,b2)=>Math.round(a2+R()*(b2-a2));let g="";
+ if(v===0){const p1=rx(110,150),p2=rx(240,290);
+  g+=C(88,92,40)+E(rx(280,320),rx(70,110),38,16)+E(rx(318,346),rx(94,118),27,12);
+  g+=P(`M14 372L${p1} 100L204 262L${p2} 84L386 372Z`);
+  g+=P(`M${p1} 100L${p1+30} 152L${p1-32} 152Z`)+P(`M${p2} 84L${p2+32} 138L${p2-32} 138Z`);
+  g+=L(`M56 240Q76 230 96 240M${rx(280,310)} 210Q${rx(298,318)} 200 ${rx(318,338)} 210`);}
+ else if(v===1){const ix=rx(150,190);g+=C(322,80,34);
+  g+=L(`M14 196H386`);
+  g+=P(`M${ix+96} 196Q${ix+74} 100 ${ix+8} 82Q${ix+96} 60 ${ix+160} 84Q${ix+240} 116 ${ix+192} 196Z`);
+  g+=RT(ix+54,120,15,80,7)+L(`M${ix+54} 128Q${ix+6} 106 ${ix-26} 128M${ix+54} 142Q${ix+106} 120 ${ix+140} 142M${ix+61} 106Q${ix+30} 92 ${ix+10} 100`);
+  g+=C(ix+61,110,17);
+  g+=P(`M30 288Q48 216 118 216Q104 288 62 298Z`)+P(`M88 216V148L136 148L136 216`);
+  g+=L(`M22 244Q52 262 82 244T142 244T202 244T262 244T322 244T378 244`);
+  g+=L(`M40 330Q70 348 100 330T160 330T220 330T280 330T340 330`);
+  g+=L(`M64 96Q84 84 104 96M140 76Q158 66 174 76`);}
+else if(v===2){g+=P(`M36 340A164 164 0 0 1 364 340L322 340A122 122 0 0 0 78 340Z`);
+  g+=P(`M78 340A122 122 0 0 1 322 340L286 340A86 86 0 0 0 114 340Z`);
+  g+=P(`M114 340A86 86 0 0 1 286 340L252 340A52 52 0 0 0 148 340Z`);
+  g+=E(56,340,42,24)+E(344,340,42,24)+C(rx(178,222),rx(66,102),rx(26,36));}
+ else if(v===3){g+=C(300,100,48)+C(284,90,12);
+  g+=S(80,120,16)+S(150,64,11)+S(64,220,12)+S(210,150,10)+S(338,214,11)+S(120,170,9)+S(250,72,8);
+  g+=P(`M16 380Q110 268 204 380Z`)+P(`M170 380Q268 286 362 380Z`);}
+ else if(v===4){const hx=rx(210,230);g+=C(86,90,32);
+  g+=RT(hx,196,132,132);
+  g+=P(`M${hx-16} 202L${hx+66} 126L${hx+148} 202Z`)+RT(hx+50,244,32,84,8);
+  g+=RT(hx+18,220,24,24,5)+RT(hx+92,220,24,24,5);
+  g+=L(`M14 328H386`);
+  g+=C(96,240,58)+RT(84,292,24,40,8)+L(`M96 182V294`);
+  g+=E(40,320,13,9)+E(180,316,12,8)+E(160,250,11,7)+C(40,308,8)+C(180,304,7)+C(160,238,6);}
+ else if(v===5){g+=RT(64,168,76,182,10)+RT(260,168,76,182,10)+RT(146,206,108,144,10);
+  g+=P(`M54 168L102 100L150 168Z`)+P(`M250 168L298 100L346 168Z`)+P(`M138 206L200 142L262 206Z`);
+  g+=L(`M102 100V54L130 70L102 86M298 100V54L326 70L298 86`);
+  g+=P(`M170 350Q200 296 230 350Z`)+C(200,318,9);
+  g+=RT(84,196,16,18,4)+RT(118,196,16,18,4)+RT(280,196,16,18,4)+RT(314,196,16,18,4);
+  g+=L(`M20 350H380`);}
+ else if(v===6){g+=P(`M14 340Q90 300 170 340T330 340T386 336`);
+  g+=RT(150,84,100,244,14)+RT(130,60,140,34,14);
+  g+=C(200,130,18)+L(`M176 130H76M224 130H324M188 112L132 66M212 112L268 66`);
+  g+=L(`M150 190H250M150 240H250`);
+  g+=E(70,352,34,18)+E(330,352,34,18)+C(120,356,14)+C(280,356,14);}
+ else if(v===7){g+=C(92,92,42)+L(`M156 92H136`);
+  g+=P(`M14 336Q120 250 224 336T386 326`);
+  g+=RT(120,208,44,150,18)+E(196,214,44,150,18);
+  g+=L(`M120 250Q152 234 178 250T226 250M142 200V156M142 168Q118 156 106 166`);
+  g+=E(60,300,16,10)+E(330,296,16,10);}
+ else if(v===8){g+=RT(216,196,150,124);
+  g+=P(`M202 202L291 118L380 202Z`)+RT(272,238,32,82,6);
+  g+=RT(238,218,26,26,5)+RT(316,218,26,26,5);
+  g+=C(96,268,66)+C(96,178,48)+C(82,146,10)+C(110,146,10)+C(88,166,7)+C(104,166,7);
+  g+=L(`M188 130L206 110M232 122L242 100M270 138L286 122M320 116L328 94M356 134L372 120`);
+  g+=L(`M14 320H386`);}
+ else if(v===9){g+=E(96,150,86,30,-34)+E(304,150,86,30,34)+E(200,104,96,30,-10);
+  g+=L(`M200 108V360M148 360Q148 260 200 240M252 360Q252 260 200 240`);
+  g+=E(120,360,22,13)+E(280,360,22,13)+E(60,330,18,11)+E(340,330,18,11);
+  g+=C(120,80,18)+C(280,80,18)+C(200,48,14);
+  g+=L(`M60 220Q100 234 96 262M340 220Q300 234 304 262`);}
+ else if(v===10){g+=L(`M186 372Q160 220 216 96Q246 176 222 372Z`);
+  g+=C(140,120,58)+C(222,88,64)+C(304,120,58)+C(172,196,48)+C(272,196,48);
+  g+=E(70,330,14,8)+E(340,316,14,8)+E(52,250,12,7)+E(354,248,12,7);
+  g+=L(`M96 92Q118 108 108 128M312 92Q290 108 300 128`);
+  g+=L(`M14 372H386`);}
+ else{g+=P(`M20 110Q130 30 230 96T382 64`);
+  g+=P(`M20 180Q140 100 240 166T382 134`);
+  g+=P(`M20 250Q150 180 260 240T382 210`);
+  g+=S(88,320,14)+S(170,342,10)+S(268,328,12)+S(340,346,9)+S(50,290,9);
+  g+=P(`M10 388Q110 300 210 388Z`)+P(`M180 388Q290 306 392 388Z`);}
+ if(v===3||v===11){const ns=2+((R()*3)|0);for(let k=0;k<ns;k++)g+=S(rx(50,350),rx(46,150),rx(7,12));}
+ else if(v!==2&&R()<.85){g+=E(rx(56,150),rx(56,100),26,12)+E(rx(236,330),rx(52,96),22,10);}
+ return g},
+vehicle(o,R){const v=(R()*10)|0,rx=(a2,b2)=>Math.round(a2+R()*(b2-a2));let g="";
+ if(v===0){g+=P(`M56 268Q56 232 92 228L118 190Q124 178 140 178H262Q278 178 284 190L308 228Q348 232 348 268V296H56Z`);
+  g+=P(`M136 186H202V228H120Z`)+P(`M212 186H258L278 228H212Z`);
+  g+=C(126,300,24)+C(278,300,24)+C(126,300,9)+C(278,300,9);}
+ else if(v===1){const fw=rx(22,30);g+=E(200,206,58,116);
+  g+=P(`M200 62L246 140H154Z`)+P(`M146 288L146 336L108 336Q108 300 146 288Z`)+P(`M254 288L254 336L292 336Q292 300 254 288Z`);
+  g+=C(200,186,24)+E(200,338,fw,12);}
+ else if(v===2){const nw=3+((R()*3)|0);g+=RT(84,196,232,92,20);
+  g+=RT(100,164,74,60,14)+P(`M100 196H174V224H100Z`);
+  for(let k=0;k<nw;k++)g+=RT(196+k*44,178,26,18,8);
+  g+=C(130,300,20)+C(200,300,20)+C(270,300,20)+L(`M66 262H334`);}
+ else if(v===3){g+=RT(66,182,268,116,20);
+  g+=RT(88,200,54,40,10)+RT(160,200,54,40,10)+RT(232,200,54,40,10)+RT(304,200,20,40,10);
+  g+=C(136,304,22)+C(264,304,22)+L(`M66 262H334`);}
+ else if(v===4){g+=E(200,232,122,38);
+  g+=P(`M152 214Q152 158 200 158Q248 158 248 214Z`)+C(200,172,14);
+  g+=C(140,242,7)+C(200,252,7)+C(260,242,7)+L(`M168 268V300M232 268V300`);}
+ else if(v===5){g+=E(200,214,102,32,0)+P(`M200 182L200 60M200 76L124 130M200 76L276 130M200 112L72 170M200 112L328 170`);
+  g+=P(`M330 224H366V206H330Z`)+C(124,236,16)+C(276,236,16);}
+ else if(v===6){g+=C(120,290,30)+C(290,290,30)+C(120,290,10)+C(290,290,10);
+  g+=P(`M132 268Q200 236 278 268L262 236Q200 216 148 236Z`);
+  g+=L(`M262 244L296 200M296 200Q320 204 322 226`);
+  g+=E(200,262,60,26)+C(196,258,13)+L(`M150 258H136`);}
+ else if(v===7){g+=P(`M84 300L120 240H280L316 300Z`);
+  g+=P(`M200 236V96M200 100L132 200H200Z`)+P(`M208 116L268 208H208Z`)+L(`M84 300H316`);
+  g+=E(100,330,10,6)+E(140,334,9,5)+E(300,330,10,6)+E(260,334,9,5);}
+ else if(v===8){g+=E(180,238,66,42)+C(172,232,18);
+  g+=P(`M244 236H340L340 252H244Z`)+P(`M340 244L368 240L368 254L340 252Z`);
+  g+=E(180,192,9,20)+L(`M96 170H268`)+C(180,170,10);
+  g+=L(`M150 284H216M158 284V300M208 284V300`);}
+ else{g+=RT(84,180,80,110,12)+RT(164,204,152,86,10);
+  g+=RT(98,196,26,26,6)+RT(140,196,26,26,6);
+  g+=C(130,308,22)+C(230,308,22)+C(300,308,22)+L(`M84 268H316M164 240H316`);}
+ if(R()<.88)g+=vface([200,200,200,200,200,200,200,200,178,124][v],[252,246,246,258,192,216,262,272,240,232][v],[14,12,13,13,11,10,10,11,11,11][v],R);
+ return g},
+sweet(o,R){const v=(R()*8|0),rx=(a2,b2)=>Math.round(a2+R()*(b2-a2));let g="";
+ if(v===0){g+=RT(118,254,164,82,14)+RT(140,202,120,62,12);
+  g+=L(`M140 222Q160 206 180 222T220 222T260 222`);
+  g+=RT(194,158,12,44,5)+C(200,148,9)+C(200,124,7);}
+ else if(v===1){g+=C(200,232,92)+C(200,232,30);
+  g+=L(`M136 216Q160 190 200 202Q240 190 264 216`);}
+ else if(v===2){g+=P(`M148 246L136 340H264L252 246Z`);
+  g+=C(178,222,26)+C(222,222,26)+C(200,190,24);
+  g+=L(`M136 282H264`)+C(200,158,10);}
+ else if(v===3){g+=P(`M160 250L140 352H260L240 250Z`)+L(`M160 250L140 352M240 250L260 352M170 262L154 342M230 262L246 342`);
+  g+=C(182,222,28)+C(222,222,28);}
+ else if(v===4){g+=P(`M158 200H242L266 352H134Z`)+L(`M158 200H242M166 236H234`);
+  g+=C(178,180,22)+C(222,180,22)+C(200,150,20)+L(`M252 120L228 160`);}
+ else if(v===5){g+=E(200,214,72,44)+E(200,258,72,44);
+  g+=L(`M150 214Q200 190 250 214M150 258Q200 234 250 258`)+E(200,236,10,7);}
+ else if(v===6){const nd=4+((R()*4)|0);g+=C(200,220,88);
+  for(let k=0;k<nd;k++){const t=k*6.2832/nd;g+=C(Math.round(200+Math.cos(t)*52),Math.round(220+Math.sin(t)*52),11)}
+  g+=L(`M148 160Q200 120 252 160`);}
+ else{g+=P(`M128 262Q128 170 200 170Q272 170 272 262L246 352H154Z`);
+  g+=L(`M200 170Q206 210 246 232M200 170Q194 214 154 236`);
+  g+=E(148,320,10,6)+E(252,320,10,6)+C(196,140,10);}
+ g+=vface(200,292,16,R);
+ return g},
+fish(o,R){const v=(R()*6)|0,rx=(a2,b2)=>Math.round(a2+R()*(b2-a2));let g="";
+ if(v===0){g+=E(196,214,92,64);
+  g+=P(`M288 214L348 172L332 214L348 256Z`)+P(`M170 152Q196 118 222 152Z`);
+  g+=L(`M150 196Q168 210 150 224M186 186Q204 200 186 214`);
+  g+=D(150,198,11)+L(`M112 226Q104 234 112 240`);}
+ else if(v===1){g+=P(`M200 106L306 214L200 322L94 214Z`)+P(`M200 106L172 60L228 60Z`)+P(`M200 322L172 368L228 368Z`);
+  g+=D(162,192,10)+L(`M140 226Q152 236 164 226`);}
+ else if(v===2){g+=P(`M96 224Q120 158 200 158Q286 158 320 210L348 190L340 232L348 272L318 250Q280 296 200 296Q120 296 96 224Z`);
+  g+=P(`M228 152L258 108L276 156Z`)+D(140,206,10)+L(`M108 240Q122 252 136 240`);}
+ else if(v===3){g+=E(200,180,72,62);
+  for(let k=0;k<5;k++){const tx=150+k*25;g+=L(`M${tx} 240Q${tx-8} 280 ${tx+6} 300Q${tx+14} 280 ${tx+18} 246`)}
+  g+=D(178,168,11)+D(224,168,11)+L(`M186 206Q200 218 214 206`);}
+ else if(v===4){g+=E(200,230,78,52);
+  g+=P(`M96 200L64 176L88 212L60 224L92 228Z`)+P(`M304 200L336 176L312 212L340 224L308 228Z`);
+  g+=L(`M158 186Q200 160 242 186M166 274Q200 292 234 274`);
+  g+=D(172,222,9)+D(228,222,9)+L(`M180 252Q200 266 220 252`);}
+ else{g+=S(200,220,86);
+  g+=D(168,196,10)+D(232,196,10)+L(`M186 246Q200 258 214 246`);
+  g+=C(140,160,6)+C(260,160,6);}
+ g+=C(rx(70,100),rx(90,130),10)+C(rx(60,80),rx(60,90),7)+C(rx(100,120),rx(55,80),5);
+ return g},
+tstand(o,R){const x=200,hr=44+R()*10,hy=120;let g="";
+ g+=LEG(186,240,176,338)+LEG(214,240,224,338)+BOOT(176,342)+BOOT(224,342);
+ g+=TTORSO(x,156,56,92,o.b,R);
+ g+=ARM(168,172,142,248)+FIST(140,254)+ARM(232,172,258,248)+FIST(260,254);
+ if(o.item==="ball")g+=C(300,342,22)+L(`M300 320V364M278 342H322M285 327Q300 342 315 357M315 327Q300 342 285 357`);
+ if(o.item==="mic")g+=L(`M262 246L272 214`)+C(274,206,11);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tpunch(o,R){const x=200,hr=44+R()*10,hy=118;let g="";
+ g+=LEG(180,240,158,340)+LEG(220,240,242,334)+BOOT(158,344)+BOOT(242,338);
+ g+=TTORSO(x,154,56,90,o.b,R);
+ g+=ARM(172,170,120,228)+FIST(114,234,14)+ARM(228,170,298,206)+FIST(304,206,15);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+twalk(o,R){const x=200,hr=44+R()*10,hy=120;let g="";
+ g+=LEG(188,240,168,342)+LEG(212,240,238,332)+BOOT(168,346)+BOOT(238,336);
+ g+=TTORSO(x,156,56,92,o.b,R);
+ g+=ARM(170,172,138,234)+FIST(134,240)+ARM(230,172,264,222)+FIST(268,216);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tpoint(o,R){const x=200,hr=44+R()*10,hy=118;let g="";
+ g+=LEG(186,240,178,338)+LEG(214,240,224,338)+BOOT(178,342)+BOOT(224,342);
+ g+=TTORSO(x,156,56,92,o.b,R);
+ g+=ARM(168,172,142,246)+FIST(140,252)+ARM(232,168,262,136)+FIST(266,128,13);
+ if(o.item==="mic")g+=L(`M266 126L282 96`)+C(284,88,11);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tcross(o,R){const x=200,hr=44+R()*10,hy=120;let g="";
+ g+=LEG(186,240,176,338)+LEG(214,240,224,338)+BOOT(176,342)+BOOT(224,342);
+ g+=TTORSO(x,156,56,92,o.b,R);
+ g+=E(176,212,34,12,6)+E(224,212,34,12,-6)+C(152,214,12)+C(248,214,12);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tsit(o,R){const x=200,hr=46+R()*10,hy=130;let g="";
+ g+=E(200,304,68,20)+E(156,298,32,12,-14)+E(244,298,32,12,14);
+ g+=TTORSO(x,170,56,86,o.b,R);
+ g+=ARM(168,182,138,248)+FIST(140,254,12)+ARM(232,182,262,248)+FIST(260,254,12);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tfly(o,R){const x=200,hr=44+R()*10,hy=114;let g="";
+ if(o.fx.includes("bugwings"))g+=E(x-92,190,25,44,-24)+E(x+92,190,25,44,24);
+ else g+=P(`M${x-58} 218Q${x-168} 170 ${x-152} 96Q${x-92} 152 ${x-48} 188Z`)+P(`M${x+58} 218Q${x+168} 170 ${x+152} 96Q${x+92} 152 ${x+48} 188Z`);
+ g+=E(x,336,88,24)+E(146,324,30,16)+E(254,324,30,16);
+ g+=LEG(192,254,200,320)+LEG(208,254,220,318)+BOOT(200,322)+BOOT(220,320);
+ g+=TTORSO(x,154,54,88,o.b,R);
+ g+=ARM(168,168,142,230)+FIST(140,236)+ARM(232,168,282,142)+FIST(286,136);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tgirl(o,R){const x=200,hr=46+R()*10,hy=118;let g="";
+ g+=LEG(190,258,184,336)+LEG(210,258,216,336)+E(184,342,16,9)+E(216,342,16,9);
+ g+=TTORSO(x,156,52,84,"dress",R)+L(`M${x-32} ${236}Q${x} ${250} ${x+32} ${236}`);
+ g+=ARM(166,170,142,240)+FIST(140,246,12)+ARM(234,170,258,240)+FIST(260,246,12);
+ if(o.item==="bag")g+=C(274,270,15)+L(`M262 246Q274 232 286 246`);
+ if(o.item==="mic")g+=L(`M258 240L270 210`)+C(272,202,11);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tblast(o,R){const x=196,hr=42+R()*8,hy=126;let g="";
+ g+=L(`M34 136Q70 128 108 134M30 196H100M34 256Q70 264 108 258`);
+ g+=`<path d="M96 200Q116 96 206 72Q300 96 316 196" fill="none" stroke="#333" stroke-width="5" stroke-dasharray="2 15" stroke-linecap="round"/>`;
+ g+=LEG(178,246,150,336)+LEG(222,246,252,332)+BOOT(150,340)+BOOT(252,336);
+ g+=TTORSO(x,158,54,90,o.b,R);
+ g+=ARM(170,174,238,216)+ARM(230,174,240,220);
+ g+=C(258,218,22)+C(258,218,34)+E(318,218,44,13,0);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tvictory(o,R){const x=200,hr=44+R()*10,hy=118;let g="";
+ g+=S(88,104,15)+S(312,92,11)+S(120,326,10)+S(286,300,8);
+ g+=LEG(188,240,178,338)+LEG(212,240,230,330)+BOOT(178,342)+BOOT(230,334);
+ g+=TTORSO(x,158,56,92,o.b,R);
+ g+=ARM(168,172,138,120)+FIST(134,112)+ARM(232,172,264,120)+FIST(268,112);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+trun(o,R){const x=206,hr=42+R()*8,hy=126;let g="";
+ g+=L(`M28 128Q66 122 104 128M24 180H98M28 232Q66 238 104 232`);
+ g+=LEG(192,240,148,330)+LEG(216,240,252,334)+BOOT(146,334)+BOOT(252,338);
+ g+=TTORSO(x,158,54,88,o.b,R);
+ g+=ARM(180,172,226,198)+ARM(240,176,192,226);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x+4,hy,hr,o,R);return g},
+tstance(o,R){const x=200,hr=40+R()*8,hy=150;let g="";
+ g+=L(`M64 108Q74 96 84 108M74 88V128M316 108Q326 96 336 108M326 88V128`);
+ g+=LEG(180,258,152,336)+LEG(220,258,248,336)+BOOT(150,340)+BOOT(250,340);
+ g+=TTORSO(x,172,56,84,o.b,R);
+ g+=ARM(166,186,138,148)+FIST(134,140)+ARM(234,186,264,148)+FIST(268,140);
+ g+=RT(x-10,hy+hr*.62,20,32,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tkick(o,R){const x=192,hr=42+R()*8,hy=120;let g="";
+ g+=L(`M306 96Q328 74 350 96M316 70Q338 62 352 78`);
+ g+=LEG(184,240,166,342)+BOOT(166,346);
+ g+=LEG(214,240,292,186)+BOOT(298,178);
+ g+=TTORSO(x,158,54,88,o.b,R);
+ g+=ARM(164,172,128,208)+FIST(124,214)+ARM(232,172,268,240)+FIST(272,246);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tride(o,R){const x=200,hr=42+R()*8,hy=102;let g="";
+ g+=S(78,116,13)+S(322,98,10)+S(60,220,8);
+ g+=L(`M78 302Q64 272 96 266Q100 238 134 248Q154 222 186 242Q214 220 236 246Q268 236 272 266Q308 272 292 302Z`)+L(`M118 296Q136 284 154 296M246 296Q264 284 282 296`);
+ g+=LEG(192,240,148,272)+LEG(208,240,252,272)+BOOT(142,274)+BOOT(258,274);
+ g+=TTORSO(x,154,52,84,o.b,R);
+ g+=ARM(166,168,138,212)+FIST(136,218)+ARM(234,168,264,204)+FIST(268,198);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tcool(o,R){const x=200,hr=44+R()*10,hy=118;let g="";
+ g+=LEG(186,240,178,338)+LEG(214,240,222,338)+BOOT(178,342)+BOOT(222,342);
+ g+=TTORSO(x,156,56,92,o.b,R);
+ g+=ARM(168,172,198,238)+FIST(202,242,12);
+ g+=ARM(232,172,260,240)+FIST(264,246,12);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);return g},
+tcarry(o,R){const x=200,hr=42+R()*8,hy=124;let g="";
+ g+=LEG(186,240,178,338)+LEG(214,240,222,338)+BOOT(178,342)+BOOT(222,342);
+ g+=TTORSO(x,158,56,90,o.b,R);
+ g+=RT(x-10,hy+hr*.62,20,34,8);
+ g+=FCE(x,hy,hr,o,R);
+ g+=ARM(168,172,150,92)+FIST(150,90)+ARM(232,172,250,92)+FIST(250,90);
+ if(R()<.5){g+=S(200,52,54);}else{g+=E(200,50,46,34)+L(`M162 28H238`)+L(`M178 40Q200 52 222 40`);}
+ return g},
+ fruit(o,R){const v=(R()*10)|0;let g="";
+ if(v===0){g+=C(200,224,92)+L(`M200 132V108`)+P(`M200 116Q252 96 268 132Q236 148 200 116Z`)}
+ else if(v===1){g+=P(`M200 118Q312 150 296 262Q288 330 200 344Q112 330 104 262Q88 150 200 118Z`)+P(`M164 118L200 84L236 118L216 132L236 148L200 132L164 148L184 132Z`);
+  for(let k=0;k<7;k++)g+=E(150+k*20,180+((k*37)%60),4,6)}
+ else if(v===2){g+=P(`M64 210A136 136 0 0 1 336 210L312 210A112 112 0 0 0 88 210Z`)+P(`M88 210A112 112 0 0 1 312 210H88Z`)+P(`M64 210H336L312 244H88Z`);
+  g+=E(160,180,5,8)+E(200,164,5,8)+E(240,180,5,8)+E(180,204,5,8)+E(220,204,5,8)}
+ else if(v===3){for(let k=0;k<6;k++){const t=k*6.2832/6;g+=C(Math.round(200+Math.cos(t)*44),Math.round(210+Math.sin(t)*36),26)}
+  g+=C(200,210,26)+P(`M200 174Q216 138 252 138Q244 166 214 174Z`)}
+ else if(v===4){g+=C(200,222,90)+P(`M200 132Q240 116 258 140Q234 152 206 144Z`)+L(`M158 250Q200 268 242 250M166 286Q200 300 234 286`)}
+ else if(v===5){g+=P(`M96 160Q120 280 220 322Q300 300 322 210Q280 252 232 236Q150 220 96 160Z`);
+  g+=L(`M120 190Q170 240 232 254M150 168Q190 220 250 240`)}
+ else if(v===6){g+=E(200,238,74,96)+P(`M186 146L200 76L214 146`)+P(`M176 148Q160 100 120 96Q140 130 176 148Z`)+P(`M224 148Q240 100 280 96Q260 130 224 148Z`);
+  g+=L(`M146 200H254M138 250H262M146 300H254M200 160V320`)}
+ else if(v===7){g+=C(200,226,92)+L(`M200 134V108M200 122Q164 106 150 122`)+P(`M200 116Q244 98 260 130Q228 148 200 116Z`)+L(`M156 226Q200 208 244 226`)}
+ else if(v===8){g+=C(148,258,40)+C(258,268,40)+L(`M148 218Q180 130 240 116M258 228Q240 150 240 116`)+P(`M240 116Q280 106 292 124Q268 138 244 130Z`)}
+ else{g+=E(200,224,92,76)+L(`M136 224Q200 258 264 224M150 180Q200 204 250 180M150 268Q200 292 250 268`)+P(`M200 148Q216 118 254 116Q246 142 216 150Z`)}
+ g+=vface(200,252,15,R);return g}
+};
+
+const Z=v=>Math.round(v),PT=a=>"M"+a.map(p=>Z(p[0])+" "+Z(p[1])).join("L")+"Z",PG=a=>P(PT(a)),rn=(R,a,b)=>a+R()*(b-a),pk=(R,a)=>a[R()*a.length|0];
+function TUBE(p,w){const n=p.length,A=[],B=[];for(let i=0;i<n;i++){const a=p[Math.max(0,i-1)],b=p[Math.min(n-1,i+1)],dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1,x=-dy/l*w[i],y=dx/l*w[i];A.push([p[i][0]+x,p[i][1]+y]);B.push([p[i][0]-x,p[i][1]-y])}
+ B.reverse();const sm=a=>{let d="";for(let i=1;i<a.length-1;i++)d+=`Q${Z(a[i][0])} ${Z(a[i][1])} ${Z((a[i][0]+a[i+1][0])/2)} ${Z((a[i][1]+a[i+1][1])/2)}`;return d+`L${Z(a[a.length-1][0])} ${Z(a[a.length-1][1])}`};
+ return P(`M${Z(A[0][0])} ${Z(A[0][1])}`+sm(A)+`A${w[n-1]} ${w[n-1]} 0 0 0 ${Z(B[0][0])} ${Z(B[0][1])}`+sm(B)+`A${w[0]} ${w[0]} 0 0 0 ${Z(A[0][0])} ${Z(A[0][1])}Z`)}
+const cloud=(x,y,k=1)=>P(`M${x} ${y}h${80*k}q${20*k} 0 ${20*k} ${-20*k}q0 ${-25*k} ${-28*k} ${-22*k}q${-8*k} ${-25*k} ${-40*k} ${-15*k}q${-30*k} ${-5*k} ${-30*k} ${25*k}q${-22*k} 0 ${-22*k} ${32*k}z`);
+const spike=(cx,cy,n,r0,r1,R)=>{const a=[];for(let i=0;i<n*2;i++){const t=i*Math.PI/n,r=i%2?r0:r1*(.85+R()*.3);a.push([cx+Math.cos(t)*r,cy+Math.sin(t)*r])}return PG(a)};
+function tyBG(R){const k=R()*8|0;let g="";
+ if(k===0)g+=spike(200,205,11+(R()*5|0),122,178,R);
+ if(k===1)for(let i=0;i<9;i++){const y=34+i*40+R()*18,x=R()*60;g+=L(`M${Z(x+10)} ${Z(y)}h${Z(70+R()*90)}M${Z(390-x)} ${Z(y+16)}h${Z(-70-R()*90)}`)}
+ if(k===2){for(let i=0;i<6;i++){const x=30+R()*330,y=345+R()*28,w=14+R()*24;g+=PG([[x,y],[x+w*.4,y-w],[x+w*1.3,y-w*.6],[x+w*1.7,y+4]])}g+=L("M120 374l36-16l24 8M240 374l30-14l26 6")}
+ if(k===3)g+=S(70,92,26)+S(335,120,19)+S(312,300,28)+S(78,292,17)+C(348,58,13)+C(52,200,10);
+ if(k===4){g+=C(320,80,34);for(let i=0;i<6;i++){const x=i*68+R()*14,w=46+R()*20,h=70+R()*130;g+=PG([[x,400],[x,400-h],[x+w*.5,400-h-R()*26],[x+w,400-h+12],[x+w,400]])+L(`M${Z(x+10)} ${Z(400-h+24)}h${Z(w-20)}M${Z(x+10)} ${Z(400-h+44)}h${Z(w-20)}`)}}
+ if(k===5){g+=C(110,92,38)+PG([[0,380],[110,230],[190,330],[270,200],[400,380]])+L("M110 230l22 40M270 200l-24 50");g+=cloud(250,120,.8)}
+ if(k===6)g+=cloud(20,110,1)+cloud(250,70,.9)+cloud(210,350,1.1)+cloud(10,330,.8);
+ if(k===7){for(let i=0;i<4;i++)g+=C(60+R()*280,70+R()*260,10+R()*22);g+=spike(200,205,9,140,184,R)}
+ return g}
+const POSES=[
+[[128,150],[152,112],[272,150],[250,112],[160,295],[135,375],[245,295],[275,375]],
+[[132,156],[150,126],[296,114],[356,100],[150,300],[112,376],[250,292],[292,376]],
+[[205,152],[300,144],[250,128],[306,138],[160,296],[120,376],[250,296],[285,376]],
+[[118,104],[84,76],[272,76],[300,52],[172,268],[128,326],[262,232],[342,212]],
+[[112,72],[102,26],[288,72],[298,26],[158,296],[132,376],[242,296],[268,376]],
+[[152,152],[220,140],[248,152],[182,136],[170,296],[168,376],[232,296],[236,376]],
+[[122,164],[116,208],[278,164],[284,208],[152,296],[118,376],[248,296],[282,376]],
+[[132,164],[170,214],[288,84],[312,38],[168,296],[160,376],[236,296],[250,376]]];
+function tyHead(cx,cy,s,R,o,mood,len){const X=v=>cx+v*s,Y=v=>cy+v*s;let g="";
+ const hair=(n,l0,base)=>{const a=[[X(-27),Y(8)]];for(let k=0;k<n;k++){const t=Math.PI*1.02+Math.PI*.96*(k+.5)/n,t2=Math.PI*1.02+Math.PI*.96*(k+1)/n,rl=(l0+R()*len)*s;a.push([X(0)+Math.cos(t)*rl,Y(-2)+Math.sin(t)*rl*1.1],[X(0)+Math.cos(t2)*base*s,Y(-2)+Math.sin(t2)*base*s])}a.push([X(27),Y(8)]);return a};
+ if(o.e==="horn")g+=PG([[X(-18),Y(-24)],[X(-44),Y(-70)],[X(-6),Y(-34)]])+PG([[X(18),Y(-24)],[X(44),Y(-70)],[X(6),Y(-34)]]);
+ g+=PG(hair(4+(R()*3|0),52,30));
+ g+=E(X(-25),Y(2),5*s,8*s)+E(X(25),Y(2),5*s,8*s);
+ g+=P(`M${Z(X(-25))} ${Z(Y(-14))}L${Z(X(-27))} ${Z(Y(10))}Q${Z(X(-21))} ${Z(Y(28))} ${Z(X(-8))} ${Z(Y(34))}L${Z(X(8))} ${Z(Y(34))}Q${Z(X(21))} ${Z(Y(28))} ${Z(X(27))} ${Z(Y(10))}L${Z(X(25))} ${Z(Y(-14))}Z`);
+ const an=mood==="angry"?1:0;
+ [-1,1].forEach(d=>{const ex=X(d*11),ey=Y(-1);g+=E(ex,ey,8*s,4.5*s,d*(an?13:3))+D(X(d*9.5),ey,3.6*s)+L(`M${Z(X(d*21))} ${Z(Y(-3))}Q${Z(ex)} ${Z(Y(-9))} ${Z(X(d*2))} ${Z(Y(an?0:-3))}`)+PG([[X(d*23),Y(an?-15:-17)],[X(d*3),Y(an?-6:-12)],[X(d*3),Y(an?-2:-8)],[X(d*23),Y(an?-10:-12)]])});
+ g+=L(`M${Z(X(1))} ${Z(Y(7))}l${Z(-3*s)} ${Z(7*s)}h${Z(5*s)}M${Z(X(-22))} ${Z(Y(10))}l${Z(4*s)} ${Z(8*s)}M${Z(X(22))} ${Z(Y(10))}l${Z(-4*s)} ${Z(8*s)}`);
+ g+=mood==="shout"?P(`M${Z(X(-11))} ${Z(Y(18))}Q${Z(X(0))} ${Z(Y(35))} ${Z(X(11))} ${Z(Y(18))}Z`)+L(`M${Z(X(-8))} ${Z(Y(21))}h${Z(16*s)}`):mood==="grin"?P(`M${Z(X(-12))} ${Z(Y(19))}Q${Z(X(0))} ${Z(Y(31))} ${Z(X(12))} ${Z(Y(19))}Z`):L(`M${Z(X(-8))} ${Z(Y(23))}Q${Z(X(0))} ${Z(Y(25))} ${Z(9)} ${Z(Y(21))}`);
+ const f=hair(3+(R()*3|0),40,30);f.push([X(18),Y(-10)],[X(10),Y(4+R()*6)],[X(2),Y(-12)],[X(-8),Y(6+R()*6)],[X(-14),Y(-12)],[X(-22),Y(-4)]);g+=PG(f);
+ if(o.a==="headband")g+=PG([[X(-27),Y(-20)],[X(27),Y(-20)],[X(27),Y(-12)],[X(-27),Y(-12)]])+PG([[X(25),Y(-17)],[X(46),Y(-6)],[X(42),Y(-22)]]);
+ return g}
+function tyFig(o,R,pi,mir,cx,sc,cy=205){const p=POSES[pi].map(q=>mir?[400-q[0],q[1]]:q),[le,lh,re,rh,lk,lf,rk,rf]=p,b=o.b,w=b==="gi"?1.25:1;let g=`<g transform="translate(${cx} ${cy}) scale(${sc}) translate(-200 -210)">`;
+ if(o.fx.includes("wings"))g+=P("M160 112Q50 30 34 140Q76 128 86 172Q118 150 128 194Q150 160 170 164Z")+P("M240 112Q350 30 366 140Q324 128 314 172Q282 150 272 194Q250 160 230 164Z");
+ if(b==="hero")g+=P("M156 106L244 106Q304 200 294 322Q250 298 200 334Q150 298 106 322Q96 200 156 106Z");
+ if(o.fx.includes("tail"))g+=TUBE([[214,208],[262,226],[300,262],[318,244]],[10,8,6,2]);
+ const leg=(h,k,f)=>TUBE([h,k,f],[17*w,13*w,9*w])+E(f[0]+(f[0]<200?-7:7),f[1]+5,21,10);
+ g+=leg([184,214],lk,lf)+leg([216,214],rk,rf)+P("M156 108Q146 156 172 214L228 214Q254 156 244 108Q200 96 156 108Z");
+ if(b==="armor")g+=P("M162 110Q200 100 238 110L230 170Q200 184 170 170Z")+L("M200 106V180")+E(156,112,21,13)+E(244,112,21,13)+PG([[176,196],[224,196],[226,214],[174,214]]);
+ else if(b==="gi")g+=L("M174 106L200 158L226 106")+PG([[174,196],[226,196],[227,214],[173,214]])+E(200,206,10,7)+L("M200 212l-8 24M200 212l8 24");
+ else if(b==="hero")g+=S(200,150,17)+PG([[174,196],[226,196],[227,214],[173,214]])+L("M168 122V190M232 122V190");
+ else g+=L("M200 108V170M170 128Q186 152 200 138Q214 152 230 128M184 168h32M186 186h28M184 202h32");
+ g+=TUBE([[158,114],le,lh],[15,12,9])+C(lh[0],lh[1],12)+TUBE([[242,114],re,rh],[15,12,9])+C(rh[0],rh[1],12);
+ if(b==="armor"||b==="hero")g+=PG([[le[0]-10,le[1]+8],[le[0]+10,le[1]+8],[lh[0]+9,lh[1]],[lh[0]-9,lh[1]]])+PG([[re[0]-10,re[1]+8],[re[0]+10,re[1]+8],[rh[0]+9,rh[1]],[rh[0]-9,rh[1]]]);
+ g+=P("M184 94L216 94L222 112L178 112Z")+tyHead(200,70,1,R,o,pk(R,["angry","grin","shout"]),30);
+ if(pi===2){const hx=mir?100:300,e=mir?16:384;g+=P(`M${hx} 128L${e} 106L${e} 184L${hx} 160Z`)+C(hx,144,28)+C(hx,144,13)}
+ return g+"</g>"}
+const tyOne=(o,R)=>tyBG(R)+tyFig(o,R,R()*8|0,R()<.5,200+rn(R,-14,14),rn(R,.74,.88));
+const tyDuo=(o,R)=>{const q=pk(R,[1,3,0,6,5]);return tyBG(R)+tyFig(o,R,q,false,116,.6,218)+tyFig({...o,e:pk(R,[o.e,"horn"]),b:pk(R,["gi","armor","bare","hero"]),a:"none"},R,pk(R,[1,3,0,6,5]),true,284,.6,218)};
+const tyBust=(o,R)=>{let g=tyBG(R)+P("M40 400Q60 330 150 300L250 300Q340 330 360 400Z");
+ g+=o.b==="armor"?P("M120 400Q130 340 200 330Q270 340 280 400Z")+E(96,330,40,22)+E(304,330,40,22):L("M150 304L200 380L250 304")+L("M120 360Q160 346 200 380");
+ return g+tyHead(200,196,2.7,R,o,pk(R,["angry","shout","grin"]),14)};
+AR.tyFight=(o,R)=>[tyOne,tyDuo,tyBust,tyOne][R()*4|0](o,R);
+AR.tyOne=tyOne;AR.tyDuo=tyDuo;AR.tyBust=tyBust;
+AR.tyKid=(o,R)=>{const m=R()*4|0,hx=200+rn(R,-10,10);let g=tyBG(R)+(R()<.5?TUBE([[222,300],[270,310],[300,284]],[9,7,2]):"");
+ const arm=[[[150,230],[110,200],[250,230],[290,196]],[[140,210],[110,160],[260,210],[290,160]],[[150,236],[130,280],[250,236],[300,250]],[[160,240],[140,214],[240,240],[262,300]]][m],lg=[[[186,282],[174,326],[170,372],[214,282],[232,326],[250,372]],[[186,282],[150,310],[120,340],[214,282],[250,326],[262,372]],[[186,282],[184,326],[176,372],[214,282],[222,326],[236,372]],[[186,282],[160,320],[170,372],[214,282],[250,300],[290,330]]][m];
+ g+=TUBE([lg[0],lg[1],lg[2]],[13,11,8])+E(lg[2][0]-6,lg[2][1]+6,20,10)+TUBE([lg[3],lg[4],lg[5]],[13,11,8])+E(lg[5][0]+6,lg[5][1]+6,20,10);
+ g+=P("M164 200Q160 250 176 290L224 290Q240 250 236 200Q200 190 164 200Z")+PG([[170,262],[230,262],[231,276],[169,276]]);
+ g+=TUBE([[170,208],[arm[0][0],arm[0][1]],[arm[1][0],arm[1][1]]],[12,10,8])+C(arm[1][0],arm[1][1],13)+TUBE([[230,208],[arm[2][0],arm[2][1]],[arm[3][0],arm[3][1]]],[12,10,8])+C(arm[3][0],arm[3][1],13);
+ const s=1.9,cx=hx,cy=112,X=v=>cx+v*s,Y=v=>cy+v*s,sp=[];for(let k=0;k<5;k++){const t=Math.PI*(1.1+.8*k/4),r=(38+R()*26)*s;sp.push([X(0)+Math.cos(t)*r,Y(0)+Math.sin(t)*r],[X(0)+Math.cos(t+.2)*30*s,Y(0)+Math.sin(t+.2)*30*s])}
+ g+=PG([[X(-28),Y(4)],...sp,[X(28),Y(4)]])+E(cx,cy+2*s,31*s,28*s)+E(X(-30),Y(4),5*s,7*s)+E(X(30),Y(4),5*s,7*s);
+ [-1,1].forEach(d=>{g+=D(X(d*12),Y(-2),4.2*s)+PG([[X(d*22),Y(-14)],[X(d*4),Y(-10-d*0)],[X(d*4),Y(-6)],[X(d*22),Y(-9)]])});
+ g+=P(`M${Z(X(-14))} ${Z(Y(12))}Q${Z(X(0))} ${Z(Y(32))} ${Z(X(14))} ${Z(Y(12))}Z`)+E(X(-20),Y(12),6*s,3.5*s)+E(X(20),Y(12),6*s,3.5*s)+L(`M${Z(X(0))} ${Z(Y(4))}l${Z(-2*s)} ${Z(4*s)}h${Z(4*s)}`);
+ const f=[[X(-30),Y(-4)],[X(-18),Y(-22)],[X(-12),Y(-6)],[X(0),Y(-26)],[X(8),Y(-6)],[X(20),Y(-22)],[X(30),Y(-4)],[X(22),Y(-18)],[X(0),Y(-30)],[X(-22),Y(-18)]];
+ return g+PG(f)};
+AR.tyDino=(o,R)=>{const v=R()*3|0,u=rn(R,.9,1.1);let g=tyBG(R);
+ g+=TUBE(v===1?[[130,260],[80,290],[40,250],[22,200]]:[[130,250],[80,270],[44,300],[24,330]],[40,26,14,3]);
+ if(v===1)g+=TUBE([[250,230],[290,150],[300,90],[330,70]],[34,22,16,13]);
+ if(v===2)for(let i=0;i<5;i++)g+=PG([[150+i*28,205+(i%2)*6],[165+i*28,150-(i%3)*14],[182+i*28,208+(i%2)*6]]);
+ g+=E(200,250,108,70)+E(166,328,28,30)+E(244,328,28,30)+E(166,356,34,13)+E(246,356,34,13)+L("M130 285Q200 320 270 285");
+ if(v===0)g+=P("M270 210Q300 170 340 180Q380 190 380 224Q380 260 330 262Q300 262 270 250Z")+L("M340 240l12 14l12-14l12 14")+C(332,206,5)+E(266,276,10,7);
+ if(v===1)g+=E(334,70,24,17,-20)+C(338,66,4);
+ if(v===2)g+=P("M270 222Q300 190 340 206Q366 222 350 250Q310 262 272 252Z")+C(326,226,4);
+ g+=E(106,252,16,10);return g+spike(70,110,6,10,24,R)};
+AR.tyCar=(o,R)=>{let g=tyBG(R);
+ if(R()<.5){g+=P("M44 296Q40 236 110 230L162 178Q200 160 250 176L308 228Q364 232 358 296Z")+PG([[170,190],[200,176],[200,226],[140,226]])+PG([[212,176],[246,184],[290,226],[212,226]])+L("M204 176V296");
+  [118,282].forEach(x=>g+=C(x+34,300,40)+C(x+34,300,19)+C(x+34,300,5));g+=C(60,262,12)+C(346,262,10);for(let i=0;i<5;i++)g+=C(76+i*54,250,3);g+=P("M360 270h36v14h-36z")}
+ else{g+=P("M80 200Q80 150 190 148Q330 150 340 204Q330 252 190 254Q80 250 80 200Z")+P("M170 150Q200 98 252 148Z")+PG([[150,220],[60,300],[120,306],[210,240]])+PG([[320,190],[372,140],[372,230]])+E(60,200,10,56)+C(60,200,8)+C(150,278,22)+C(150,278,9)+C(260,278,22)+C(260,278,9);for(let i=0;i<6;i++)g+=C(120+i*38,230-(i%2)*6,3)}
+ return g};
+
+const dsEye=(x,y,s,d)=>E(x,y,10*s,15*s)+C(x,y+1.5*s,8.6*s)+D(x,y+2*s,6.6*s)+L(`M${Z(x-11*s)} ${Z(y-3*s)}Q${Z(x)} ${Z(y-22*s)} ${Z(x+11*s)} ${Z(y-3*s)}`)+L(`M${Z(x+d*11*s)} ${Z(y-3*s)}l${Z(d*7*s)} ${Z(-5*s)}`);
+function dsHead(cx,cy,s,R,o,hl){const X=v=>Z(cx+v*s),Y=v=>Z(cy+v*s),st=o.h||pk(R,["long","bun","pony","short"]);let g="",bk="";
+ if(st==="long")bk+=P(`M${X(-54)} ${Y(-10)}C${X(-96)} ${Y(hl*.3)} ${X(-40)} ${Y(hl*.6)} ${X(-64)} ${Y(hl)}Q${X(-10)} ${Y(hl*.8)} ${X(0)} ${Y(hl*.95)}Q${X(20)} ${Y(hl*.8)} ${X(66)} ${Y(hl)}C${X(40)} ${Y(hl*.6)} ${X(96)} ${Y(hl*.3)} ${X(54)} ${Y(-10)}Z`);
+ if(st==="bun")bk+=C(cx-44*s,cy-54*s,23*s)+C(cx+44*s,cy-54*s,23*s);
+ if(st==="pony")bk+=P(`M${X(40)} ${Y(-40)}Q${X(120)} ${Y(-30)} ${X(86)} ${Y(50)}Q${X(70)} ${Y(90)} ${X(100)} ${Y(120)}Q${X(40)} ${Y(116)} ${X(50)} ${Y(50)}Q${X(54)} ${Y(10)} ${X(36)} ${Y(-10)}Z`);
+ g+=P(`M${X(-46)} ${Y(-4)}C${X(-48)} ${Y(-54)} ${X(48)} ${Y(-54)} ${X(46)} ${Y(-4)}C${X(44)} ${Y(28)} ${X(24)} ${Y(46)} ${X(0)} ${Y(46)}C${X(-24)} ${Y(46)} ${X(-44)} ${Y(28)} ${X(-46)} ${Y(-4)}Z`);
+ g+=dsEye(cx-20*s,cy+4*s,s,-1)+dsEye(cx+20*s,cy+4*s,s,1)+E(cx-34*s,cy+22*s,9*s,5*s)+E(cx+34*s,cy+22*s,9*s,5*s);
+ g+=L(`M${X(-31)} ${Y(-17)}Q${X(-20)} ${Y(-27)} ${X(-9)} ${Y(-19)}M${X(9)} ${Y(-19)}Q${X(20)} ${Y(-27)} ${X(31)} ${Y(-17)}M${X(-2)} ${Y(17)}Q${X(0)} ${Y(20)} ${X(3)} ${Y(17)}`);
+ g+=R()<.6?P(`M${X(-14)} ${Y(25)}Q${X(0)} ${Y(44)} ${X(14)} ${Y(25)}Q${X(0)} ${Y(30)} ${X(-14)} ${Y(25)}Z`)+P(`M${X(-6)} ${Y(33)}Q${X(0)} ${Y(29)} ${X(6)} ${Y(33)}Q${X(0)} ${Y(40)} ${X(-6)} ${Y(33)}Z`):L(`M${X(-13)} ${Y(27)}Q${X(0)} ${Y(38)} ${X(13)} ${Y(27)}`);
+ g+=P(`M${X(-50)} ${Y(-4)}Q${X(-62)} ${Y(-64)} ${X(0)} ${Y(-62)}Q${X(62)} ${Y(-64)} ${X(50)} ${Y(-4)}Q${X(36)} ${Y(-34)} ${X(14)} ${Y(-32)}Q${X(-20)} ${Y(-30)} ${X(-50)} ${Y(-4)}Z`)+L(`M${X(-6)} ${Y(-58)}Q${X(-22)} ${Y(-44)} ${X(-36)} ${Y(-26)}M${X(8)} ${Y(-58)}Q${X(26)} ${Y(-48)} ${X(42)} ${Y(-24)}`);
+ const a=o.a;if(a==="tiara"||a==="crown")g+=PG([[cx-26*s,cy-54*s],[cx-18*s,cy-78*s],[cx-6*s,cy-60*s],[cx,cy-86*s],[cx+6*s,cy-60*s],[cx+18*s,cy-78*s],[cx+26*s
