@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff0f6">
+<title>ぬりえスマイル</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif;background:linear-gradient(160deg,#fff4fa,#eef8ff);color:#51445a;text-align:center}
+main{max-width:620px;margin:auto;padding:24px 16px 40px}.hero{background:#fff;border-radius:28px;padding:26px 18px;box-shadow:0 8px 24px #d9c8dd55}
+h1{font-size:30px;margin:8px 0;color:#e56b9c}.mascots{font-size:54px;letter-spacing:8px;margin:8px}
+p{line-height:1.7}.start{border:0;border-radius:999px;background:#ff83b4;color:white;font-size:20px;font-weight:700;padding:16px 30px;margin:12px;box-shadow:0 5px 0 #dc6594}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}.cat{border:0;border-radius:18px;padding:18px 8px;background:#fff;font-size:18px;color:#66536d;box-shadow:0 4px 12px #d9c8dd55}
+.hidden{display:none}.back{border:0;background:#fff;border-radius:20px;padding:10px 16px;font-size:16px;margin:8px}
+canvas{width:100%;max-width:480px;height:auto;background:white;border:3px solid #f5c2d7;border-radius:18px;touch-action:manipulation}
+.colors{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin:14px}.swatch{width:34px;height:34px;border:2px solid white;border-radius:50%;box-shadow:0 0 0 1px #aaa}
+.small{font-size:13px;color:#8a7b8e}
+</style>
+</head>
+<body><main>
+<section id="home" class="hero">
+<div class="mascots">🐱 🐻 🐰</div><h1>ぬりえスマイル</h1>
+<p>すきな絵を選んで、自由に色をぬろう！<br>広告なし・懸賞なしのオリジナルぬりえ</p>
+<button class="start" onclick="showCats()">🎨 ぬりえを はじめる ▶</button>
+<p class="small">スマートフォン対応・おためし版</p>
+</section>
+<section id="categories" class="hidden">
+<h1>どれをぬる？</h1><p>カテゴリーを選んでね</p>
+<div class="grid" id="catgrid"></div><button class="back" onclick="showHome()">🏠 ホームへ</button>
+</section>
+<section id="paint" class="hidden">
+<button class="back" onclick="showCats()">← カテゴリーへ</button><h1 id="paintTitle">ぬりえ</h1>
+<p>色を選んで、絵の中をタップしてね。</p>
+<canvas id="art" width="480" height="480"></canvas>
+<div class="colors" id="colors"></div>
+<button class="start" onclick="savePic()">📷 ぬりえを保存</button>
+<p class="small">保存ボタンで画像を写真に保存できます（ブラウザの共有・保存メニューを使用）。</p>
+</section>
+</main>
+<script>
+const cats=["🐶 どうぶつ","🚗 のりもの","🦕 きょうりゅう","🚀 うちゅう","🌸 おはな","🍰 おかし","👑 おひめさま","🐠 うみ","🍁 きせつ","🧭 ぼうけん"];
+const palette=["#f44336","#ff9800","#ffeb3b","#8bc34a","#00bcd4","#2196f3","#673ab7","#e91e63","#795548","#9e9e9e","#222222","#ffffff"];
+let chosen="#ff83b4",ctx;
+function showHome(){home.classList.remove("hidden");categories.classList.add("hidden");paint.classList.add("hidden")}
+function showCats(){home.classList.add("hidden");categories.classList.remove("hidden");paint.classList.add("hidden")}
+function openPaint(name){categories.classList.add("hidden");paint.classList.remove("hidden");paintTitle.textContent=name+" のぬりえ";draw(); }
+catgrid.innerHTML=cats.map(c=>`<button class="cat" onclick="openPaint('${c}')">${c}</button>`).join("");
+colors.innerHTML=palette.map(c=>`<button class="swatch" style="background:${c}" aria-label="${c}" onclick="chosen='${c}'"></button>`).join("");
+function draw(){const canvas=document.getElementById("art");ctx=canvas.getContext("2d");ctx.clearRect(0,0,480,480);ctx.fillStyle="#fff";ctx.fillRect(0,0,480,480);ctx.lineWidth=8;ctx.strokeStyle="#333";ctx.lineCap="round";
+ctx.beginPath();ctx.arc(240,230,145,0,Math.PI*2);ctx.stroke();
+ctx.beginPath();ctx.arc(190,205,15,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(290,205,15,0,Math.PI*2);ctx.stroke();
+ctx.beginPath();ctx.moveTo(220,260);ctx.quadraticCurveTo(240,280,260,260);ctx.stroke();
+ctx.beginPath();ctx.arc(240,230,8,0,Math.PI*2);ctx.stroke();
+ctx.beginPath();ctx.moveTo(150,100);ctx.lineTo(110,30);ctx.lineTo(200,75);ctx.stroke();ctx.beginPath();ctx.moveTo(330,100);ctx.lineTo(370,30);ctx.lineTo(280,75);ctx.stroke();
+ctx.font="bold 28px sans-serif";ctx.fillStyle="#555";ctx.fillText("たのしく ぬろう！",130,440);}
+art.addEventListener("click",e=>{const r=art.getBoundingClientRect(),x=(e.clientX-r.left)*480/r.width,y=(e.clientY-r.top)*480/r.height;ctx.fillStyle=chosen;ctx.beginPath();ctx.arc(x,y,24,0,Math.PI*2);ctx.fill();});
+function savePic(){const a=document.createElement("a");a.download="nurie-smile.png";a.href=art.toDataURL("image/png");a.click();}
+</script></body></html>
