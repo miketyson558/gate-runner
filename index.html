@@ -3,56 +3,285 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#fff0f6">
-<title>ぬりえスマイル</title>
+<meta name="theme-color" content="#ffeff7">
+<title>ぬりえスマイル 🌈</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif;background:linear-gradient(160deg,#fff4fa,#eef8ff);color:#51445a;text-align:center}
-main{max-width:620px;margin:auto;padding:24px 16px 40px}.hero{background:#fff;border-radius:28px;padding:26px 18px;box-shadow:0 8px 24px #d9c8dd55}
-h1{font-size:30px;margin:8px 0;color:#e56b9c}.mascots{font-size:54px;letter-spacing:8px;margin:8px}
-p{line-height:1.7}.start{border:0;border-radius:999px;background:#ff83b4;color:white;font-size:20px;font-weight:700;padding:16px 30px;margin:12px;box-shadow:0 5px 0 #dc6594}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}.cat{border:0;border-radius:18px;padding:18px 8px;background:#fff;font-size:18px;color:#66536d;box-shadow:0 4px 12px #d9c8dd55}
-.hidden{display:none}.back{border:0;background:#fff;border-radius:20px;padding:10px 16px;font-size:16px;margin:8px}
-canvas{width:100%;max-width:480px;height:auto;background:white;border:3px solid #f5c2d7;border-radius:18px;touch-action:manipulation}
-.colors{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin:14px}.swatch{width:34px;height:34px;border:2px solid white;border-radius:50%;box-shadow:0 0 0 1px #aaa}
-.small{font-size:13px;color:#8a7b8e}
+:root{--pink:#ff78ad;--purple:#9a7be8;--ink:#594b69;--cream:#fffaf0}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;background:#f6f2ea;color:#23253a;min-height:100vh}
+button{font:inherit;cursor:pointer}main{max-width:760px;margin:auto;padding:14px 14px 38px}
+.top{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 12px}.brand{font-weight:900;color:#23253a;font-size:17px}.pill{border:0;border-radius:12px;padding:9px 13px;background:#fff;box-shadow:0 3px 10px #9e7da522;color:var(--ink)}
+.hero{position:relative;overflow:hidden;border-radius:24px;padding:22px 16px 24px;text-align:center;background:linear-gradient(135deg,#23253a,#3a2d63 60%,#7a3b6b);box-shadow:0 12px 30px #23253a44}
+.hero:before,.hero:after{content:"✦";position:absolute;color:#ffd76a;font-size:35px;opacity:.9}.hero:before{top:13px;left:18px}.hero:after{right:22px;bottom:20px}
+h1{font-size:clamp(29px,7vw,43px);line-height:1.2;margin:4px 0 8px;color:#fff;font-weight:1000;letter-spacing:4px}
+.sub{font-weight:700;margin:5px 0 12px;color:#e9e3ff}
+.cast{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:10px 0 16px}
+.cast>div{aspect-ratio:1;border-radius:18px;display:grid;place-items:center;background:#2d2f4a!important;cursor:pointer}
+.cast svg{width:92%;height:92%}
+.start{border:0;border-radius:14px;padding:15px 27px;background:linear-gradient(90deg,#ff5a4f,#ff9a3c);color:white;font-size:20px;font-weight:900;box-shadow:0 5px 0 #b83a33}
+.start:active{transform:translateY(4px);box-shadow:0 2px 0 #b83a33}
+.features{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:17px}.feature{background:#ffffff1f;color:#fff;border-radius:8px;padding:7px 11px;font-size:12px;font-weight:800}
+.section{margin:20px 2px 10px;font-size:20px;font-weight:900}.section span{color:#ef79a8}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.stat{background:#fff;border-radius:16px;padding:11px 4px;font-weight:900;font-size:13px;border:1px solid #e3dccd;box-shadow:0 2px 0 #e3dccd}.stat b{display:block;color:#ff5a4f;font-size:21px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.cat{border:1px solid #e3dccd;border-radius:16px;padding:14px 9px;text-align:center;background:#fff;box-shadow:0 2px 0 #e3dccd;color:var(--ink);font-weight:900;min-height:88px}
+.cat .icon{display:block;width:76px;height:76px;border-radius:50%;margin:0 auto 6px;border:3px solid #fff;box-shadow:0 3px 0 rgba(0,0,0,.09)}
+.cat svg{width:100%;height:100%;display:block}
+.cat small{font-size:11px;color:#998ba1;display:block;margin-top:4px}
+.pages{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.page{background:white;border:1px solid #e3dccd;border-radius:16px;padding:12px;text-align:left;color:var(--ink);box-shadow:0 2px 0 #e3dccd}.page .thumb{height:85px;border-radius:13px;background:#2d2f4a;display:grid;place-items:center}
+.page svg{height:80px;width:auto;display:block}
+.page b{display:block;margin-top:7px}.page small{color:#9b8da2}
+.panel{background:white;border:1px solid #e3dccd;border-radius:16px;padding:13px;box-shadow:0 2px 0 #e3dccd}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}.back{border:0;border-radius:12px;padding:9px 13px;background:#f8edf7;color:#725d7c;font-weight:800}
+#stage{position:relative;width:100%;max-width:520px;aspect-ratio:1;margin:auto;background:#fff;border:2px solid #23253a;border-radius:10px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#stage canvas,#stage #lines,#stage svg{position:absolute;inset:0;width:100%;height:100%;display:block}#lines{pointer-events:none}
+.tools{margin-top:12px}.tl{padding:9px 11px;font-size:13px;border-radius:12px}.tl.sel{background:#ff5a4f;color:#fff}
+.palette{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin:14px 0 8px}.swatch{aspect-ratio:1;border:2px solid white;border-radius:50%;box-shadow:0 0 0 1px #ddd}.swatch.selected{outline:3px solid #66547a;outline-offset:2px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.action{border:0;border-radius:12px;padding:11px 14px;background:#f3edff;color:#66547a;font-weight:900}.action.primary{background:#ff5a4f;color:white}
+.hidden{display:none!important}.hint{text-align:center;color:#6b6e85;font-size:12px;line-height:1.6}.saved-list{display:flex;gap:9px;overflow:auto}.saved-item{min-width:100px;background:white;border-radius:14px;padding:8px;font-size:12px}
+.spark{position:fixed;z-index:99;pointer-events:none;font-size:22px;animation:sp .8s ease-out forwards}
+@keyframes sp{0%{transform:translate(-50%,-50%) scale(.4);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% - 46px)) scale(1.3) rotate(40deg);opacity:0}}
+.parade{display:flex;gap:10px;overflow-x:auto;padding:6px 2px 14px;-webkit-overflow-scrolling:touch}
+.parade button{flex:0 0 96px;aspect-ratio:1;border:0;border-radius:18px;display:grid;place-items:center;padding:3px;background:#2d2f4a!important}
+.parade svg{width:100%;height:100%;display:block}
+.pill.off{opacity:.55}
+@media(min-width:560px){.grid,.pages{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{padding:30px}}
 </style>
 </head>
 <body><main>
-<section id="home" class="hero">
-<div class="mascots">🐱 🐻 🐰</div><h1>ぬりえスマイル</h1>
-<p>すきな絵を選んで、自由に色をぬろう！<br>広告なし・懸賞なしのオリジナルぬりえ</p>
-<button class="start" onclick="showCats()">🎨 ぬりえを はじめる ▶</button>
-<p class="small">スマートフォン対応・おためし版</p>
+<div class="top"><div class="brand"><span id="logo" style="display:inline-block;width:30px;height:30px;vertical-align:middle"></span> ぬりえスマイル</div><span><button class="pill" id="musicBtn" onclick="toggleMusic()">🎵 ON</button> <button class="pill" onclick="showSaved()">💖 アルバム</button></span></div>
+<section id="home">
+<div class="hero">
+<div style="font-size:13px;font-weight:900;color:#ffd76a;letter-spacing:3px">COLORING STUDIO</div>
+<h1 id="ttl">ぬりえスマイル</h1>
+<div class="sub">好きな色で、自分だけの一枚を仕上げよう</div>
+<div class="cast" id="cast"></div>
+<button class="start" onclick="showCategories()">🎨 ぬりえを始める</button><br><button class="pill" style="margin-top:12px" onclick="$('imp').click()">📷 手持ちの線画を塗る</button><input id="imp" type="file" accept="image/*" hidden onchange="importArt(this)">
+<div class="features"><span class="feature">🌟 いろんな作品</span><span class="feature">🖍️ 96色</span><span class="feature">🎵 かわいい音</span><span class="feature">💗 広告なし</span></div>
+</div>
+<div class="stats"><div class="stat"><b id="total">0</b>ぬりえ</div><div class="stat"><b>96</b>カラー</div><div class="stat"><b>0</b>広告・懸賞</div></div>
+<h2 class="section">🎪 キャラクター</h2><div class="parade" id="parade"></div>
+<h2 class="section">💝 おすすめ</h2>
+<div class="grid">
+<button class="cat" onclick="openPage(0,0)"><span class="icon" style="background:#ffd6e0"><svg viewBox="0 0 400 400"><g transform="scale(0.8) translate(50,50)"><path d="M95 190L85 70L170 125Z" fill="#ff8fb8" stroke="#333" stroke-width="7" stroke-linejoin="round"/><path d="M305 190L315 70L230 125Z" fill="#ffd45e" stroke="#333" stroke-width="7" stroke-linejoin="round"/><ellipse cx="200" cy="230" rx="118" ry="100" fill="#7fd8ff" stroke="#333" stroke-width="7" stroke-linejoin="round"/><ellipse cx="145" cy="245" rx="13" ry="8" fill="#ff9fb8" opacity=".55"/><ellipse cx="255" cy="245" rx="13" ry="8" fill="#ff9fb8" opacity=".55"/><ellipse cx="165" cy="230" rx="6" ry="8.4" fill="#333"/><ellipse cx="235" cy="230" rx="6" ry="8.4" fill="#333"/><path d="M185 270Q200 285 215 270" fill="none" stroke="#333" stroke-width="6" stroke-linecap="round"/></g></svg></span>ネコ<small>人気のキャラ</small></button>
+<button class="cat" onclick="openPage(4,1)"><span class="icon" style="background:#d6f8ff"><svg viewBox="0 0 400 400"><g transform="scale(0.8) translate(50,50)"><ellipse cx="135" cy="335" rx="60" ry="22" transform="rotate(-35 135 335)" fill="#ff8fb8" stroke="#333" stroke-width="7" stroke-linejoin="round"/><ellipse cx="265" cy="335" rx="60" ry="22" transform="rotate(35 265 335)" fill="#ffd45e" stroke="#333" stroke-width="7" stroke-linejoin="round"/><rect x="192" y="250" width="16" height="145" rx="6" fill="#7fd8ff" stroke="#333" stroke-width="7" stroke-linejoin="round"/><path d="M115 185Q110 80 135 70L170 115L200 60L230 115L265 70Q290 80 285 185Q285 265 200 270Q115 265 115 185Z" fill="#a8e87a" stroke="#333" stroke-width="7" stroke-linejoin="round"/></g></svg></span>チューリップ<small>定番の花</small></button>
+</div>
 </section>
 <section id="categories" class="hidden">
-<h1>どれをぬる？</h1><p>カテゴリーを選んでね</p>
-<div class="grid" id="catgrid"></div><button class="back" onclick="showHome()">🏠 ホームへ</button>
+<div class="toolbar"><button class="back" onclick="showHome()">← ホーム</button><span>テーマ選択</span></div>
+<h2 class="section">テーマを選ぶ</h2><div id="catgrid" class="grid"></div>
 </section>
-<section id="paint" class="hidden">
-<button class="back" onclick="showCats()">← カテゴリーへ</button><h1 id="paintTitle">ぬりえ</h1>
-<p>色を選んで、絵の中をタップしてね。</p>
-<canvas id="art" width="480" height="480"></canvas>
-<div class="colors" id="colors"></div>
-<button class="start" onclick="savePic()">📷 ぬりえを保存</button>
-<p class="small">保存ボタンで画像を写真に保存できます（ブラウザの共有・保存メニューを使用）。</p>
+<section id="pages" class="hidden">
+<div class="toolbar"><button class="back" onclick="showCategories()">← カテゴリー</button><b id="categoryTitle"></b></div>
+<p class="hint">好きな絵を選んでください。</p><div id="pagegrid" class="pages"></div>
 </section>
+<section id="editor" class="hidden">
+<div class="toolbar"><button class="back" onclick="showPages()">← もどる</button><b id="pageTitle">ぬりえ</b><button class="back" onclick="resetPage()">↻ リセット</button></div>
+<div class="panel"><div id="stage"><canvas id="paint" width="800" height="800"></canvas><div id="lines"><svg id="drawing" viewBox="0 0 400 400"></svg></div></div>
+<p class="hint">色を選んで、指でなぞって塗ろう</p>
+<div class="actions tools"><button class="action tl" id="sz10" onclick="setSize(10)">細</button><button class="action tl sel" id="sz22" onclick="setSize(22)">中</button><button class="action tl" id="sz46" onclick="setSize(46)">太</button><button class="action tl" id="ers" onclick="toggleErase()">🧽 消す</button><button class="action tl sel" id="ins" onclick="toggleInside()">🔒 はみ出し防止</button></div><div id="palette" class="palette"></div>
+<div class="actions"><button class="action" onclick="undo()">↶ 一つ戻す</button><button class="action primary" onclick="saveArtwork()">💾 作品を保存</button><button class="action" onclick="downloadArtwork()">📥 画像をダウンロード</button></div>
+</div>
+</section>
+<section id="saved" class="hidden">
+<div class="toolbar"><button class="back" onclick="showHome()">← ホーム</button><b>💖 作品アルバム</b></div>
+<p class="hint">この端末に保存した作品だよ。</p><div id="savedList" class="saved-list"></div>
+</section>
+<p class="hint" style="margin-top:22px">ぬりえスマイル 🌈 たのしく、じゆうに、ぬってみよう！</p>
 </main>
 <script>
-const cats=["🐶 どうぶつ","🚗 のりもの","🦕 きょうりゅう","🚀 うちゅう","🌸 おはな","🍰 おかし","👑 おひめさま","🐠 うみ","🍁 きせつ","🧭 ぼうけん"];
-const palette=["#f44336","#ff9800","#ffeb3b","#8bc34a","#00bcd4","#2196f3","#673ab7","#e91e63","#795548","#9e9e9e","#222222","#ffffff"];
-let chosen="#ff83b4",ctx;
-function showHome(){home.classList.remove("hidden");categories.classList.add("hidden");paint.classList.add("hidden")}
-function showCats(){home.classList.add("hidden");categories.classList.remove("hidden");paint.classList.add("hidden")}
-function openPaint(name){categories.classList.add("hidden");paint.classList.remove("hidden");paintTitle.textContent=name+" のぬりえ";draw(); }
-catgrid.innerHTML=cats.map(c=>`<button class="cat" onclick="openPaint('${c}')">${c}</button>`).join("");
-colors.innerHTML=palette.map(c=>`<button class="swatch" style="background:${c}" aria-label="${c}" onclick="chosen='${c}'"></button>`).join("");
-function draw(){const canvas=document.getElementById("art");ctx=canvas.getContext("2d");ctx.clearRect(0,0,480,480);ctx.fillStyle="#fff";ctx.fillRect(0,0,480,480);ctx.lineWidth=8;ctx.strokeStyle="#333";ctx.lineCap="round";
-ctx.beginPath();ctx.arc(240,230,145,0,Math.PI*2);ctx.stroke();
-ctx.beginPath();ctx.arc(190,205,15,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(290,205,15,0,Math.PI*2);ctx.stroke();
-ctx.beginPath();ctx.moveTo(220,260);ctx.quadraticCurveTo(240,280,260,260);ctx.stroke();
-ctx.beginPath();ctx.arc(240,230,8,0,Math.PI*2);ctx.stroke();
-ctx.beginPath();ctx.moveTo(150,100);ctx.lineTo(110,30);ctx.lineTo(200,75);ctx.stroke();ctx.beginPath();ctx.moveTo(330,100);ctx.lineTo(370,30);ctx.lineTo(280,75);ctx.stroke();
-ctx.font="bold 28px sans-serif";ctx.fillStyle="#555";ctx.fillText("たのしく ぬろう！",130,440);}
-art.addEventListener("click",e=>{const r=art.getBoundingClientRect(),x=(e.clientX-r.left)*480/r.width,y=(e.clientY-r.top)*480/r.height;ctx.fillStyle=chosen;ctx.beginPath();ctx.arc(x,y,24,0,Math.PI*2);ctx.fill();});
-function savePic(){const a=document.createElement("a");a.download="nurie-smile.png";a.href=art.toDataURL("image/png");a.click();}
+const categories=[["動物","🐶"],["乗り物","🚗"],["恐竜","🦕"],["宇宙","🚀"],["花","🌸"],["お菓子","🍰"],["プリンセス","👑"],["海の生き物","🐠"],["季節","🍁"],["冒険","🧭"]];
+const $=id=>document.getElementById(id);let currentCat=0,currentPage=0,chosen="#ff5f9e";
+function hideAll(){["home","categories","pages","editor","saved"].forEach(x=>$(x).classList.add("hidden"))}
+function showHome(){hideAll();$("home").classList.remove("hidden")}
+function showCategories(){hideAll();$("categories").classList.remove("hidden")}
+function showPages(){hideAll();$("pages").classList.remove("hidden")}
+function showSaved(){hideAll();$("saved").classList.remove("hidden");renderSaved()}
+function selectCategory(i){currentCat=i;$("categoryTitle").textContent=categories[i][1]+" "+categories[i][0];$("pagegrid").innerHTML=DES[i].map((d,n)=>`<button class="page" onclick="openPage(${i},${n})"><div class="thumb"><svg viewBox="0 0 400 400">${colorize(shapeSVG(i,n),n+i)}</svg></div><b>${d[0]}</b><small>塗る</small></button>`).join("");hideAll();$("pages").classList.remove("hidden")}
+function showPages(){selectCategory(currentCat)}
+const colors=[];for(let h=0;h<360;h+=15){for(let l of [42,58,72])colors.push(`hsl(${h} 82% ${l}%)`)}colors.push("#222222","#555555","#888888","#bbbbbb","#eeeeee","#ffffff","#8b5a2b","#d9a066","#ffd9b8","#f6e6d2","#ffb6c1","#a8d8ff"); 
+$("palette").innerHTML=colors.map((c,i)=>`<button class="swatch ${i===0?"selected":""}" style="background:${c}" aria-label="色${i+1}" onclick="chooseColor(this,'${c}')"></button>`).join("");
+function chooseColor(el,c){chosen=c;erase=false;updTools();sfx("pick");document.querySelectorAll(".swatch").forEach(x=>x.classList.remove("selected"));el.classList.add("selected")}
+const PAL=["#ff8fb8","#ffd45e","#7fd8ff","#a8e87a","#c9a7ff","#ffab6e","#ff7b7b","#6fe0c0"];
+const F='fill="#fff" stroke="#333" stroke-width="7" stroke-linejoin="round"';
+const sh=(x,y,a,b)=>{if(a<28||b<28)return"";const q=(t,k)=>`${(x+a*k*Math.cos(t)).toFixed(1)} ${(y+b*k*Math.sin(t)).toFixed(1)}`;return `<path d="M${x-a*.62} ${y-b*.1}Q${x-a*.6} ${y-b*.55} ${x-a*.2} ${y-b*.7}" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" opacity=".85" style="pointer-events:none"/><path d="M${q(.25,.8)}A${a*.8} ${b*.8} 0 0 1 ${q(1.6,.8)}" fill="none" stroke="#000" stroke-width="9" stroke-linecap="round" opacity=".12" style="pointer-events:none"/><path d="M${q(.3,.68)}A${a*.68} ${b*.68} 0 0 1 ${q(1.5,.68)}M${q(.5,.55)}A${a*.55} ${b*.55} 0 0 1 ${q(1.3,.55)}" fill="none" stroke="#333" stroke-width="3.5" stroke-dasharray="0.1 8" stroke-linecap="round" opacity=".4" style="pointer-events:none"/>`};
+const E=(x,y,a,b,r=0)=>`<g transform="rotate(${r} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="${a}" ry="${b}" ${F}/>${sh(x,y,a,b)}</g>`,C=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" ${F}/>${sh(x,y,r,r)}`,P=d=>`<path d="${d}" ${F}/>`,R=(x,y,w,h,r=8)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ${F}/>`;
+const L=d=>`<path d="${d}" fill="none" stroke="#333" stroke-width="6" stroke-linecap="round" style="pointer-events:none"/>`,D=(x,y,r=8)=>r>=8?`<ellipse cx="${x}" cy="${y}" rx="${r*1.05}" ry="${r*1.4}" fill="#333" style="pointer-events:none"/><circle cx="${x-r*.35}" cy="${y-r*.55}" r="${r*.42}" fill="#FFF" style="pointer-events:none"/><circle cx="${x+r*.3}" cy="${y+r*.55}" r="${r*.2}" fill="#FFF" style="pointer-events:none"/>`:`<circle cx="${x}" cy="${y}" r="${r}" fill="#333" style="pointer-events:none"/>`;
+const ck=(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="13" ry="8" fill="#ff9fb8" opacity=".55" style="pointer-events:none"/>`;
+const g=(x,y,s=32)=>ck(x-s*1.55,y+16)+ck(x+s*1.55,y+16)+D(x-s,y)+D(x+s,y)+L(`M${x-14} ${y+26}Q${x} ${y+42} ${x+14} ${y+26}`);
+const S=(x,y,r)=>{let p=[];for(let k=0;k<10;k++){const t=-Math.PI/2+k*Math.PI/5,q=k%2?r*.45:r;p.push((x+Math.cos(t)*q).toFixed(0)+" "+(y+Math.sin(t)*q).toFixed(0))}return P("M"+p.join("L")+"Z")};
+const PET=(n,x,y,d,a,b)=>Array.from({length:n},(_,k)=>{const t=k*2*Math.PI/n;return E(Math.round(x+Math.cos(t)*d),Math.round(y+Math.sin(t)*d),a,b,k*360/n)}).join("");
+const stem=(x,y)=>R(x-8,y,16,395-y,6);
+const DES=[
+[["ねこ",()=>P("M95 190L85 70L170 125Z")+P("M305 190L315 70L230 125Z")+E(200,230,118,100)+g(200,215)+D(200,245,6)+L("M70 235H125M75 262L125 250M330 235H275M325 262L275 250")+C(150,350,26)+C(250,350,26)],
+["いぬ",()=>E(92,215,40,85,12)+E(308,215,40,85,-12)+E(200,220,95,105)+E(200,270,52,38)+D(200,255,14)+D(163,195)+D(237,195)+L("M200 270V285M180 292Q200 305 220 292")+C(150,360,25)+C(250,360,25)],
+["うさぎ",()=>E(150,95,30,80,-8)+E(250,95,30,80,8)+E(200,255,105,92)+g(200,235)+D(200,255,7)+C(150,355,24)+C(250,355,24)],
+["くま",()=>C(105,130,40)+C(295,130,40)+C(200,225,112)+E(200,258,50,38)+D(200,245,12)+D(160,200)+D(240,200)+L("M185 272Q200 285 215 272")],
+["ぞう",()=>E(70,215,55,85)+E(330,215,55,85)+E(200,200,100,100)+P("M170 270Q160 360 215 355Q250 350 240 320Q225 335 215 315Q225 280 232 268Z")+D(160,185)+D(240,185)],
+["ひよこ",()=>E(200,240,108,105)+E(95,255,28,50,20)+E(305,255,28,50,-20)+P("M175 235H225L200 268Z")+D(160,210)+D(240,210)+L("M200 135Q180 95 165 105M200 135Q210 85 232 98")+C(160,352,18)+C(240,352,18)]],
+[["くるま",()=>P("M65 250L95 175H260L315 230L340 250V300H60Z")+R(125,195,70,50)+R(205,195,55,50)+C(125,300,32)+C(280,300,32)],
+["バス",()=>R(40,120,320,170,24)+R(60,145,60,55)+R(130,145,60,55)+R(200,145,60,55)+R(270,145,70,55)+L("M40 235H360")+C(120,295,32)+C(280,295,32)],
+["でんしゃ",()=>R(75,105,50,70)+R(50,165,200,125,14)+R(250,115,100,175,14)+R(270,140,60,55)+R(75,190,50,45,6)+R(135,190,50,45,6)+C(100,305,28)+C(185,305,28)+C(300,305,28)+C(110,70,16)+C(140,45,22)],
+["ひこうき",()=>P("M65 245L45 175L110 220Z")+P("M200 215L150 85L210 100L260 200Z")+P("M205 240L195 340L140 320L165 240Z")+E(200,215,150,38,-12)+C(240,190,13)+C(195,205,13)+C(150,222,13)]],
+[["ブラキオ",()=>P("M105 255Q50 270 30 335Q80 300 110 300Z")+R(110,300,38,60,10)+R(220,300,38,60,10)+E(185,262,95,60)+P("M245 250Q300 200 280 110L330 100Q345 210 300 275Z")+E(322,92,40,28)+D(335,86)+C(160,250,16)+C(205,275,14)],
+["ステゴ",()=>[0,1,2,3,4].map(k=>P(`M${105+k*45} 205L${130+k*45} 125L${155+k*45} 200Z`)).join("")+P("M75 255Q30 270 20 330Q70 305 90 300Z")+R(110,300,40,60,10)+R(230,300,40,60,10)+E(200,258,130,70)+E(335,278,34,26)+D(345,272)],
+["ティラノ",()=>P("M95 255Q35 280 20 335Q75 305 105 300Z")+R(120,310,42,50,10)+R(190,310,42,50,10)+E(175,255,90,85,-10)+P("M235 265L275 290L240 300Z")+E(250,185,40,70,-25)+E(285,135,62,42)+D(300,120)+L("M240 150Q290 168 335 150")],
+["たまご",()=>E(200,290,100,85)+C(200,170,62)+D(178,160)+D(222,160)+L("M185 192Q200 206 215 192")+C(150,310,16)+C(240,325,16)+C(205,275,12)+L("M102 255L130 235L155 258L180 232L215 255L250 233L275 258L300 238L298 258")]],
+[["ロケット",()=>P("M200 55L270 280L200 250L130 280Z")+P("M130 210L65 275L140 265M270 210L335 275L260 265")+C(200,185,30)+P("M165 285L145 340L200 315L255 340L235 285Z")],
+["わくせい",()=>E(200,200,165,42,-20)+C(200,200,92)+C(165,165,16)+C(235,235,20)+C(220,155,10)+L("M95 250Q200 285 305 190")+S(60,70,22)+S(340,330,24)],
+["UFO",()=>P("M150 275L105 365H295L250 275Z")+E(200,160,68,62)+E(200,225,155,48)+C(95,230,13)+C(200,250,13)+C(305,230,13)+D(185,155)+D(215,155)],
+["うちゅうじん",()=>L("M150 90L120 50M250 90L280 50")+C(118,45,14)+C(282,45,14)+E(200,205,108,122)+E(158,195,30,42,-20)+E(242,195,30,42,20)+D(165,200,10)+D(235,200,10)+L("M170 275Q200 300 230 275")]],
+[["ひまわり",()=>stem(200,260)+E(140,335,48,20,-25)+E(260,335,48,20,25)+PET(14,200,165,100,42,17)+C(200,165,62)],
+["チューリップ",()=>E(135,335,60,22,-35)+E(265,335,60,22,35)+stem(200,250)+P("M115 185Q110 80 135 70L170 115L200 60L230 115L265 70Q290 80 285 185Q285 265 200 270Q115 265 115 185Z")+L("M170 115Q175 200 200 265M230 115Q225 200 200 265")],
+["ひなぎく",()=>stem(200,270)+E(140,335,45,18,-20)+PET(12,200,165,88,42,12)+C(200,165,45)],
+["ばら",()=>stem(200,265)+E(135,335,50,20,-30)+E(265,335,50,20,30)+C(200,165,100)+C(200,165,72)+C(200,165,46)+C(200,165,20)],
+["さくら",()=>PET(5,200,200,78,58,46)+C(200,200,34)+E(60,70,20,12,30)+E(340,90,20,12,-20)+E(60,340,20,12,60)+E(345,330,20,12,0)]],
+[["アイス",()=>P("M140 210L200 375L260 210Z")+L("M155 240L240 245M170 285L230 290")+C(155,185,52)+C(245,185,52)+C(200,125,58)+C(200,62,15)],
+["カップケーキ",()=>P("M110 235L135 360H265L290 235Z")+L("M165 245L175 350M200 245V350M235 245L225 350")+E(200,225,100,34)+C(200,170,62)+C(200,125,36)+C(200,85,14)],
+["ドーナツ",()=>C(200,200,135)+C(200,200,42)+E(120,150,20,7,30)+E(250,115,20,7,-40)+E(310,200,20,7,70)+E(280,290,20,7,10)+E(130,275,20,7,-50)+E(200,300,20,7,5)],
+["ケーキ",()=>R(90,255,220,90,14)+R(115,185,170,75,14)+L("M90 270Q115 295 140 270Q165 295 190 270Q215 295 240 270Q265 295 290 270")+R(150,125,18,62,5)+R(232,125,18,62,5)+E(159,108,10,16)+E(241,108,10,16)+C(200,160,14)]],
+[["おうかん",()=>P("M70 300L60 130L140 200L200 90L260 200L340 130L330 300Z")+R(70,290,260,40,10)+C(200,75,16)+C(60,120,16)+C(340,120,16)+C(130,255,18)+C(200,250,18)+C(270,255,18)],
+["おしろ",()=>R(70,130,70,210,6)+R(260,130,70,210,6)+R(130,180,140,160,6)+P("M60 135L105 55L150 135Z")+P("M250 135L295 55L340 135Z")+P("M170 340V270Q200 225 230 270V340Z")+E(105,200,10,20)+E(295,200,10,20)+L("M200 180V95M200 95L245 112L200 128")],
+["ユニコーン",()=>P("M165 135L195 30L235 130Z")+C(115,170,28)+C(100,225,30)+C(112,285,28)+P("M130 140L110 85L175 120Z")+E(200,240,92,95)+E(215,290,50,34)+D(175,215,9)+D(205,292,5)+D(235,292,5)+L("M205 312Q222 320 238 310")],
+["ハート",()=>P("M200 335C45 235 60 90 145 90Q200 90 200 145Q200 90 255 90C340 90 355 235 200 335Z")+S(200,205,50)+S(95,60,22)+S(310,50,26)+S(340,340,20)+S(60,330,24)]],
+[["くじら",()=>P("M300 205Q380 160 365 105Q320 130 295 175Z")+E(190,235,140,88)+L("M95 270Q190 300 280 262")+D(105,215,9)+L("M175 145V105M175 105Q150 90 135 105M175 105Q200 90 215 105")+C(70,335,14)+C(330,330,10)],
+["たこ",()=>[0,1,2,3,4,5].map(k=>E(95+k*42,305,21,65,(k-2.5)*8)).join("")+C(200,155,95)+D(165,150,12)+D(235,150,12)+L("M175 195Q200 215 225 195")+C(150,105,10)+C(250,105,10)],
+["かめ",()=>E(120,290,30,24)+E(280,290,30,24)+C(332,215,38)+P("M92 215L55 235L92 245Z")+E(200,215,112,85)+C(200,210,34)+C(135,205,22)+C(265,205,22)+C(170,265,18)+C(230,265,18)+D(345,208)],
+["ひとで",()=>S(200,205,170)+C(200,110,12)+C(125,215,10)+C(275,215,10)+C(155,300,10)+C(245,300,10)+D(180,200)+D(220,200)+L("M185 235Q200 250 215 235")]],
+[["ゆきだるま",()=>C(200,285,88)+C(200,165,62)+R(150,85,100,12,5)+R(165,35,70,55,6)+D(178,155,7)+D(222,155,7)+P("M200 170L255 180L200 190Z")+D(200,260,8)+D(200,290,8)+D(200,320,8)+L("M112 250L55 205M288 250L345 205")],
+["たいよう",()=>Array.from({length:12},(_,k)=>{const t=k*Math.PI/6,f=(a,r)=>(200+Math.cos(a)*r).toFixed(0)+" "+(200+Math.sin(a)*r).toFixed(0);return P(`M${f(t-.13,105)}L${f(t,172)}L${f(t+.13,105)}Z`)}).join("")+C(200,200,95)+g(200,190)],
+["かさ",()=>P("M45 215Q200 -20 355 215Q320 190 285 215Q250 190 200 215Q150 190 115 215Q80 190 45 215Z")+L("M200 215V320Q200 355 165 350")+E(90,290,8,14)+E(310,285,8,14)+E(60,350,8,14)+E(340,350,8,14)],
+["かぼちゃ",()=>R(188,75,26,55,8)+E(115,240,70,98)+E(285,240,70,98)+E(165,240,62,100)+E(235,240,62,100)+D(160,215,12)+D(240,215,12)+L("M150 275Q200 310 250 275")]],
+[["たからばこ",()=>R(80,200,240,130,12)+P("M80 205Q80 110 200 110Q320 110 320 205Z")+R(180,195,40,55,6)+D(200,225,6)+C(150,155,12)+C(250,155,12)+L("M80 250H320")],
+["テント",()=>P("M45 340L200 90L355 340Z")+P("M165 340L200 225L235 340Z")+L("M200 90V225")+S(70,60,24)+S(330,70,28)],
+["やま",()=>C(320,70,38)+P("M25 340L150 115L245 270L295 195L385 340Z")+P("M150 115L112 180L140 170L155 195L180 168L195 180Z")],
+["ききゅう",()=>E(200,150,100,115)+L("M200 35V265M130 60Q105 150 150 250M270 60Q295 150 250 250M120 235L160 305M280 235L240 305")+R(160,305,80,50,8)]]
+];
+
+categories.push(["昆虫","🦋"],["鳥","🐧"],["果物","🍓"],["食べ物","🍙"]);
+DES[0].push(["ぶた",()=>P("M105 150L100 85L165 120Z")+P("M295 150L300 85L235 120Z")+E(200,230,115,100)+E(200,262,52,38)+D(185,260,8)+D(215,260,8)+D(160,200)+D(240,200)+ck(120,240)+ck(280,240)],
+["かえる",()=>C(130,120,48)+C(270,120,48)+D(135,125,16)+D(265,125,16)+E(200,250,150,105)+L("M100 270Q200 345 300 270")+D(185,205,5)+D(215,205,5)+C(110,360,28)+C(290,360,28)],
+["パンダ",()=>C(105,125,42)+C(295,125,42)+C(200,225,115)+E(150,205,32,40,20)+E(250,205,32,40,-20)+D(150,208,12)+D(250,208,12)+D(200,255,14)+L("M180 280Q200 298 220 280")+ck(115,260)+ck(285,260)],
+["ライオン",()=>PET(12,200,215,100,45,38)+C(200,215,88)+C(130,140,22)+C(270,140,22)+E(200,255,40,30)+D(200,245,12)+D(165,200)+D(235,200)+L("M200 258V272M182 280Q200 292 218 280")]);
+DES[1].push(["ヘリコプター",()=>L("M190 175V150")+R(95,142,200,12,6)+P("M270 215L350 185V205L280 245Z")+E(190,230,90,55)+E(165,225,34,28)+L("M110 305H270M140 285V305M240 285V305")],
+["ヨット",()=>P("M60 270H340L300 335H100Z")+P("M200 60V255H95Z")+P("M215 110V255H310Z")+S(335,60,26)+L("M20 365Q50 350 80 365T140 365T200 365T260 365T320 365T380 365")]);
+DES[3].push(["おつきさま",()=>P("M250 60Q120 90 120 210Q120 330 250 355Q60 360 55 210Q55 70 250 60Z")+D(105,200,8)+L("M95 245Q110 262 130 250")+ck(95,230)+S(290,100,28)+S(325,235,22)+S(280,320,26)]);
+DES[5].push(["キャンディ",()=>P("M115 175L45 130V280L115 235Z")+P("M285 175L355 130V280L285 235Z")+C(200,205,88)+L("M150 175Q200 135 245 190M145 235Q200 285 258 235")]);
+DES[7].push(["さかな",()=>P("M285 200L365 130V270Z")+P("M150 125Q180 70 220 130Z")+E(180,200,115,80)+L("M115 160Q145 200 115 240M165 150Q195 200 165 250")+D(100,185,10)+L("M72 220Q88 232 100 222")+ck(112,215)],
+["カニ",()=>C(65,140,40)+C(335,140,40)+E(105,185,14,48,35)+E(295,185,14,48,-35)+L("M105 270L55 310M115 290L75 345M295 270L345 310M285 290L325 345M165 185V150M235 185V150")+E(200,240,105,68)+C(165,140,17)+C(235,140,17)+D(165,142,8)+D(235,142,8)+L("M180 255Q200 275 220 255")+ck(135,255)+ck(265,255)]);
+DES.push(
+[["ちょうちょ",()=>E(125,150,75,85,-20)+E(275,150,75,85,20)+E(135,275,55,65,20)+E(265,275,55,65,-20)+C(120,150,24)+C(280,150,24)+C(135,280,16)+C(265,280,16)+E(200,215,16,90)+L("M195 130Q170 80 150 70M205 130Q230 80 250 70")],
+["てんとうむし",()=>E(200,130,60,42)+C(200,240,105)+L("M200 135V345M175 95Q150 60 130 65M225 95Q250 60 270 65")+C(150,215,20)+C(250,215,20)+C(145,290,16)+C(255,290,16)+D(180,125,8)+D(220,125,8)],
+["みつばち",()=>E(160,120,42,60,-30)+E(240,120,42,60,30)+E(200,265,85,95)+C(200,150,58)+L("M118 250Q200 285 282 250M120 300Q200 335 280 300")+g(200,145,24)+P("M200 365L190 392L210 392Z")],
+["かたつむり",()=>E(185,330,150,35)+E(70,265,28,62,-10)+L("M60 215L45 170M85 215L95 165")+C(45,165,8)+C(95,162,8)+C(235,200,95)+C(235,200,60)+C(235,200,28)+D(62,252,7)]],
+[["ペンギン",()=>E(95,240,28,75,15)+E(305,240,28,75,-15)+E(200,225,105,140)+E(200,255,70,100)+P("M180 175H220L200 200Z")+D(165,150)+D(235,150)+E(160,375,32,12)+E(240,375,32,12)+ck(130,180)+ck(270,180)],
+["ふくろう",()=>P("M105 110L100 55L155 90Z")+P("M295 110L300 55L245 90Z")+E(200,230,110,140)+C(150,175,42)+C(250,175,42)+D(150,178,16)+D(250,178,16)+P("M185 205H215L200 235Z")+E(200,295,60,60)+L("M170 275Q185 290 200 275M200 295Q215 310 230 295")],
+["ことり",()=>P("M290 250L360 230L350 290Z")+C(200,220,110)+E(160,240,48,65,-30)+P("M105 205L60 215L105 230Z")+D(145,190,10)+L("M175 330V370M225 330V370M190 112Q180 80 165 85M205 112Q205 75 225 80")+ck(130,225)],
+["あひる",()=>E(160,360,30,10)+E(230,360,30,10)+E(190,270,130,85)+E(170,270,70,40,-10)+C(285,150,60)+E(345,165,35,15)+D(298,140,9)+ck(310,180)]],
+[["いちご",()=>P("M200 355C80 300 60 150 120 120Q200 90 280 120C340 150 320 300 200 355Z")+L("M150 175v8M200 160v8M250 175v8M150 275v8M250 275v8")+g(200,225,28)+P("M130 115L160 75L200 105L240 75L270 115L200 135Z")+R(192,45,16,50,6)],
+["りんご",()=>P("M200 120C130 70 40 130 60 250C75 340 150 370 200 345C250 370 325 340 340 250C360 130 270 70 200 120Z")+R(192,50,16,75,6)+E(255,75,45,22,-25)+L("M95 195Q95 160 120 140")+g(200,250,28)],
+["すいか",()=>P("M40 160A160 160 0 0 0 360 160Z")+P("M65 170A135 135 0 0 0 335 170Z")+E(140,215,8,13,-20)+E(200,245,8,13)+E(260,215,8,13,20)+E(170,195,7,11)+E(230,195,7,11)+L("M40 160H360")],
+["ぶどう",()=>R(190,40,16,60,6)+E(260,80,45,22,-20)+[[155,125],[245,125],[110,185],[200,185],[290,185],[155,245],[245,245],[200,305]].map(p=>C(p[0],p[1]+25,42)).join("")]],
+[["おにぎり",()=>P("M200 70Q300 90 345 300Q350 335 310 335H90Q50 335 55 300Q100 90 200 70Z")+R(135,250,130,85,6)+g(200,185,30)],
+["ハンバーガー",()=>R(60,270,280,65,26)+R(55,215,290,52,24)+P("M50 205Q80 235 110 205Q140 235 170 205Q200 235 230 205Q260 235 290 205Q320 235 350 205V222H50Z")+P("M60 190Q60 70 200 70Q340 70 340 190Z")+E(130,120,13,7,20)+E(200,100,13,7)+E(270,120,13,7,-20)+E(165,150,13,7,-10)+E(240,150,13,7,10)],
+["ピザ",()=>P("M200 360L55 110Q200 40 345 110Z")+P("M50 105Q200 35 350 105L345 128Q200 62 55 128Z")+C(200,155,24)+C(150,205,22)+C(250,205,22)+C(200,260,20)],
+["おすし",()=>R(80,230,240,90,40)+P("M60 225Q200 120 340 225Q340 255 200 265Q60 255 60 225Z")+L("M130 190L165 245M200 175L225 250M270 190L285 245")]]
+);
+
+categories.push(["ロボット","🤖"],["モンスター","👾"],["魔法","🧙"],["仲間","🧒"],["スポーツ","⚽"],["おもちゃ","🧸"],["街","🏠"]);
+DES.push(
+[["ロボくん",()=>L("M200 60V95")+C(200,50,12)+R(120,95,160,120,28)+R(85,135,35,50,10)+R(280,135,35,50,10)+R(145,120,110,65,20)+D(175,152,9)+D(225,152,9)+L("M185 175Q200 187 215 175")+R(140,215,120,100,20)+C(200,265,22)+R(150,315,40,50,12)+R(210,315,40,50,12)],
+["ずんぐりロボ",()=>L("M200 80V45")+C(200,38,10)+E(75,265,32,55,15)+E(325,265,32,55,-15)+E(200,275,110,90)+R(115,80,170,115,45)+E(160,135,26,30)+E(240,135,26,30)+D(160,138,11)+D(240,138,11)+C(145,280,9)+C(255,280,9)+L("M175 175H225")+R(135,350,50,30,14)+R(215,350,50,30,14)],
+["まるロボ",()=>L("M140 85L120 45M260 85L280 45")+C(118,40,12)+C(282,40,12)+R(50,170,35,60,12)+R(315,170,35,60,12)+C(200,200,135)+E(200,185,95,55)+D(165,185,10)+D(235,185,10)+L("M165 250H235M185 250V275M215 250V275")],
+["ロボいぬ",()=>R(100,265,36,85,12)+R(150,265,36,85,12)+R(225,265,36,85,12)+R(270,265,36,85,12)+R(85,165,230,115,45)+R(250,90,115,95,32)+P("M270 92L265 40L308 88Z")+P("M345 92L355 45L322 90Z")+D(305,135,9)+C(355,150,12)+L("M85 190L50 140")+C(48,134,12)+C(150,225,10)+C(220,225,10)]],
+[["スライム",()=>P("M200 70Q215 70 225 100Q340 130 345 260Q348 340 200 340Q52 340 55 260Q60 130 175 100Q185 70 200 70Z")+D(155,225,13)+D(245,225,13)+L("M170 275Q200 300 230 275")+ck(112,262)+ck(288,262)],
+["おばけ",()=>E(60,255,25,40,30)+E(340,255,25,40,-30)+P("M70 340V180Q70 60 200 60Q330 60 330 180V340L290 305L245 340L200 305L155 340L110 305Z")+D(160,175,13)+D(240,175,13)+E(200,240,22,28)+ck(110,215)+ck(290,215)],
+["ちびドラゴン",()=>P("M300 290Q385 270 365 200Q340 235 300 238Z")+P("M120 160Q40 90 50 50Q110 70 150 130Z")+P("M280 160Q360 90 350 50Q290 70 250 130Z")+E(200,265,100,85)+E(200,285,55,60)+C(200,150,85)+P("M145 90L130 40L175 75Z")+P("M255 90L270 40L225 75Z")+E(200,185,50,35)+D(160,140,11)+D(240,140,11)+D(185,182,5)+D(215,182,5)+ck(120,175)+ck(280,175)+C(140,350,24)+C(260,350,24)],
+["たまごモンスター",()=>P("M130 70L110 20L165 55Z")+P("M270 70L290 20L235 55Z")+P("M200 40C300 40 345 200 335 280Q320 350 200 355Q80 350 65 280C55 200 100 40 200 40Z")+C(150,120,22)+C(250,235,26)+L("M70 275L110 250L150 280L200 250L250 280L290 250L330 275")+D(160,200,12)+D(240,200,12)+L("M175 310Q200 335 225 310")]],
+[["まほうのぼうし",()=>E(200,300,170,45)+P("M110 295Q130 160 215 40Q235 120 295 295Z")+P("M117 255Q200 280 285 255L292 290Q200 315 110 290Z")+S(205,205,26)+S(80,80,26)+S(330,120,22)],
+["まほうのつえ",()=>P("M120 340L150 365L290 150L262 130Z")+S(300,100,75)+C(300,110,20)+S(100,90,24)+S(80,250,20)+S(340,290,24)],
+["ポーション",()=>R(165,50,70,50,10)+P("M185 100V160Q80 220 80 290Q80 360 200 360Q320 360 320 290Q320 220 215 160V100Z")+L("M100 275Q200 245 300 275")+C(160,310,14)+C(235,325,10)+C(205,285,8)],
+["クリスタル",()=>P("M200 40L300 130L250 350H150L100 130Z")+L("M100 130H300M200 40L160 130L200 350M200 40L240 130L200 350")+S(70,70,24)+S(335,90,28)+S(330,330,22)]],
+[["ぼうけんしゃ",()=>P("M95 175L70 90L135 130L150 45L195 115L240 40L255 125L325 85L305 180Z")+C(100,250,18)+C(300,250,18)+C(200,235,98)+D(160,235,13)+D(240,235,13)+L("M135 205L180 215M265 205L220 215M170 282Q200 305 230 282")+ck(122,268)+ck(278,268)],
+["にんじゃ",()=>P("M300 165L365 140L345 185L372 220L305 200Z")+C(200,230,115)+P("M88 255H312Q310 335 200 350Q90 335 88 255Z")+R(85,145,230,45,14)+R(160,152,80,30,6)+D(155,235,13)+D(245,235,13)],
+["まほうつかい",()=>E(200,150,135,32)+P("M130 145Q150 40 235 25Q220 80 270 145Z")+C(200,240,88)+D(165,235,12)+D(235,235,12)+P("M115 270Q200 410 285 270Q200 305 115 270Z")+ck(120,260)+ck(280,260)],
+["おひめさま",()=>C(85,115,28)+C(315,115,28)+E(200,230,120,150)+C(200,235,88)+P("M145 135L150 85L175 110L200 75L225 110L250 85L255 135Z")+D(165,235,13)+D(235,235,13)+L("M180 282Q200 297 220 282")+ck(125,265)+ck(275,265)]],
+[["サッカー",()=>C(200,200,140)+P("M200 135L250 170L232 230H168L150 170Z")+L("M200 135V62M250 170L322 148M232 230L275 298M168 230L125 298M150 170L78 148")],
+["やきゅう",()=>P("M240 335L350 70L382 85L275 350Z")+C(150,210,115)+L("M80 135Q130 210 80 285M220 135Q170 210 220 285")],
+["バスケット",()=>C(200,200,140)+L("M60 200H340M200 60V340M105 105Q160 200 105 295M295 105Q240 200 295 295")],
+["メダル",()=>P("M130 165L100 40H170L200 125Z")+P("M270 165L300 40H230L200 125Z")+C(200,245,100)+S(200,245,65)+C(200,245,20)]],
+[["ブロック",()=>R(115,55,170,60,12)+R(70,150,260,165,16)+R(95,112,55,40,10)+R(173,112,55,40,10)+R(250,112,55,40,10)+L("M70 270H330")+C(140,205,12)+C(260,205,12)],
+["こま",()=>R(190,45,20,55,8)+E(200,130,140,35)+P("M60 140Q200 100 340 140Q320 200 200 350Q80 200 60 140Z")+L("M100 175Q200 205 300 175M130 220Q200 245 270 220")],
+["かざぐるま",()=>R(193,200,14,190,6)+P("M200 200L200 70Q290 70 250 150Z")+P("M200 200L330 200Q330 290 250 250Z")+P("M200 200L200 330Q110 330 150 250Z")+P("M200 200L70 200Q70 110 150 150Z")+C(200,200,18)],
+["ガチャガチャ",()=>C(200,145,105)+C(160,125,28)+C(240,110,28)+C(205,185,28)+R(95,240,210,125,20)+R(165,275,70,32,8)+C(200,335,14)]],
+[["おうち",()=>R(250,85,35,65,6)+R(90,180,220,160,10)+P("M65 195L200 65L335 195Z")+R(165,250,70,90,10)+R(105,215,45,45,6)+R(250,215,45,45,6)],
+["とうだい",()=>L("M130 105L70 90M270 105L330 90M40 365Q80 345 120 365T200 365T280 365T360 365")+P("M150 350L170 120H230L250 350Z")+L("M160 200H240M155 270H245")+R(155,85,90,40,6)+P("M150 85L200 45L250 85Z")],
+["ポスト",()=>R(150,350,100,25,8)+R(130,120,140,230,22)+E(200,130,70,35)+R(165,185,70,18,8)+C(200,270,24)],
+["ビル",()=>R(50,170,75,185,8)+R(120,50,160,305,10)+[0,1,2,3,4].map(i=>R(145,80+i*50,30,30,5)+R(225,80+i*50,30,30,5)).join("")+R(175,310,50,45,6)]]
+);
+const BG=n=>{let w="";const N=14+n%4*2,f=(t)=>(200+Math.cos(t)*192).toFixed(0)+" "+(200+Math.sin(t)*192).toFixed(0);for(let k=0;k<N;k++)w+=`<path d="M200 200L${f(k*6.2832/N)}L${f((k+1)*6.2832/N)}Z" fill="none" stroke="#9a9aae" stroke-width="2.5"/>`;return w+`<circle cx="200" cy="200" r="192" fill="none" stroke="#333" stroke-width="7"/><circle cx="200" cy="200" r="172" fill="none" stroke="#9a9aae" stroke-width="3" stroke-dasharray="1 9" stroke-linecap="round"/>`};
+const shapeSVG=(c,n)=>DES[c][n%DES[c].length][1]();
+$("catgrid").innerHTML=categories.map((c,i)=>`<button class="cat" onclick="selectCategory(${i})"><span class="icon" style="background:hsl(${i*47%360} 90% 90%)"><svg viewBox="0 0 400 400">${colorize(shapeSVG(i,0),i)}</svg></span>${c[0]}<small>${DES[i].length}作品</small></button>`).join("");
+$("total").textContent=DES.reduce((a,x)=>a+x.length,0);
+
+function colorize(svg,o=0){let k=0;return svg.replace(/fill="#fff"/g,()=>`fill="${PAL[(k++*3+o)%8]}"`)}
+const find=nm=>{for(let c=0;c<DES.length;c++)for(let n=0;n<DES[c].length;n++)if(DES[c][n][0]===nm)return[c,n]};
+const art=(nm,o)=>{const[c,n]=find(nm);return `<svg viewBox="0 0 400 400">${colorize(shapeSVG(c,n),o)}</svg>`};
+$("cast").innerHTML=["ねこ","ひよこ","パンダ","ちびドラゴン","スライム","ライオン","ぶた","ペンギン"].map((nm,i)=>{const[c,n]=find(nm);return `<div onclick="openPage(${c},${n})" style="background:hsl(${i*47+10} 95% 88%)">${art(nm,i)}</div>`}).join("");
+$("parade").innerHTML=DES.map((l,c)=>l.slice(0,2).map((d,n)=>`<button onclick="openPage(${c},${n})" style="background:hsl(${c*47%360} 90% 90%)">${colorize(shapeSVG(c,n),c+n).replace("<svg","<svg")&&`<svg viewBox="0 0 400 400">${colorize(shapeSVG(c,n),c+n)}</svg>`}</button>`).join("")).join("");
+document.querySelectorAll("[data-ch]").forEach(e=>e.innerHTML=art(e.dataset.ch,1));
+$("logo").innerHTML=art("ねこ",0);
+$("ttl").innerHTML=[..."ぬりえスマイル"].map((ch,i)=>`<span style="color:${PAL[i%8]}">${ch}</span>`).join("");
+{const ic=document.createElement("link");ic.rel="icon";ic.href="data:image/svg+xml,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" rx="90" fill="#ffd7ea"/>${colorize(shapeSVG(0,0),0)}</svg>`);document.head.appendChild(ic)}
+let imp=false,size=22,erase=false,inside=true,undoS=[],mk=null,down=false,last=null,lastT=0,ni=0;
+const pc=$("paint"),px=pc.getContext("2d",{willReadFrequently:true}),tmp=document.createElement("canvas");tmp.width=tmp.height=800;const tx=tmp.getContext("2d");
+function svgImg(svg,cb){const im=new Image();im.onload=()=>cb(im);im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="800" height="800">${svg}</svg>`)}
+function openPage(c,n){imp=false;$("lines").style.mixBlendMode="";currentCat=c;currentPage=n;undoS=[];mk=null;hideAll();$("editor").classList.remove("hidden");$("pageTitle").textContent=DES[c][n][0];const raw=shapeSVG(c,n);$("drawing").innerHTML=`<defs><mask id="bgm"><rect width="400" height="400" fill="#fff"/>${raw.replace(/fill="#fff"/gi,'fill="#000"').replace(/stroke="#(333|FFF|000)"/gi,'stroke="#000"')}</mask></defs><g mask="url(#bgm)">${BG(n)}</g>`+'<ellipse cx="200" cy="390" rx="140" ry="9" fill="#000" opacity=".1" style="pointer-events:none"/>'+raw.replace(/fill="#fff"/g,'fill="none"');px.clearRect(0,0,800,800);svgImg('<circle cx="200" cy="200" r="192"/>'+raw.replace(/fill="#fff"/g,'fill="#000"'),im=>{mk=im});ac();sfx("start")}
+function updTools(){["10","22","46"].forEach(k=>$("sz"+k).classList.toggle("sel",!erase&&size==k));$("ers").classList.toggle("sel",erase);$("ins").classList.toggle("sel",inside);$("ins").textContent=inside?"🔒 はみ出し防止":"🔓 自由に"}
+function setSize(n){size=n;erase=false;updTools()}function toggleErase(){erase=!erase;updTools()}function toggleInside(){inside=!inside;updTools()}
+function pos(e){const r=pc.getBoundingClientRect();return[(e.clientX-r.left)*800/r.width,(e.clientY-r.top)*800/r.height]}
+function stroke(a,b){const t=!erase&&inside&&mk,c=t?tx:px;if(t)tx.clearRect(0,0,800,800);c.save();c.lineCap=c.lineJoin="round";c.lineWidth=size;if(erase)c.globalCompositeOperation="destination-out";else c.strokeStyle=chosen;c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0]+.01,b[1]);c.stroke();c.restore();if(t){tx.globalCompositeOperation="destination-in";tx.drawImage(mk,0,0);tx.globalCompositeOperation="source-over";px.drawImage(tmp,0,0)}}
+function undo(){const h=undoS.pop();if(h){px.putImageData(h,0,0);sfx("undo")}}
+function spark(x,y){const e=document.createElement("div");e.className="spark";e.textContent=["✨","💖","⭐","🌸"][Math.random()*4|0];e.style.left=x+"px";e.style.top=y+"px";e.style.setProperty("--dx",(Math.random()*60-30)+"px");document.body.appendChild(e);setTimeout(()=>e.remove(),800)}
+(function(){const d=$("stage");
+d.addEventListener("pointerdown",e=>{e.preventDefault();ac();down=true;try{d.setPointerCapture(e.pointerId)}catch(_){}undoS.push(px.getImageData(0,0,800,800));if(undoS.length>12)undoS.shift();last=pos(e);lastT=e.timeStamp;stroke(last,last);sfx(erase?"erase":"touch");if(!erase)spark(e.clientX,e.clientY);scratch(.04)});
+d.addEventListener("pointermove",e=>{if(!down)return;const p=pos(e),dt=Math.max(8,e.timeStamp-lastT);stroke(last,p);scratch(Math.min(.3,Math.hypot(p[0]-last[0],p[1]-last[1])/dt*.05+.03));last=p;lastT=e.timeStamp});
+["pointerup","pointercancel"].forEach(t=>d.addEventListener(t,()=>{down=false;scratch(0)}));
+document.addEventListener("pointerdown",e=>{if(e.target.closest("button")){ac();sfx("tap")}},true)})();
+let AC,master,mus,NB,nzG,nzF,musicOn=true,timer=null,step=0,nextT=0;
+function ac(){if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=.7;master.connect(AC.destination);mus=AC.createGain();mus.gain.value=.3;mus.connect(master);NB=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const nz=AC.createBufferSource();nz.buffer=NB;nz.loop=true;nzF=AC.createBiquadFilter();nzF.type="bandpass";nzF.frequency.value=2200;nzF.Q.value=.9;nzG=AC.createGain();nzG.gain.value=0;nz.connect(nzF);nzF.connect(nzG);nzG.connect(master);nz.start();if(musicOn)startMusic()}if(AC.state==="suspended")AC.resume()}
+function scratch(v){if(!AC)return;const t=AC.currentTime;nzG.gain.setTargetAtTime(v,t,.025);nzF.frequency.setTargetAtTime(erase?3800:1500+v*5000,t,.04)}
+const hz=s=>261.63*Math.pow(2,s/12),PENTA=[0,2,4,7,9];
+function tone(f,t,d,type,v,dest,slide){const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(f*slide,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(dest||master);o.start(t);o.stop(t+d+.05)}
+function bell(s,t,d,v,dest){tone(hz(s),t,d,"sine",v,dest);tone(hz(s)*2.76,t,d*.3,"sine",v*.25,dest);tone(hz(s)*4.1,t,d*.15,"sine",v*.1,dest)}
+function marimba(s,t,d,v,dest){tone(hz(s),t,d,"triangle",v,dest);tone(hz(s)*4,t,d*.2,"sine",v*.3,dest)}
+function puff(t,d,f,v,dest,f2,q){const s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain();s.buffer=NB;fl.type="bandpass";fl.Q.value=q||1;fl.frequency.setValueAtTime(f,t);if(f2)fl.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+d*.2);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(fl);fl.connect(g);g.connect(dest||master);s.start(t,Math.random());s.stop(t+d+.05)}
+function sfx(k){if(!AC)return;const t=AC.currentTime;
+if(k==="touch"){const s=PENTA[ni%5]+12*((ni/5|0)%2);ni++;tone(150,t,.12,"sine",.35,null,.5);puff(t,.06,3000,.25,null,1500);bell(s+12,t+.01,.45,.12)}
+else if(k==="erase"){puff(t,.12,4500,.3,null,2500,1.5)}
+else if(k==="tap"){tone(900,t,.05,"sine",.12,null,.6);puff(t,.03,5000,.1,null)}
+else if(k==="pick"){marimba(PENTA[Math.random()*5|0]+12,t,.25,.25)}
+else if(k==="undo"){puff(t,.28,3000,.35,null,500,1.2)}
+else if(k==="start"){puff(t,.22,800,.4,null,4000,.8);puff(t+.14,.18,4000,.2,null,900,1);[0,4,7,12].forEach((s,i)=>bell(s+12,t+.15+i*.07,.4,.12))}
+else if(k==="ok"){puff(t,.05,6000,.5,null);puff(t+.05,.08,2500,.4,null);[0,4,7,12,16,19,24].forEach((s,i)=>bell(s+12,t+.2+i*.08,.6,.14))}}
+const CH=[[0,4,7],[-3,0,4],[-7,-3,0],[-5,-1,2],[0,4,7],[-7,-3,0],[-5,-1,2],[0,4,7]],r="r";
+const MEL=[16,r,14,12,14,r,16,r,12,r,9,12,14,r,r,r,17,r,16,14,16,r,19,r,21,r,19,17,16,r,r,r,19,r,17,16,14,r,16,r,17,r,16,14,12,r,14,16,19,r,r,r,r,r,16,r,21,r,19,17,16,14,12,r];
+function startMusic(){if(timer||!AC)return;nextT=AC.currentTime+.1;timer=setInterval(()=>{while(nextT<AC.currentTime+.4){const i=step%64,b=i>>3,ch=CH[b],m=MEL[i],t=nextT;
+if(typeof m==="number")bell(m,t,.7,.2,mus);
+if(i%2===0)marimba(ch[(i>>1)%3]-12+(i%4?12:0),t,.3,.1,mus);
+if(i%4===0){tone(hz(ch[0]-24),t,.3,"sine",.35,mus,.9)}
+if(i%8===0)tone(130,t,.14,"sine",.3,mus,.4);
+if(i%2===1)puff(t,.05,7000,.06,mus);
+step++;nextT+=.24}},100)}
+function stopMusic(){clearInterval(timer);timer=null}
+function toggleMusic(){ac();musicOn=!musicOn;$("musicBtn").textContent=musicOn?"🎵 ON":"🔇 OFF";$("musicBtn").classList.toggle("off",!musicOn);musicOn?startMusic():stopMusic()}
+function resetPage(){openPage(currentCat,currentPage)}
+function importArt(inp){const f=inp.files[0];if(!f)return;const im=new Image();im.onload=()=>{const o=document.createElement("canvas");o.width=o.height=800;const x=o.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,800,800);const k=Math.min(800/im.width,800/im.height);x.drawImage(im,(800-im.width*k)/2,(800-im.height*k)/2,im.width*k,im.height*k);
+const url=o.toDataURL("image/png");currentCat=0;currentPage=0;undoS=[];hideAll();$("editor").classList.remove("hidden");$("pageTitle").textContent="マイ線画";px.clearRect(0,0,800,800);imp=true;$("lines").style.mixBlendMode="multiply";$("drawing").innerHTML=`<image href="${url}" width="400" height="400"/>`;
+const d=x.getImageData(0,0,800,800).data,N=640000,out=new Uint8Array(N),st=new Int32Array(N);let sp=0;const push=i=>{if(!out[i]&&d[i*4]+d[i*4+1]+d[i*4+2]>600){out[i]=1;st[sp++]=i}};
+for(let i=0;i<800;i++){push(i);push(N-1-i);push(i*800);push(i*800+799)}
+while(sp){const i=st[--sp],cx=i%800;if(cx>0)push(i-1);if(cx<799)push(i+1);if(i>=800)push(i-800);if(i<N-800)push(i+800)}
+const m=document.createElement("canvas");m.width=m.height=800;const mx=m.getContext("2d"),id=mx.createImageData(800,800);for(let i=0;i<N;i++)id.data[i*4+3]=out[i]?0:255;mx.putImageData(id,0,0);mk=m;ac();sfx("start")};im.src=URL.createObjectURL(f);inp.value=""}
+function compose(cb){const o=document.createElement("canvas");o.width=o.height=800;const x=o.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,800,800);x.drawImage(pc,0,0);svgImg($("drawing").innerHTML,im=>{if(imp)x.globalCompositeOperation="multiply";x.drawImage(im,0,0);x.globalCompositeOperation="source-over";cb(o)})}
+function downloadArtwork(){compose(o=>o.toBlob(b=>{const u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=`nurie-${currentCat+1}-${currentPage+1}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(u),2000);sfx("ok")}))}
+function saveArtwork(){compose(o=>{const t=document.createElement("canvas");t.width=t.height=260;t.getContext("2d").drawImage(o,0,0,260,260);try{let arr=JSON.parse(localStorage.getItem("nurieSmileSaved")||"[]");arr.unshift({title:$("pageTitle").textContent,img:t.toDataURL("image/jpeg",.8),date:new Date().toLocaleDateString("ja-JP")});localStorage.setItem("nurieSmileSaved",JSON.stringify(arr.slice(0,30)));sfx("ok");alert("作品アルバムに保存したよ！💖")}catch(e){alert("保存できなかったよ。画像ダウンロードを使ってね。")}})}
+function renderSaved(){let arr=[];try{arr=JSON.parse(localStorage.getItem("nurieSmileSaved")||"[]")}catch(e){}$("savedList").innerHTML=arr.length?arr.map(x=>`<div class="saved-item">${x.img?`<img src="${x.img}" style="width:100%;border-radius:8px">`:""}${x.title}<br><small>${x.date}</small></div>`).join(""):"まだ作品がないよ。ぬりえを完成させて保存してね！"}
 </script></body></html>
