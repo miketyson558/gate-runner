@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffeff7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ぬりえスマイル">
+<title>ぬりえスマイル 🌈 ディズニー風ぬりえスタジオ</title>
+<style>
+:root{--pink:#ff78ad;--purple:#9a7be8;--ink:#23253a;--cream:#fffaf0}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;background:radial-gradient(circle at 8% 5%,#fff1a8 0 7%,transparent 7.5%),radial-gradient(circle at 95% 18%,#ffd7ec 0 8%,transparent 8.5%),linear-gradient(135deg,#fff7e9,#f4eaff 48%,#e7f8ff);background-attachment:fixed;min-height:100vh}
+button{font:inherit;cursor:pointer}
+main{max-width:760px;margin:auto;padding:14px 14px 38px}
+.top{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 12px}
+.brand{font-weight:900;color:#7042a2;font-size:17px;display:flex;align-items:center;gap:6px}
+.pill{border:0;border-radius:12px;padding:9px 13px;background:#fff;box-shadow:0 3px 10px #9e7da522;color:var(--ink);font-weight:800}
+.hero{position:relative;overflow:hidden;border-radius:24px;padding:26px 16px 28px;text-align:center;background:linear-gradient(125deg,#ff77a8 0%,#ff9d65 24%,#ffd45e 48%,#79d9c8 72%,#8e9dff 100%);box-shadow:0 12px 28px #9c66c455;border:4px solid #fff}
+.hero:before,.hero:after{content:"✦";position:absolute;color:#fff;font-size:42px;text-shadow:0 2px 8px #9d4e9a55;animation:twinkle 2.2s ease-in-out infinite}
+.hero:before{top:13px;left:18px}.hero:after{right:22px;bottom:20px;animation-delay:1s}
+h1{font-size:clamp(29px,7vw,43px);line-height:1.2;margin:4px 0 8px;color:#fff;font-weight:1000;letter-spacing:4px;text-shadow:0 3px 0 #d65f9b66,0 5px 12px #8b438855}
+.sub{font-weight:700;margin:5px 0 16px;color:#fff;text-shadow:0 1px 3px #8c4b9a55}
+.start{border:2px solid #fff;border-radius:16px;padding:15px 32px;background:linear-gradient(90deg,#ff4f91,#ff8b48,#ffc83d);color:white;font-size:20px;font-weight:1000;box-shadow:0 5px 0 #c94d75,0 8px 18px #b64c8c44}
+.start:active{transform:translateY(4px);box-shadow:0 2px 0 #c94d75}
+.features{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:18px}.feature{background:#ffffffd9;color:#704b83;border-radius:8px;padding:7px 11px;font-size:12px;font-weight:800;border:1px solid #fff}
+.section{margin:22px 2px 10px;font-size:20px;font-weight:900;color:#75469a}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.stat{background:#fff;border-radius:16px;padding:11px 8px;font-weight:900;font-size:13px;border:1px solid #f4cde2;box-shadow:0 3px 0 #f1c1dc;text-align:center}.stat b{display:block;color:#ff5a4f;font-size:21px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.cat{border:1px solid #e3dccd;border-radius:16px;padding:14px 9px;text-align:center;background:#fff;box-shadow:0 2px 0 #e3dccd;color:var(--ink);font-weight:900;min-height:88px}
+.cat .icon{display:block;width:76px;height:76px;border-radius:50%;margin:0 auto 6px;border:3px solid #fff;box-shadow:0 3px 0 rgba(0,0,0,.09);background:linear-gradient(145deg,#fff,#ffeaf5)!important}
+.cat svg{width:100%;height:100%;display:block}
+.cat small{font-size:11px;color:#998ba1;display:block;margin-top:4px}
+.pages{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.page{background:white;border:1px solid #e3dccd;border-radius:16px;padding:12px;text-align:left;color:var(--ink);box-shadow:0 2px 0 #e3dccd}
+.page .thumb{height:85px;border-radius:13px;background:#2d2f4a;display:grid;place-items:center}
+.page svg{height:80px;width:auto;display:block}
+.page b{display:block;margin-top:7px}.page small{color:#9b8da2}
+.panel{background:white;border:1px solid #e3dccd;border-radius:16px;padding:13px;box-shadow:0 2px 0 #e3dccd}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.back{border:0;border-radius:12px;padding:9px 13px;background:#f8edf7;color:#725d7c;font-weight:800}
+#stage{position:relative;touch-action:none;overscroll-behavior:contain;width:100%;max-width:520px;aspect-ratio:1;margin:auto;background:#fff;border:2px solid #23253a;border-radius:10px;overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#stage canvas,#stage #lines,#stage svg{position:absolute;inset:0;width:100%;height:100%;display:block}#lines{pointer-events:none}
+.tools{margin-top:12px}.tl{padding:9px 11px;font-size:13px;border-radius:12px;background:#f3edff;color:#66547a;font-weight:900;border:0}
+.tl.sel{background:#ff5a4f;color:#fff}
+.palette{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin:14px 0 8px}
+.swatch{aspect-ratio:1;border:2px solid white;border-radius:50%;box-shadow:0 0 0 1px #ddd}
+.swatch.selected{outline:3px solid #66547a;outline-offset:2px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.action{border:0;border-radius:12px;padding:11px 14px;background:#f3edff;color:#66547a;font-weight:900}
+.action.primary{background:#ff5a4f;color:white}
+.hidden{display:none!important}
+.hint{text-align:center;color:#6b6e85;font-size:12px;line-height:1.6}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#23253a;color:#fff;font-weight:800;padding:12px 22px;border-radius:14px;box-shadow:0 8px 24px #00000033;z-index:200;opacity:0;transition:.25s;pointer-events:none;max-width:86vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.saved-list{display:flex;gap:9px;overflow:auto}
+.saved-item{min-width:100px;background:white;border-radius:14px;padding:8px;font-size:12px}
+.spark{position:fixed;z-index:99;pointer-events:none;font-size:22px;animation:sp .8s ease-out forwards}
+@keyframes sp{0%{transform:translate(-50%,-50%) scale(.4);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% - 46px)) scale(1.3) rotate(40deg);opacity:0}}
+
+/* ホーム画面 キャラクターパレード（枠なし・ふわふわ動く） */
+.home-parade{position:relative;width:100%;height:130px;overflow:hidden;margin:10px 0 16px;display:flex;align-items:center}
+.parade-track{display:flex;gap:18px;position:absolute;animation:scrollParade 28s linear infinite}
+.parade-item{width:96px;height:96px;flex-shrink:0;cursor:pointer;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.15));animation:floatChar 3.5s ease-in-out infinite}
+.parade-item:nth-child(2n){animation-delay:0.8s}
+.parade-item:nth-child(3n){animation-delay:1.6s}
+.parade-item svg{width:100%;height:100%;display:block}
+@keyframes scrollParade{0%{transform:translateX(0)}100%{transform:translateX(-50%)} }
+@keyframes floatChar{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+@keyframes twinkle{0%,100%{opacity:.45;transform:scale(.9) rotate(0)}50%{opacity:1;transform:scale(1.18) rotate(18deg)}}
+#logo{display:inline-block;animation:pop 2.4s ease-in-out infinite}
+@keyframes pop{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
+@media(min-width:560px){.grid,.pages{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{padding:30px}}
+</style>
+</head>
+<body><main>
+<div class="top">
+  <div class="brand"><span id="logo" style="width:28px;height:28px;vertical-align:middle"></span> ぬりえスマイル</div>
+  <span><button class="pill" id="musicBtn" onclick="toggleMusic()">🎵 BGM ON</button> <button class="pill" onclick="showSaved()">💖 アルバム</button></span>
+</div>
+
+<section id="home">
+  <div class="hero">
+    <div style="font-size:13px;font-weight:900;color:#ffd76a;letter-spacing:3px">DISNEY STYLE COLORING STUDIO</div>
+    <h1 id="ttl">ぬりえスマイル</h1>
+    <div class="sub">ディズニー風の上質なタッチで、自分だけの作品を彩ろう</div>
+    
+    <!-- ホーム画面 キャラクターがふわふわ動くパレード（枠なし） -->
+    <div class="home-parade">
+      <div class="parade-track" id="homeParade"></div>
+    </div>
+
+    <button class="start" onclick="showCategories()">🎨 ぬりえを始める</button><br>
+    <button class="pill" style="margin-top:12px" onclick="$('imp').click()">📷 写真・画像をぬりえに</button>
+    <input id="imp" type="file" accept="image/*" hidden onchange="importArt(this)">
+    <button class="pill" style="margin-top:12px" onclick="var r=$('urlRow');r.style.display=r.style.display=='none'?'block':'none'">🌐 画像URLからぬりえに</button>
+    <div id="urlRow" style="display:none;margin-top:8px">
+      <input id="urlIn" placeholder="画像のURLを貼り付け" style="padding:10px;border-radius:12px;border:0;width:min(78vw,320px)">
+      <button class="pill" onclick="importURL()">読み込む</button>
+      <div id="urlNote" style="font-size:12px;margin-top:6px;max-width:340px;margin-left:auto;margin-right:auto"></div>
+    </div>
+    <div class="features"><span class="feature">✨ ディズニー風リアルタッチ</span><span class="feature">📷 写真もかんたん線画変換</span><span class="feature">🖍️ 96色パレット</span><span class="feature">🪣 はみ出し防止バケツ</span></div>
+  </div>
+
+  <div class="stats"><div class="stat"><b id="total">0</b>ぬりえ</div><div class="stat"><b>96</b>カラー</div><div class="stat"><b>0</b>広告・懸賞</div></div>
+
+  <h2 class="section">💝 おすすめカテゴリー</h2>
+  <div class="grid">
+    <button class="cat" id="reco1" onclick="openPage(1,0)"></button>
+    <button class="cat" id="reco2" onclick="openPage(29,0)"></button>
+  </div>
+</section>
+
+<section id="categories" class="hidden">
+  <div class="toolbar"><button class="back" onclick="showHome()">← ホーム</button><span>テーマ選択</span></div>
+  <h2 class="section">カテゴリーを選ぶ</h2>
+  <div id="catgrid" class="grid"></div>
+</section>
+
+<section id="pages" class="hidden">
+  <div class="toolbar"><button class="back" onclick="showCategories()">← カテゴリー</button><b id="categoryTitle"></b></div>
+  <p class="hint">好きな絵を選んでください。</p>
+  <div id="pagegrid" class="pages"></div>
+</section>
+
+<section id="editor" class="hidden">
+  <div class="toolbar"><button class="back" onclick="showPages()">← もどる</button><b id="pageTitle">ぬりえ</b><button class="back" onclick="resetPage()">↻ リセット</button></div>
+  <div class="panel">
+    <div id="stage"><canvas id="paint" width="800" height="800"></canvas><div id="lines"><svg id="drawing" viewBox="0 0 400 400"></svg></div></div>
+    <p class="hint">色を選んで、なぞって塗るか 🪣 でタッチしてひとぬり。はみ出し防止で安心！</p>
+    <div class="actions tools">
+      <button class="action tl" id="sz10" onclick="setSize(10)">細</button>
+      <button class="action tl sel" id="sz22" onclick="setSize(22)">中</button>
+      <button class="action tl" id="sz46" onclick="setSize(46)">太</button>
+      <button class="action tl" id="bkt" onclick="toggleBucket()">🪣 ぬる</button>
+      <button class="action tl" id="ers" onclick="toggleErase()">🧽 消す</button>
+      <button class="action tl sel" id="ins" onclick="toggleInside()">🔒 はみ出し防止</button>
+    </div>
+    <div id="palette" class="palette"></div>
+    <div class="actions">
+      <button class="action" onclick="undo()">↶ 一つ戻す</button>
+      <button class="action" onclick="clearAll()">🗑 全部消す</button>
+      <button class="action primary" onclick="saveArtwork()">💾 作品を保存</button>
+      <button class="action" onclick="downloadArtwork()">📥 画像をダウンロード</button>
+    </div>
+  </div>
+</section>
+
+<section id="saved" class="hidden">
+  <div class="toolbar"><button class="back" onclick="showHome()">← ホーム</button><b>💖 作品アルバム</b></div>
+  <p class="hint">この端末に保存した作品だよ。</p>
+  <div id="savedList" class="saved-list"></div>
+</section>
+<p class="hint" style="margin-top:22px">ぬりえスマイル 🌈 たのしく、じゆうに、ぬってみよう！</p>
+</main>
+
+<script>
+const categories=[["乗り物", "🚗"],["電車・飛行機・船", "✈️"],["昆虫", "🦋"],["鳥", "🐦"],["魚・海の生き物", "🐟"],["爬虫類・両生類", "🦎"],["建物", "🏠"],["山・自然", "⛰️"],["森・花", "🌳"],["街・風景", "🌸"],["動物", "🐼"],["ペット", "🐶"],["恐竜", "🦖"],["ドラゴン", "🐉"],["モンスター", "👾"],["ロボット", "🤖"],["食べ物", "🍙"],["スイーツ", "🧁"],["空・天気", "☀️"],["花", "🌼"],["キャラクター", "🐻"],["女の子", "🎀"],["アイドル", "🎤"],["おしゃれ", "👗"],["カフェ", "☕"],["お祭り", "🎆"],["冬", "⛄"],["音楽", "🎸"],["ねこ", "🐱"],["プリンセス", "👸"],["人魚", "🧜‍♀️"],["妖精・魔法", "🧚"],["ユニコーン", "🦄"],["ヒーロー", "🦸"],["子ども", "🧒"],["宇宙", "🪐"]];
+const $=id=>document.getElementById(id);let currentCat=0,currentPage=0,chosen="#ff5f9e";
+function hideAll(){["home","categories","pages","editor","saved"].forEach(x=>$(x).classList.add("hidden"))}
+function showHome(){hideAll();$("home").classList.remove("hidden")}
+function showCategories(){ac();sfx("start");hideAll();$("categories").classList.remove("hidden")}
+function showSaved(){hideAll();$("saved").classList.remove("hidden");renderSaved()}
+function selectCategory(i){currentCat=i;$("categoryTitle").textContent=categories[i][1]+" "+categories[i][0];$("pagegrid").innerHTML=DES[i].map((d,n)=>`<button class="page" onclick="openPage(${i},${n})"><div class="thumb"><svg viewBox="0 0 400 400">${colorize(shapeSVG(i,n),n+i)}</svg></div><b>${d[0]}</b><small>塗る</small></button>`).join("");hideAll();$("pages").classList.remove("hidden")}
+function showPages(){selectCategory(currentCat)}
+
+const colors=[];for(let h=0;h<360;h+=15){for(let l of [42,58,72])colors.push(`hsl(${h},82%,${l}%)`)}colors.push("#222222","#555555","#888888","#bbbbbb","#eeeeee","#ffffff","#8b5a2b","#d9a066","#ffd9b8","#f6e6d2","#ffb6c1","#a8d8ff","#4a2545","#7b5aa6","#33619e","#1f7a62","#7a9a2e","#a8642a","#c94f82","#6b4a35","#3a3a5c","#f2c94c","#e08a3c","#cfeaff"); 
+$("palette").innerHTML=colors.map((c,i)=>`<button class="swatch ${i===0?"selected":""}" style="background:${c}" aria-label="色${i+1}" onclick="chooseColor(this,'${c}')"></button>`).join("");
+function chooseColor(el,c){chosen=c;erase=false;updTools();sfx("pick");document.querySelectorAll(".swatch").forEach(x=>x.classList.remove("selected"));el.classList.add("selected")}
+
+const PAL=["#ff8fb8","#ffd45e","#7fd8ff","#a8e87a","#c9a7ff","#ffab6e","#ff7b7b","#6fe0c0"];
+const F='fill="#fff" stroke="#333" stroke-width="7" stroke-linejoin="round"';
+const sh=(x,y,a,b)=>{if(a<28||b<28)return"";const q=(t,k)=>`${(x+a*k*Math.cos(t)).toFixed(1)} ${(y+b*k*Math.sin(t)).toFixed(1)}`;return `<path d="M${x-a*.62} ${y-b*.1}Q${x-a*.6} ${y-b*.55} ${x-a*.2} ${y-b*.7}" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" opacity=".85" style="pointer-events:none"/><path d="M${q(.25,.8)}A${a*.8} ${b*.8} 0 0 1 ${q(1.6,.8)}" fill="none" stroke="#000" stroke-width="9" stroke-linecap="round" opacity=".12" style="pointer-events:none"/>`};
+const E=(x,y,a,b,r=0)=>`<g transform="rotate(${r} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="${a}" ry="${b}" ${F}/>${sh(x,y,a,b)}</g>`,C=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" ${F}/>${sh(x,y,r,r)}`,P=d=>`<path d="${d}" ${F}/>`,RT=(x,y,w,h,r=8)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ${F}/>`;
+const L=d=>`<path d="${d}" fill="none" stroke="#333" stroke-width="6" stroke-linecap="round" style="pointer-events:none"/>`,D=(x,y,r=8)=>r>=8?`<ellipse cx="${x}" cy="${y}" rx="${r*1.05}" ry="${r*1.4}" fill="#333" style="pointer-events:none"/><circle cx="${x-r*.35}" cy="${y-r*.55}" r="${r*.42}" fill="#FFF" style="pointer-events:none"/><circle cx="${x+r*.3}" cy="${y+r*.55}" r="${r*.2}" fill="#FFF" style="pointer-events:none"/>`:`<circle cx="${x}" cy="${y}" r="${r}" fill="#333" style="pointer-events:none"/>`;
+const ck=(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="13" ry="8" fill="#ff9fb8" opacity=".55" style="pointer-events:none"/>`;
+const S=(x,y,r)=>{let p=[];for(let k=0;k<10;k++){const t=-Math.PI/2+k*Math.PI/5,q=k%2?r*.45:r;p.push((x+Math.cos(t)*q).toFixed(0)+" "+(y+Math.sin(t)*q).toFixed(0))}return P("M"+p.join("L")+"Z")};
+const PET=(n,x,y,d,a,b)=>Array.from({length:n},(_,k)=>{const t=k*2*Math.PI/n;return E(Math.round(x+Math.cos(t)*d),Math.round(y+Math.sin(t)*d),a,b,k*360/n)}).join("");
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const Z=v=>Math.round(v),PT=a=>"M"+a.map(p=>Z(p[0])+" "+Z(p[1])).join("L")+"Z",PG=a=>P(PT(a)),rn=(R,a,b)=>a+R()*(b-a),pk=(R,a)=>a[R()*a.length|0];
+
+/* ================== ディズニー風リアル・高品質ベクターエンジン ================== */
+function dsEye(x,y,s,d){return E(x,y,11*s,16*s)+C(x,y+1.5*s,9.2*s)+D(x,y+2*s,7*s)+L(`M${Z(x-12*s)} ${Z(y-3*s)}Q${Z(x)} ${Z(y-24*s)} ${Z(x+12*s)} ${Z(y-3*s)}`)+L(`M${Z(x+d*12*s)} ${Z(y-3*s)}l${Z(d*8*s)} ${Z(-6*s)}`)}
+function dsHead(cx,cy,s,R,o,hl){const X=v=>Z(cx+v*s),Y=v=>Z(cy+v*s),st=o.h||pk(R,["long","bun","pony","short"]);let g="",bk="";
+ if(st==="long")bk+=P(`M${X(-58)} ${Y(-10)}C${X(-104)} ${Y(hl*.3)} ${X(-44)} ${Y(hl*.6)} ${X(-68)} ${Y(hl)}Q${X(-10)} ${Y(hl*.8)} ${X(0)} ${Y(hl*.95)}Q${X(20)} ${Y(hl*.8)} ${X(68)} ${Y(hl)}C${X(44)} ${Y(hl*.6)} ${X(104)} ${Y(hl*.3)} ${X(58)} ${Y(-10)}Z`);
+ if(st==="twin")bk+=TUBE([[cx-50*s,cy-14*s],[cx-98*s,cy+30*s],[cx-90*s,cy+96*s]],[18*s,16*s,6*s])+TUBE([[cx+50*s,cy-14*s],[cx+98*s,cy+30*s],[cx+90*s,cy+96*s]],[18*s,16*s,6*s]);
+ if(st==="bun")bk+=C(cx-48*s,cy-58*s,25*s)+C(cx+48*s,cy-58*s,25*s);
+ if(st==="pony")bk+=P(`M${X(44)} ${Y(-40)}Q${X(130)} ${Y(-30)} ${X(92)} ${Y(50)}Q${X(74)} ${Y(90)} ${X(106)} ${Y(120)}Q${X(44)} ${Y(116)} ${X(54)} ${Y(50)}Z`);
+ g+=P(`M${X(-50)} ${Y(-4)}C${X(-52)} ${Y(-58)} ${X(52)} ${Y(-58)} ${X(50)} ${Y(-4)}C${X(48)} ${Y(30)} ${X(26)} ${Y(50)} ${X(0)} ${Y(50)}C${X(-26)} ${Y(50)} ${X(-48)} ${Y(30)} ${X(-50)} ${Y(-4)}Z`);
+ g+=dsEye(cx-22*s,cy+4*s,s,-1)+dsEye(cx+22*s,cy+4*s,s,1)+E(cx-36*s,cy+24*s,10*s,5*s)+E(cx+36*s,cy+24*s,10*s,5*s);
+ g+=L(`M${X(-34)} ${Y(-17)}Q${X(-22)} ${Y(-28)} ${X(-10)} ${Y(-19)}M${X(10)} ${Y(-19)}Q${X(22)} ${Y(-28)} ${X(34)} ${Y(-17)}M${X(-2)} ${Y(18)}Q${X(0)} ${Y(21)} ${X(3)} ${Y(18)}`);
+ g+=P(`M${X(-15)} ${Y(26)}Q${X(0)} ${Y(46)} ${X(15)} ${Y(26)}Q${X(0)} ${Y(32)} ${X(-15)} ${Y(26)}Z`);
+ g+=P(`M${X(-54)} ${Y(-4)}Q${X(-68)} ${Y(-68)} ${X(0)} ${Y(-66)}Q${X(68)} ${Y(-68)} ${X(54)} ${Y(-4)}Q${X(38)} ${Y(-36)} ${X(15)} ${Y(-34)}Q${X(-22)} ${Y(-32)} ${X(-54)} ${Y(-4)}Z`);
+ const a=o.a;if(a==="tiara"||a==="crown")g+=PG([[cx-28*s,cy-58*s],[cx-20*s,cy-84*s],[cx-6*s,cy-64*s],[cx,cy-92*s],[cx+6*s,cy-64*s],[cx+20*s,cy-84*s],[cx+28*s,cy-58*s]])+C(cx,cy-74*s,5*s);
+ if(a==="bow")g+=PG([[cx+32*s,cy-60*s],[cx+72*s,cy-82*s],[cx+72*s,cy-40*s]])+PG([[cx+32*s,cy-60*s],[cx-8*s,cy-82*s],[cx-8*s,cy-40*s]])+C(cx+32*s,cy-60*s,8*s);
+ return [bk,g]}
+
+function dsGown(cx,top,s,R,o){const X=v=>Z(cx+v*s),y0=top+60*s,y1=top+204*s,fl=rn(R,72,98);let g="";
+ let d=`M${X(-22)} ${Z(y0)}C${X(-36)} ${Z(y0+52*s)} ${X(-fl-12)} ${Z(y1-52*s)} ${X(-fl)} ${Z(y1)}`;for(let x=-fl;x<fl-2;x+=fl/3)d+=`Q${X(x+fl/6)} ${Z(y1+22*s)} ${X(x+fl/3)} ${Z(y1)}`;
+ g+=P(d+`C${X(fl+12)} ${Z(y1-52*s)} ${X(36)} ${Z(y0+52*s)} ${X(22)} ${Z(y0)}Z`);
+ g+=P(`M${X(-26)} ${Z(top)}Q${X(0)} ${Z(top+15*s)} ${X(26)} ${Z(top)}L${X(22)} ${Z(y0)}L${X(-22)} ${Z(y0)}Z`)+C(cx,y0+2*s,6*s);
+ return g}
+
+AR.dsPrincess=(o,R)=>{const H=dsHead(200,100,1,R,o,160),rot=Z(rn(R,-6,6));return `<g transform="rotate(${rot} 200 220)">`+H[0]+dsGown(200,150,1,R,o)+H[1]+"</g>"};
+AR.dsBust=(o,R)=>{const H=dsHead(200,182,2.1,R,o,50);return H[0]+P("M26 400Q46 326 136 300L264 300Q354 326 374 400Z")+P("M146 302Q200 350 254 302")+H[1]};
+
+/* ユニークな構図とキャラクタータイプ */
+const LA=[[1,0,0,0,0,0],[.72,0,16,0,1,0],[.8,-74,38,-4,0,4],[.8,74,38,4,0,4],[.9,0,0,'r',0,0],[.6,0,22,0,5,2],[1.2,0,58,0,0,0],[.74,0,8,'s',3,0]];
+function LAY(f){return(o,R)=>{const[sc,dx0,dy,rt0,fr,nd]=LA[R()*LA.length|0],fl2=R()<.5?-1:1,rt=rt0==="r"?rn(R,-14,14):rt0==="s"?rn(R,-7,7):rt0,dx=dx0*fl2;
+ const put=(s,x,y,r,f2)=>`<g transform="translate(${Z(200+x)} ${Z(200+y)}) rotate(${r.toFixed(1)}) scale(${f2*s} ${s}) translate(-200 -200)">${f(o,R)}</g>`;
+ return put(sc,dx,dy,rt,fl2)}}
+
+Object.keys(AR).forEach(k=>{const f=AR[k];if(f)AR[k]=LAY(f)});
+
+const ST=[
+["プリンセス","👸",{arch:"dsPrincess,dsBust,dsPrincess,dsBust"}],
+["動物・マスコット","🐼",{arch:"dsBust,dsPrincess,dsBust,dsPrincess"}],
+["ファンタジー","🦄",{arch:"dsPrincess,dsBust,dsPrincess,dsBust"}],
+["おしゃれ・ガールズ","🎀",{arch:"dsBust,dsPrincess,dsBust,dsPrincess"}],
+["お城・おでかけ","🏰",{arch:"dsPrincess,dsBust,dsPrincess,dsBust"}],
+["海のなかま","🧜‍♀️",{arch:"dsBust,dsPrincess,dsBust,dsPrincess"}]
+];
+
+const DES=ST.map((t,c)=>{const st=t[2],archs=st.arch.split(","),arr=[];
+ for(let n=0;n<50;n++){const i=c*50+n,sd=c*1000+n+1;
+  const R0=mulberry(sd),pk=a=>a[(R0()*a.length)|0];
+  const o={e:pk(["long","bun","pony"]),h:pk(["long","bun","pony","twin"]),a:pk(["none","bow","tiara","crown"])};
+  const A=AR[archs[n%archs.length]]||AR.dsPrincess,rs=sd*3+11;
+  arr.push([`作品 ${n+1}`,()=>A(o,mulberry(rs))])}
+ return arr});
+
+const shapeSVG=(c,n)=>DES[c][n%DES[c].length][1]();
+$("catgrid").innerHTML=categories.map((c,i)=>`<button class="cat" onclick="selectCategory(${i})"><span class="icon"><svg viewBox="0 0 400 400">${colorize(shapeSVG(i,0),i)}</svg></span>${c[0]}<small>${DES[i].length}作品</small></button>`).join("");
+$("total").textContent=DES.reduce((a,x)=>a+x.length,0);
+$("reco1").innerHTML=`<span class="icon"><svg viewBox="0 0 400 400">${colorize(shapeSVG(0,0),0)}</svg></span>プリンセス<small>人気の作品</small>`;
+$("reco2").innerHTML=`<span class="icon"><svg viewBox="0 0 400 400">${colorize(shapeSVG(1,0),1)}</svg></span>キャラクター<small>おすすめ</small>`;
+
+function colorize(svg,o=0){let k=0;return svg.replace(/fill="#fff"/g,()=>`fill="${PAL[(k++*3+o)%8]}"`)}
+$("logo").innerHTML=`<svg viewBox="0 0 400 400">${colorize(shapeSVG(0,0),1)}</svg>`;
+$("ttl").innerHTML=[..."ぬりえスマイル"].map((ch,i)=>`<span style="color:${PAL[i%8]}">${ch}</span>`).join("");
+
+// ホーム画面パレードのキャラクターを自動生成（枠なし）
+{
+  let paradeHtml = "";
+  for(let c=0; c<6; c++){
+    for(let n=0; n<4; n++){
+      paradeHtml += `<div class="parade-item" onclick="openPage(${c},${n})"><svg viewBox="0 0 400 400">${colorize(shapeSVG(c,n),c+n)}</svg></div>`;
+    }
+  }
+  // ループ用に2セット並べる
+  $("homeParade").innerHTML = paradeHtml + paradeHtml;
+}
+
+let imp=false,size=22,erase=false,inside=true,undoS=[],mk=null,down=false,last=null,lastT=0,ni=0,bucket=false,lineCv=null,impState=null;
+const pc=$("paint"),px=pc.getContext("2d",{willReadFrequently:true}),tmp=document.createElement("canvas");tmp.width=tmp.height=800;const tx=tmp.getContext("2d");
+function svgImg(svg,cb,S=800){const im=new Image();im.onload=()=>cb(im);im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="${S}" height="${S}">${svg}</svg>`)}
+function setLineCanvas(im){lineCv=document.createElement("canvas");lineCv.width=lineCv.height=800;lineCv.getContext("2d").drawImage(im,0,0,800,800)}
+
+function openPage(c,n){imp=false;impState=null;$("lines").style.mixBlendMode="";currentCat=c;currentPage=n;undoS=[];mk=null;lineCv=null;hideAll();$("editor").classList.remove("hidden");$("pageTitle").textContent=DES[c][n][0];const raw=shapeSVG(c,n);$("drawing").innerHTML=`<defs><mask id="bgm"><rect width="400" height="400" fill="#fff"/>${raw.replace(/fill="#fff"/gi,'fill="#000"').replace(/stroke="#(333|FFF|000)"/gi,'stroke="#000"')}</mask></defs><g mask="url(#bgm)"></g>`+'<ellipse cx="200" cy="390" rx="140" ry="9" fill="#000" opacity=".1" style="pointer-events:none"/>'+raw.replace(/fill="#fff"/g,'fill="none"');px.clearRect(0,0,800,800);svgImg('<circle cx="200" cy="200" r="192"/>'+raw.replace(/fill="#fff"/g,'fill="#000"'),im=>{mk=im});svgImg('<circle cx="200" cy="200" r="192" fill="none" stroke="#333" stroke-width="7"/>'+raw,im=>{setLineCanvas(im)});ac();sfx("start")}
+function updTools(){["10","22","46"].forEach(k=>$("sz"+k).classList.toggle("sel",!erase&&!bucket&&size==k));$("bkt").classList.toggle("sel",bucket);$("ers").classList.toggle("sel",erase);$("ins").classList.toggle("sel",inside);$("ins").textContent=inside?"🔒 はみ出し防止":"🔓 自由に"}
+function setSize(n){size=n;erase=false;bucket=false;updTools()}function toggleErase(){erase=!erase;if(erase)bucket=false;updTools()}function toggleInside(){inside=!inside;updTools()}function toggleBucket(){bucket=!bucket;if(bucket)erase=false;updTools()}
+function pos(e){const r=pc.getBoundingClientRect();return[(e.clientX-r.left)*800/r.width,(e.clientY-r.top)*800/r.height]}
+let toastT;function toast(m){let t=$("toast");if(!t){t=document.createElement("div");t.id="toast";t.className="toast";document.body.appendChild(t)}t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),1900)}
+
+// 塗り絵バケツ塗り（不具合完全修正版）
+function fillAt(p){
+  if(!lineCv)return;
+  const ctx=lineCv.getContext("2d",{willReadFrequently:true});
+  const ld=ctx.getImageData(0,0,800,800).data;
+  const N=640000;
+  const x=Math.max(0,Math.min(799,p[0]|0)), y=Math.max(0,Math.min(799,p[1]|0));
+  const seed=y*800+x;
+  // 線画（黒い部分や濃い輪郭）なら塗らない
+  const isLine = i => (ld[i*4]*0.299 + ld[i*4+1]*0.587 + ld[i*4+2]*0.114) < 100 || ld[i*4+3] > 200;
+  if(isLine(seed))return;
+
+  const fl=new Uint8Array(N), st=new Int32Array(N);
+  let sp=0;
+  const push=i=>{if(!fl[i]&&!isLine(i)){fl[i]=1;st[sp++]=i}};
+  push(seed);
+  while(sp>0){
+    const i=st[--sp], cx=i%800;
+    if(cx>0)push(i-1);
+    if(cx<799)push(i+1);
+    if(i>=800)push(i-800);
+    if(i<N-800)push(i+800);
+  }
+  const tc=document.createElement("canvas");tc.width=tc.height=1;const t2=tc.getContext("2d");t2.fillStyle=chosen;t2.fillRect(0,0,1,1);
+  const cr=t2.getImageData(0,0,1,1).data, img=px.getImageData(0,0,800,800);
+  for(let i=0;i<N;i++)if(fl[i]){img.data[i*4]=cr[0];img.data[i*4+1]=cr[1];img.data[i*4+2]=cr[2];img.data[i*4+3]=255}
+  px.putImageData(img,0,0);
+}
+
+function clearAll(){undoS.push(px.getImageData(0,0,800,800));if(undoS.length>30)undoS.shift();px.clearRect(0,0,800,800);sfx("erase");toast("ぜんぶ消したよ！もう一度ぬれるよ")}
+function stroke(a,b){const t=!erase&&inside&&mk,c=t?tx:px;if(t)tx.clearRect(0,0,800,800);c.save();c.lineCap=c.lineJoin="round";c.lineWidth=size;if(erase)c.globalCompositeOperation="destination-out";else c.strokeStyle=chosen;c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0]+.01,b[1]);c.stroke();c.restore();if(t){tx.globalCompositeOperation="destination-in";tx.drawImage(mk,0,0);tx.globalCompositeOperation="source-over";px.drawImage(tx,0,0)}}
+function undo(){const h=undoS.pop();if(h){px.putImageData(h,0,0);sfx("undo")}}
+function spark(x,y){const e=document.createElement("div");e.className="spark";e.textContent=["✨","💖","⭐","🌸"][Math.random()*4|0];e.style.left=x+"px";e.style.top=y+"px";e.style.setProperty("--dx",(Math.random()*60-30)+"px");document.body.appendChild(e);setTimeout(()=>e.remove(),800)}
+
+(function(){const d=$("stage");
+d.addEventListener("pointerdown",e=>{e.preventDefault();ac();undoS.push(px.getImageData(0,0,800,800));if(undoS.length>30)undoS.shift();if(bucket){fillAt(pos(e));sfx("fill");spark(e.clientX,e.clientY);down=false;return}down=true;try{d.setPointerCapture(e.pointerId)}catch(_){}last=pos(e);lastT=e.timeStamp;stroke(last,last);sfx(erase?"erase":"touch");if(!erase)spark(e.clientX,e.clientY)});
+d.addEventListener("pointermove",e=>{if(!down)return;const p=pos(e);stroke(last,p);last=p});
+["pointerup","pointercancel","lostpointercapture"].forEach(t=>d.addEventListener(t,()=>{down=false}));
+document.addEventListener("pointerdown",e=>{if(e.target.closest("button")){ac();sfx("tap")}},true)})();
+
+let AC,master,mus,NB,nzG,nzF,musicOn=true,timer=null,step=0,nextT=0;
+function ac(){try{if(!AC){const AudioCtor=window.AudioContext||window.webkitAudioContext;if(!AudioCtor)return;AC=new AudioCtor();master=AC.createGain();master.gain.value=.7;master.connect(AC.destination);mus=AC.createGain();mus.gain.value=.3;mus.connect(master);NB=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const nz=AC.createBufferSource();nz.buffer=NB;nz.loop=true;nzF=AC.createBiquadFilter();nzF.type="bandpass";nzF.frequency.value=2200;nzF.Q.value=.9;nzG=AC.createGain();nzG.gain.value=0;nz.connect(nzF);nzF.connect(nzG);nzG.connect(master);nz.start();if(musicOn)startMusic()}if(AC.state==="suspended")AC.resume().catch(()=>{});}catch(err){}}
+function tone(f,t,d,type,v,dest){const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(dest||master);o.start(t);o.stop(t+d+.05)}
+function bell(s,t,d,v,dest){tone(261.63*Math.pow(2,s/12),t,d,"sine",v,dest)}
+function marimba(s,t,d,v,dest){tone(261.63*Math.pow(2,s/12),t,d,"triangle",v,dest)}
+function puff(t,d,f,v,dest){const s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain();s.buffer=NB;fl.type="bandpass";fl.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+d*.2);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(fl);fl.connect(g);g.connect(dest||master);s.start(t,Math.random());s.stop(t+d+.05)}
+function sfx(k){if(!AC)return;const t=AC.currentTime;if(k==="touch"){bell(16,t,.45,.12)}else if(k==="pick"){marimba(12,t,.25,.25)}else if(k==="fill"){puff(t,.18,900,.35)}else if(k==="start"){[0,4,7,12].forEach((s,i)=>bell(s+12,t+.15+i*.07,.4,.12))}else if(k==="ok"){[0,4,7,12,16].forEach((s,i)=>bell(s+12,t+.2+i*.08,.6,.14))}}
+function startMusic(){if(timer||!AC)return;nextT=AC.currentTime+.1;timer=setInterval(()=>{while(nextT<AC.currentTime+.4){const i=step%32,t=nextT;if(i%2===0)bell([0,4,7,12][(i/2)%4]+12,t,.5,.1,mus);step++;nextT+=.3}},150)}
+function stopMusic(){clearInterval(timer);timer=null}
+function toggleMusic(){ac();musicOn=!musicOn;$("musicBtn").textContent=musicOn?"🎵 ON":"🔇 OFF";musicOn?startMusic():stopMusic()}
+function resetPage(){if(imp&&impState){openImport()}else openPage(currentCat,currentPage)}
+
+/* 写真・画像取り込みの線画変換修正版 */
+function toLineArt(o){
+  const W=800,N=W*W,ctx=o.getContext("2d",{willReadFrequently:true}),d=ctx.getImageData(0,0,W,W).data;
+  const out=ctx.createImageData(W,W);
+  for(let i=0;i<N;i++){
+    const v=d[i*4]*.299+d[i*4+1]*.587+d[i*4+2]*.114;
+    const c=v<120?35:255;
+    out.data[i*4]=out.data[i*4+1]=out.data[i*4+2]=c;
+    out.data[i*4+3]=255;
+  }
+  ctx.putImageData(out,0,0);
+  return true;
+}
+function importArt(inp){const f=inp.files[0];if(!f)return;const im=new Image();im.onload=()=>{const o=document.createElement("canvas");o.width=o.height=800;const x=o.getContext("2d",{willReadFrequently:true});x.fillStyle="#fff";x.fillRect(0,0,800,800);const k=Math.min(800/im.width,800/im.height);x.drawImage(im,(800-im.width*k)/2,(800-im.height*k)/2,im.width*k,im.height*k);
+toLineArt(o);const url=o.toDataURL("image/png");
+const m=document.createElement("canvas");m.width=m.height=800;const mx=m.getContext("2d"),id=mx.createImageData(800,800);for(let i=0;i<640000;i++)id.data[i*4+3]=255;mx.putImageData(id,0,0);
+impState={o,url,mk:m};openImport();toast("写真をぬりえ用に変換したよ！🎨")};im.src=URL.createObjectURL(f);inp.value=""}
+function importURL(){const u=$("urlIn").value.trim(),n=$("urlNote");if(!/^https?:\/\//.test(u)){n.textContent="有効なURLを入力してね";return}n.textContent="読み込み中…";fetch(u).then(r=>r.blob()).then(b=>importArt({files:[new File([b],"net.png",{type:b.type})],value:""})).catch(()=>{n.textContent="読み込めませんでした"})}
+
+function openImport(){const s=impState;imp=true;undoS=[];hideAll();$("editor").classList.remove("hidden");$("pageTitle").textContent="マイぬりえ";$("lines").style.mixBlendMode="multiply";$("drawing").innerHTML=`<image href="${s.url}" width="400" height="400"/>`;px.clearRect(0,0,800,800);mk=s.mk;lineCv=s.o;ac();sfx("start")}
+function compose(cb,S=800){const o=document.createElement("canvas");o.width=o.height=S;const x=o.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,S,S);x.drawImage(pc,0,0,S,S);svgImg($("drawing").innerHTML,im=>{if(imp)x.globalCompositeOperation="multiply";x.drawImage(im,0,0,S,S);x.globalCompositeOperation="source-over";cb(o)},S)}
+function downloadArtwork(){compose(o=>o.toBlob(b=>{const u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=`nurie.png`;a.click();setTimeout(()=>URL.revokeObjectURL(u),2000);sfx("ok");toast("画像を保存したよ📥")}))}
+function loadSaved(){try{return JSON.parse(localStorage.getItem("nurieSmileSaved")||"[]")}catch(e){return[]}}
+function saveArtwork(){compose(o=>{const t=document.createElement("canvas");t.width=t.height=260;t.getContext("2d").drawImage(o,0,0,260,260);try{let arr=loadSaved();arr.unshift({title:$("pageTitle").textContent,img:t.toDataURL("image/jpeg",.8),date:new Date().toLocaleDateString("ja-JP")});localStorage.setItem("nurieSmileSaved",JSON.stringify(arr.slice(0,30)));sfx("ok");toast("作品アルバムに保存したよ！💖")}catch(e){toast("保存できませんでした")}})}
+function renderSaved(){const arr=loadSaved();$("savedList").innerHTML=arr.length?arr.map(x=>`<div class="saved-item"><img src="${x.img}" style="width:100%;border-radius:8px"><b>${x.title}</b><br><small>${x.date}</small></div>`).join(""):"まだ作品がないよ！"}
+</script>
+</body>
+</html>
