@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff8ee">
+<title>ぬりえスマイル</title>
+<style>
+:root{—ink:#342b3b;—pink:#ef7a9d;—cream:#fff8ee;—card:#fff;—line:#eadde0;—mint:#c9eee0}
+*{box-sizing:border-box}
+body{margin:0;background:var(—cream);color:var(—ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:22px 16px 12px;text-align:center}
+h1{font-size:26px;margin:0 0 5px}
+header p{margin:0;color:#746a76;font-size:14px}
+main{max-width:950px;margin:auto;padding:12px}
+.panel{background:var(—card);border:1px solid var(—line);border-radius:18px;padding:16px;margin:0 0 14px;box-shadow:0 4px 14px #4533440b}
+h2{font-size:18px;margin:0 0 12px}
+.categories{display:flex;gap:8px;overflow:auto;padding:2px 0 8px}
+button,.file-label{border:0;border-radius:12px;background:#f4eaf0;color:var(—ink);padding:11px 14px;font-size:15px;font-weight:650;cursor:pointer;white-space:nowrap}
+button.active{background:var(—pink);color:white}
+button.primary{background:var(—pink);color:white}
+button.secondary{background:var(—mint)}
+button:disabled{opacity:.45}
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.art-card{border:1px solid var(—line);border-radius:14px;padding:8px;background:white;text-align:center}
+.art-card canvas{width:100%;height:auto;display:block;background:white;border-radius:9px;touch-action:manipulation}
+.art-card button{margin-top:7px;width:100%;font-size:14px;padding:9px}
+.workspace{display:grid;grid-template-columns:1fr;gap:12px}
+.canvas-wrap{width:100%;max-width:600px;margin:auto;background:white;border:1px solid var(—line);border-radius:14px;overflow:hidden;touch-action:none}
+#paintCanvas{display:block;width:100%;height:auto;touch-action:none}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.colors{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.swatch{width:31px;height:31px;border-radius:50%;border:2px solid #ffffff;box-shadow:0 0 0 1px #cdbfc5;padding:0}
+.swatch.selected{box-shadow:0 0 0 3px var(—ink)}
+input[type="range"]{width:100%;accent-color:var(—pink)}
+label{font-size:14px}
+small,.note{color:#746a76;font-size:13px;line-height:1.55}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:10px 0}
+#photoInput{display:none}
+.saved-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.saved-item{border:1px solid var(—line);border-radius:10px;padding:5px;background:white}
+.saved-item img{width:100%;display:block;border-radius:7px}
+.saved-item button{width:100%;margin-top:5px;padding:7px;font-size:12px}
+.status{min-height:20px;color:#6d5664;font-size:13px;margin-top:8px}
+footer{text-align:center;padding:8px 16px 28px;color:#827780;font-size:12px}
+@media(min-width:700px){.gallery{grid-template-columns:repeat(4,minmax(0,1fr))}.workspace{grid-template-columns:minmax(0,1fr) 260px}.saved-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header>
+  <h1>ぬりえスマイル</h1>
+  <p>好きな絵を選んで、自由に色をぬろう</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>ぬりえを選ぶ</h2>
+    <div class="categories" id="categories"></div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section class="panel">
+    <h2>ぬりえを楽しむ</h2>
+    <div class="workspace">
+      <div class="canvas-wrap"><canvas id="paintCanvas" width="800" height="800"></canvas></div>
+      <div>
+        <div class="colors" id="colors"></div>
+        <div class="controls">
+          <button id="undoBtn">↶ もどす</button>
+          <button id="clearBtn">消す</button>
+          <button class="primary" id="saveBtn">作品を保存</button>
+          <button class="secondary" id="downloadBtn">PNG保存</button>
+        </div>
+        <p class="note">線で囲まれた場所をタップすると色をぬれます。線の上をドラッグして自由に描くこともできます。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>写真からぬりえを作る</h2>
+    <p class="note">写真はこの端末内で処理します。顔や物の輪郭が見えやすい写真を選ぶと、塗りやすい線画になります。</p>
+    <div class="controls">
+      <label class="file-label primary" for="photoInput">写真を選ぶ</label>
+      <input id="photoInput" type="file" accept="image/*">
+      <button class="secondary" id="convertBtn" disabled>線画に変換して使う</button>
+    </div>
+    <div class="row"><label for="detail">細かさ</label><span id="detailText">標準</span></div>
+    <input id="detail" type="range" min="1" max="5" value="3">
+    <div class="row"><label for="threshold">線の濃さ</label><span id="thresholdText">標準</span></div>
+    <input id="threshold" type="range" min="1" max="5" value="3">
+    <div class="status" id="photoStatus"></div>
+  </section>
+
+  <section class="panel">
+    <h2>保存した作品</h2>
+    <div class="saved-grid" id="savedGrid"></div>
+    <p class="note">作品はこのブラウザの端末内に保存されます。</p>
+  </section>
+</main>
+<footer>オリジナルのぬりえアプリ</footer>
+
+<script>
+"use strict";
+
+const SIZE=800, MAX_UNDO=20, STORE_KEY="nurieSmileSaved";
+const palette=[
+ "#111111","#ffffff","#f44336","#e91e63","#9c27b0","#673ab7","#3f51b5","#2196f3",
+ "#03a9f4","#00bcd4","#009688","#4caf50","#8bc34a","#cddc39","#ffeb3b","#ffc107",
+ "#ff9800","#ff5722","#795548","#9e9e9e","#f8bbd0","#fce4ec","#d1c4e9","#bbdefb",
+ "#b2dfdb","#c8e6c9","#fff9c4","#ffe0b2","#d7ccc8","#b0bec5","#8d6e63","#607d8b",
+ "#ef9a9a","#f48fb1","#ce93d8","#b39ddb","#9fa8da","#90caf9","#81d4fa","#80deea",
+ "#80cbc4","#a5d6a7","#c5e1a5","#e6ee9c","#fff59d","#ffe082","#ffcc80","#ffab91",
+ "#bcaaa4","#bdbdbd","#ff1744","#f50057","#d500f9","#651fff","#3d5afe","#2979ff",
+ "#00b0ff","#00e5ff","#1de9b6","#00e676","#76ff03","#c6ff00","#ffea00","#ffc400",
+ "#ff9100","#ff3d00","#5d4037","#424242","#f6d7b0","#d9a066","#bb774b","#8f563b",
+ "#ffe6c7","#f3c9a9","#d99b72","#a96f50","#fff1a8","#f4d35e","#ee964b","#f95738",
+ "#b8e0d2","#95d5b2","#52b788","#40916c","#bde0fe","#a2d2ff","#6ea8fe","#4361ee",
+ "#f1faee","#a8dadc","#457b9d","#1d3557"
+];
+
+const animals=[
+ {id:"cat",name:"おしゃれな子ねこ",kind:"cat"},
+ {id:"fox",name:"森のきつね",kind:"fox"},
+ {id:"rabbit",name:"花かんむりのうさぎ",kind:"rabbit"},
+ {id:"bear",name:"ぼうしのくま",kind:"bear"}
+];
+const fantasy=[
+ {id:"dragon",name:"小さなドラゴン",kind:"dragon"},
+ {id:"fairy",name:"星の妖精",kind:"fairy"},
+ {id:"unicorn",name:"ユニコーン",kind:"unicorn"},
+ {id:"castle",name:"森のお城",kind:"castle"}
+];
+const food=[
+ {id:"cake",name:"いちごケーキ",kind:"cake"},
+ {id:"icecream",name:"アイスクリーム",kind:"icecream"},
+ {id:"apple",name:"りんご",kind:"apple"},
+ {id:"donut",name:"ドーナツ",kind:"donut"}
+];
+const categories=[
+ {id:"animals",label:"どうぶつ",items:animals},
+ {id:"fantasy",label:"ファンタジー",items:fantasy},
+ {id:"food",label:"たべもの",items:food}
+];
+
+const $=s=>document.querySelector(s);
+const gallery=$("#gallery"), categoryBox=$("#categories");
+const canvas=$("#paintCanvas"), ctx=canvas.getContext("2d",{willReadFrequently:true});
+let selectedCategory="animals", currentColor=palette[2], currentBase=null;
+let undoStack=[], drawing=false, lastPoint=null, photoImage=null;
+
+function svgFrame(content){
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+ <rect width="800" height="800" fill="white"/>
+ <g fill="white" stroke="#222" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">${content}</g>
+ </svg>`;
+}
+function drawingSvg(kind){
+ const face=(x,y,r=135)=>`<circle cx="${x}" cy="${y}" r="${r}"/><ellipse cx="${x-50}" cy="${y-8}" rx="13" ry="21" fill="#222"/><ellipse cx="${x+50}" cy="${y-8}" rx="13" ry="21" fill="#222"/><path d="M${x-25} ${y+45} Q${x} ${y+68} ${x+25} ${y+45}"/>`;
+ const flower=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}"/><circle cx="${x}" cy="${y}" r="${r/3}"/>`;
+ let c="";
+ if(kind==="cat") c=`<path d="M250 340 L260 150 L390 255 Q450 220 520 255 L645 150 L650 350 Q700 520 600 630 Q520 700 400 670 Q260 650 220 530 Q190 430 250 340Z"/>${face(450,430,125)}<path d="M340 500 L250 475 M340 525 L245 535 M560 500 L650 475 M560 525 L655 535"/><path d="M340 630 Q450 570 560 630"/><path d="M300 700 Q270 620 305 600 M600 700 Q630 620 595 600"/>${flower(235,250,38)}`;
+ if(kind==="fox") c=`<path d="M220 350 L190 140 L360 255 Q440 220 520 255 L680 140 L650 360 Q700 500 590 610 Q480 710 360 650 Q230 600 200 490Z"/><path d="M250 410 Q440 350 625 410 Q600 600 440 630 Q290 600 250 410Z"/>${face(440,435,110)}<path d="M390 535 Q440 500 490 535 Q440 580 390 535Z"/><path d="M300 660 Q440 720 580 660"/>`;
+ if(kind==="rabbit") c=`<path d="M310 350 Q245 130 315 120 Q375 120 395 330 M480 330 Q500 110 570 125 Q635 145 555 365"/><ellipse cx="440" cy="465" rx="220" ry="210"/>${face(440,450,120)}<path d="M405 540 Q440 575 475 540"/><path d="M300 660 Q440 710 580 660"/>${flower(285,350,35)}${flower(595,355,35)}`;
+ if(kind==="bear") c=`<circle cx="300" cy="300" r="90"/><circle cx="580" cy="300" r="90"/><circle cx="440" cy="440" r="235"/>${face(440,420,125)}<ellipse cx="440" cy="480" rx="55" ry="40"/><path d="M300 640 Q440 700 580 640"/><path d="M340 205 L440 90 L550 205Z"/><circle cx="440" cy="160" r="30"/>`;
+ if(kind==="dragon") c=`<path d="M250 490 Q180 340 260 270 Q340 210 430 275 Q560 200 635 300 Q700 400 620 500 L680 620 L570 600 Q480 710 350 620 L230 660Z"/><path d="M300 300 L200 180 L380 260 M535 275 L620 155 L630 330"/><circle cx="380" cy="380" r="18" fill="#222"/><circle cx="530" cy="370" r="18" fill="#222"/><path d="M410 450 Q470 490 535 445"/><path d="M350 570 Q450 620 550 565"/><path d="M350 250 L400 180 L440 275 M500 250 L540 180 L565 290"/>`;
+ if(kind==="fairy") c=`<circle cx="430" cy="350" r="95"/><path d="M340 320 Q430 180 530 310 Q490 280 470 285"/><path d="M400 440 L370 600 L490 600 L460 440Z"/><path d="M370 480 Q210 350 245 300 Q340 320 400 440 M490 440 Q570 300 660 290 Q680 370 490 480Z"/><circle cx="400" cy="350" r="10" fill="#222"/><circle cx="465" cy="350" r="10" fill="#222"/><path d="M405 390 Q435 415 465 390"/><path d="M350 610 L300 700 M500 610 L560 700"/>${flower(430,180,30)}`;
+ if(kind==="unicorn") c=`<path d="M250 350 Q300 220 440 240 Q580 220 640 360 L600 540 Q520 650 400 620 Q270 600 220 480Z"/><path d="M400 250 L460 90 L500 260"/><path d="M270 350 Q200 270 220 180 Q320 240 350 300"/><circle cx="365" cy="400" r="16" fill="#222"/><path d="M430 470 Q480 510 530 465"/><path d="M250 500 Q150 600 250 680 Q350 700 360 610"/><path d="M440 620 L440 740 M550 590 L590 700"/>${flower(570,300,30)}`;
+ if(kind==="castle") c=`<path d="M150 680 L150 350 L250 350 L250 250 L350 250 L350 350 L450 350 L450 200 L550 200 L550 350 L650 350 L650 680Z"/><path d="M125 350 L200 260 L275 350 M325 250 L400 150 L475 250 M525 350 L600 260 L675 350"/><path d="M360 680 L360 520 Q400 450 440 520 L440 680"/><path d="M210 430 L270 430 L270 500 L210 500Z M510 430 L570 430 L570 500 L510 500Z"/><path d="M400 150 L400 80 L470 110 L400 135"/>`;
+ if(kind==="cake") c=`<path d="M220 470 L660 470 L610 680 L270 680Z"/><path d="M250 470 Q280 400 330 455 Q370 380 420 450 Q480 370 520 450 Q580 390 630 470"/><path d="M320 420 L320 300 M440 420 L440 270 M560 420 L560 300"/><path d="M300 300 Q320 270 340 300 M420 270 Q440 240 460 270 M540 300 Q560 270 580 300"/><path d="M270 550 L630 550"/>`;
+ if(kind==="icecream") c=`<path d="M330 400 L550 400 L450 700Z"/><circle cx="350" cy="340" r="100"/><circle cx="470" cy="300" r="110"/><circle cx="560" cy="370" r="90"/><path d="M410 300 Q470 350 530 300"/>${flower(470,200,25)}`;
+ if(kind==="apple") c=`<path d="M440 280 Q330 190 250 270 Q160 370 240 540 Q300 680 430 640 Q560 690 630 530 Q700 370 610 280 Q530 205 440 280Z"/><path d="M440 290 Q430 200 490 140"/><path d="M470 190 Q560 120 620 180 Q560 245 470 220Z"/><path d="M260 430 Q310 390 350 430"/>`;
+ if(kind==="donut") c=`<path d="M440 180 C600 180 690 290 680 430 C670 580 570 650 430 650 C280 650 170 560 170 420 C170 280 290 180 440 180Z"/><path d="M440 330 C500 330 540 370 540 420 C540 470 500 510 440 510 C390 510 350 470 350 420 C350 370 390 330 440 330Z"/><path d="M230 350 Q270 300 310 340 M570 280 Q620 310 630 360 M250 520 Q300 560 340 540 M550 550 Q590 520 620 490"/>`;
+ return svgFrame(c);
+}
+function loadSvgImage(svg){
+ return new Promise((resolve,reject)=>{
+  const img=new Image();
+  img.onload=()=>resolve(img);
+  img.onerror=reject;
+  img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+ });
+}
+function renderCategories(){
+ categoryBox.innerHTML="";
+ categories.forEach(cat=>{
+  const b=document.createElement("button");
+  b.textContent=cat.label;b.className=cat.id===selectedCategory?"active":"";
+  b.onclick=()=>{selectedCategory=cat.id;renderCategories();renderGallery()};
+  categoryBox.appendChild(b);
+ });
+}
+async function renderGallery(){
+ const cat=categories.find(x=>x.id===selectedCategory);gallery.innerHTML="";
+ for(const item of cat.items){
+  const card=document.createElement("div");card.className="art-card";
+  const thumb=document.createElement("canvas");thumb.width=400;thumb.height=400;
+  const tctx=thumb.getContext("2d");
+  try{const img=await loadSvgImage(drawingSvg(item.kind));tctx.drawImage(img,0,0,400,400)}catch{}
+  const b=document.createElement("button");b.textContent=item.name;
+  b.onclick=()=>loadDrawing(item);
+  card.append(thumb,b);gallery.appendChild(card);
+ }
+}
+async function loadDrawing(item){
+ const img=await loadSvgImage(drawingSvg(item.kind));
+ ctx.clearRect(0,0,SIZE,SIZE);ctx.fillStyle="#fff";ctx.fillRect(0,0,SIZE,SIZE);ctx.drawImage(img,0,0,SIZE,SIZE);
+ currentBase=ctx.getImageData(0,0,SIZE,SIZE);undoStack=[];updateUndo();
+ document.querySelector(".workspace").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function updateUndo(){$("#undoBtn").disabled=!undoStack.length}
+function snapshot(){undoStack.push(ctx.getImageData(0,0,SIZE,SIZE));if(undoStack.length>MAX_UNDO)undoStack.shift();updateUndo()}
+function pointFromEvent(e){
+ const r=canvas.getBoundingClientRect();
+ return {x:Math.floor((e.clientX-r.left)*SIZE/r.width),y:Math.floor((e.clientY-r.top)*SIZE/r.height)};
+}
+function getPixel(data,x,y){const i=(y*SIZE+x)*4;return [data[i],data[i+1],data[i+2],data[i+3]]}
+function isLine(p){return p[0]<110&&p[1]<110&&p[2]<110}
+function floodFill(x,y,color){
+ const im=ctx.getImageData(0,0,SIZE,SIZE),d=im.data,idx=(y*SIZE+x)*4;
+ if(isLine([d[idx],d[idx+1],d[idx+2],d[idx+3]]))return false;
+ const target=[d[idx],d[idx+1],d[idx+2],d[idx+3]],rgb=color.match(/\w\w/g).map(v=>parseInt(v,16));
+ if(target[0]===rgb[0]&&target[1]===rgb[1]&&target[2]===rgb[2])return false;
+ const stack=[[x,y]],seen=new Uint8Array(SIZE*SIZE),tol=36;
+ while(stack.length){
+  const [cx,cy]=stack.pop();if(cx<0||cy<0||cx>=SIZE||cy>=SIZE)continue;
+  const p=cy*SIZE+cx;if(seen[p])continue;seen[p]=1;
+  const i=p*4;if(isLine([d[i],d[i+1],d[i+2],d[i+3]]))continue;
+  if(Math.abs(d[i]-target[0])+Math.abs(d[i+1]-target[1])+Math.abs(d[i+2]-target[2])>tol)continue;
+  d[i]=rgb[0];d[i+1]=rgb[1];d[i+2]=rgb[2];d[i+3]=255;
+  stack.push([cx+1,cy],[cx-1,cy],[cx,cy+1],[cx,cy-1]);
+ }
+ ctx.putImageData(im,0,0);return true;
+}
+canvas.addEventListener("pointerdown",e=>{
+ if(!currentBase)return;
+ e.preventDefault();const p=pointFromEvent(e),pixel=getPixel(ctx.getImageData(p.x,p.y,1,1).data,0,0);
+ if(isLine(pixel)){
+  snapshot();drawing=true;lastPoint=p;canvas.setPointerCapture(e.pointerId);
+ }else{
+  snapshot();if(!floodFill(p.x,p.y,currentColor)){undoStack.pop();updateUndo()}
+ }
+});
+canvas.addEventListener("pointermove",e=>{
+ if(!drawing)return;e.preventDefault();const p=pointFromEvent(e);
+ ctx.beginPath();ctx.moveTo(lastPoint.x,lastPoint.y);ctx.lineTo(p.x,p.y);
+ ctx.strokeStyle=currentColor;ctx.lineWidth=12;ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();lastPoint=p;
+});
+function stopDraw(){drawing=false;lastPoint=null}
+canvas.addEventListener("pointerup",stopDraw);canvas.addEventListener("pointercancel",stopDraw);
+
+function renderColors(){
+ const box=$("#colors");box.innerHTML="";
+ palette.forEach(col=>{
+  const b=document.createElement("button");b.className="swatch"+(col===currentColor?" selected":"");
+  b.style.background=col;b.setAttribute("aria-label",col);b.onclick=()=>{currentColor=col;renderColors()};
+  box.appendChild(b);
+ });
+}
+$("#undoBtn").onclick=()=>{if(undoStack.length){ctx.putImageData(undoStack.pop(),0,0);updateUndo()}};
+$("#clearBtn").onclick=()=>{if(!currentBase)return;snapshot();ctx.putImageData(currentBase,0,0)};
+$("#downloadBtn").onclick=()=>{
+ const a=document.createElement("a");a.download="nurie-smile.png";a.href=canvas.toDataURL("image/png");a.click();
+};
+function getSaved(){try{return JSON.parse(localStorage.getItem(STORE_KEY)||"[]")}catch{return []}}
+function setSaved(x){localStorage.setItem(STORE_KEY,JSON.stringify(x))}
+$("#saveBtn").onclick=()=>{
+ try{
+  const data=canvas.toDataURL("image/png"),arr=getSaved();arr.unshift({data,at:Date.now()});setSaved(arr.slice(0,30));renderSaved();
+  $("#photoStatus").textContent="作品を端末内に保存しました。";
+ }catch{$("#photoStatus").textContent="保存できませんでした。PNG保存をお試しください。"}
+};
+function renderSaved(){
+ const box=$("#savedGrid");box.innerHTML="";
+ getSaved().forEach((item,i)=>{
+  const wrap=document.createElement("div");wrap.className="saved-item";
+  const img=document.createElement("img");img.src=item.data;img.alt="保存した作品";
+  const b=document.createElement("button");b.textContent="開く";b.onclick=()=>loadSaved(item.data);
+  const del=document.createElement("button");del.textContent="削除";del.onclick=()=>{const a=getSaved();a.splice(i,1);setSaved(a);renderSaved()};
+  wrap.append(img,b,del);box.appendChild(wrap);
+ });
+}
+function loadSaved(src){
+ const img=new Image();img.onload=()=>{ctx.clearRect(0,0,SIZE,SIZE);ctx.drawImage(img,0,0,SIZE,SIZE);currentBase=ctx.getImageData(0,0,SIZE,SIZE);undoStack=[];updateUndo();canvas.scrollIntoView({behavior:"smooth",block:"center"})};img.src=src;
+}
+renderSaved();
+
+const photoInput=$("#photoInput");
+photoInput.onchange=()=>{
+ const f=photoInput.files&&photoInput.files[0];if(!f)return;
+ const url=URL.createObjectURL(f),img=new Image();
+ img.onload=()=>{photoImage=img;$("#convertBtn").disabled=false;$("#photoStatus").textContent="写真を読み込みました。細かさと線の濃さを調整できます。";URL.revokeObjectURL(url)};
+ img.onerror=()=>{$("#photoStatus").textContent="画像を読み込めませんでした。別の写真を選んでください。"};
+ img.src=url;
+};
+$("#detail").oninput=e=>{$("#detailText").textContent=["大きめ","やや大きめ","標準","細かめ","細かい"][e.target.value-1]};
+$("#threshold").oninput=e=>{$("#thresholdText").textContent=["薄め","やや薄め","標準","濃いめ","濃い"][e.target.value-1]};
+
+$("#convertBtn").onclick=()=>{
+ if(!photoImage)return;
+ $("#photoStatus").textContent="線画を作成しています…";
+ setTimeout(()=>{
+  const work=document.createElement("canvas"),w=600,h=600;work.width=w;work.height=h;
+  const wc=work.getContext("2d",{willReadFrequently:true});
+  wc.fillStyle="#fff";wc.fillRect(0,0,w,h);
+  const scale=Math.min(w/photoImage.width,h/photoImage.height),dw=photoImage.width*scale,dh=photoImage.height*scale;
+  wc.drawImage(photoImage,(w-dw)/2,(h-dh)/2,dw,dh);
+  const im=wc.getImageData(0,0,w,h),src=im.data,gray=new Float32Array(w*h);
+  for(let i=0,p=0;i<src.length;i+=4,p++)gray[p]=.299*src[i]+.587*src[i+1]+.114*src[i+2];
+  const detail=Number($("#detail").value),radius=detail===1?2:detail===2?1:0;
+  let smooth=gray;
+  if(radius){
+   smooth=new Float32Array(gray.length);
+   for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    let sum=0,n=0;for(let dy=-radius;dy<=radius;dy++)for(let dx=-radius;dx<=radius;dx++){
+     const xx=Math.max(0,Math.min(w-1,x+dx)),yy=Math.max(0,Math.min(h-1,y+dy));sum+=gray[yy*w+xx];n++;
+    }smooth[y*w+x]=sum/n;
+   }
+  }
+  const out=wc.createImageData(w,h),darkness=(Number($("#threshold").value)-3)*9;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+   const p=y*w+x,i=p*4;
+   const left=smooth[y*w+Math.max(0,x-1)],right=smooth[y*w+Math.min(w-1,x+1)];
+   const up=smooth[Math.max(0,y-1)*w+x],down=smooth[Math.min(h-1,y+1)*w+x];
+   const edge=Math.abs(right-left)+Math.abs(down-up);
+   const threshold=detail===1?75:detail===2?58:detail===3?43:detail===4?32:24;
+   const v=edge>threshold-darkness?20:255;
+   out.data[i]=out.data[i+1]=out.data[i+2]=v;out.data[i+3]=255;
+  }
+  const temp=document.createElement("canvas");temp.width=w;temp.height=h;temp.getContext("2d").putImageData(out,0,0);
+  ctx.clearRect(0,0,SIZE,SIZE);ctx.fillStyle="#fff";ctx.fillRect(0,0,SIZE,SIZE);ctx.drawImage(temp,0,0,SIZE,SIZE);
+  currentBase=ctx.getImageData(0,0,SIZE,SIZE);undoStack=[];updateUndo();
+  $("#photoStatus").textContent="線画に変換しました。線で囲まれた場所をタップして色をぬれます。";
+  canvas.scrollIntoView({behavior:"smooth",block:"center"});
+ },30);
+};
+
+renderCategories();renderGallery();renderColors();updateUndo();
+</script>
+</body>
+</html>
