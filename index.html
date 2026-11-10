@@ -10,17 +10,17 @@
 <title>ぬりえスマイル 🌈</title>
 <style>
 :root{--pink:#ff78ad;--purple:#9a7be8;--ink:#594b69;--cream:#fffaf0}
-*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;background:#f6f2ea;color:#23253a;min-height:100vh}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;background:linear-gradient(180deg,#fff0f8 0%,#f7f3ff 48%,#eefaff 100%);color:#23253a;min-height:100vh}
 button{font:inherit;cursor:pointer}main{max-width:760px;margin:auto;padding:14px 14px 38px}
 .top{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 12px}.brand{font-weight:900;color:#23253a;font-size:17px}.pill{border:0;border-radius:12px;padding:9px 13px;background:#fff;box-shadow:0 3px 10px #9e7da522;color:var(--ink)}
-.hero{position:relative;overflow:hidden;border-radius:24px;padding:22px 16px 24px;text-align:center;background:linear-gradient(135deg,#23253a,#3a2d63 60%,#7a3b6b);box-shadow:0 12px 30px #23253a44}
+.hero{position:relative;overflow:hidden;border-radius:24px;padding:22px 16px 24px;text-align:center;background:linear-gradient(135deg,#ff77b7 0%,#9a7be8 48%,#55c9e8 100%);box-shadow:0 14px 36px #8e5aa855}
 .hero:before,.hero:after{content:"✦";position:absolute;color:#ffd76a;font-size:35px;opacity:.9}.hero:before{top:13px;left:18px}.hero:after{right:22px;bottom:20px}
 h1{font-size:clamp(29px,7vw,43px);line-height:1.2;margin:4px 0 8px;color:#fff;font-weight:1000;letter-spacing:4px}
 .sub{font-weight:700;margin:5px 0 12px;color:#e9e3ff}
 .cast{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:10px 0 16px}
 .cast>div{aspect-ratio:1;border-radius:18px;display:grid;place-items:center;background:#2d2f4a!important;cursor:pointer}
 .cast svg{width:92%;height:92%}
-.start{border:0;border-radius:14px;padding:15px 27px;background:linear-gradient(90deg,#ff5a4f,#ff9a3c);color:white;font-size:20px;font-weight:900;box-shadow:0 5px 0 #b83a33}
+.start{border:0;border-radius:14px;padding:15px 27px;background:linear-gradient(90deg,#ff4f9a,#ff8a5b,#ffd34f);color:white;font-size:20px;font-weight:900;box-shadow:0 5px 0 #b83a33}
 .start:active{transform:translateY(4px);box-shadow:0 2px 0 #b83a33}
 .features{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:17px}.feature{background:#ffffff1f;color:#fff;border-radius:8px;padding:7px 11px;font-size:12px;font-weight:800}
 .section{margin:20px 2px 10px;font-size:20px;font-weight:900}.section span{color:#ef79a8}
@@ -55,14 +55,14 @@ h1{font-size:clamp(29px,7vw,43px);line-height:1.2;margin:4px 0 8px;color:#fff;fo
 </style>
 </head>
 <body><main>
-<div class="top"><div class="brand"><span id="logo" style="display:inline-block;width:30px;height:30px;vertical-align:middle"></span> ぬりえスマイル</div><span><button class="pill" id="musicBtn" onclick="toggleMusic()">🎵 BGM ON</button> <button class="pill" onclick="showSaved()">💖 アルバム</button></span></div>
+<div class="top"><div class="brand"><span id="logo" style="display:inline-block;width:30px;height:30px;vertical-align:middle"></span> ぬりえスマイル</div><span><button class="pill" id="musicBtn" onclick="toggleMusic()">🎵 BGM ON</button><button class="pill" onclick="testSound()">🔔 音を試す</button> <button class="pill" onclick="showSaved()">💖 アルバム</button></span></div>
 <section id="home">
 <div class="hero">
-<div style="font-size:13px;font-weight:900;color:#ffd76a;letter-spacing:3px">COLORING STUDIO</div>
+<div style="font-size:13px;font-weight:900;color:#ffd76a;letter-spacing:3px">✨ COLORING STUDIO ✨</div>
 <h1 id="ttl">ぬりえスマイル</h1>
 <div class="sub">好きな色で、自分だけの一枚を仕上げよう</div>
 <div class="cast" id="cast"></div>
-<button class="start" onclick="showCategories()">🎨 ぬりえを始める</button><br><div class="features"><span class="feature">🌟 1800作品</span><span class="feature">🖍️ 96色</span><span class="feature">🎵 かわいい音</span></div>
+<button class="start" onclick="showCategories()">🎨 ぬりえを始める</button><br><div class="features"><span class="feature">🌟 1800作品</span><span class="feature">🖍️ 96色</span><span class="feature">🎵 BGM</span><span class="feature">🔔 効果音</span></div>
 </div>
 <div class="stats"><div class="stat"><b id="total">0</b>ぬりえ</div><div class="stat"><b>96</b>カラー</div><div class="stat"><b>0</b>広告・懸賞</div></div>
 <h2 class="section">🎪 キャラクター</h2><div class="parade" id="parade"></div>
@@ -99,7 +99,7 @@ const categories=[["乗り物", "🚗"],["電車・飛行機・船", "✈️"],[
 const $=id=>document.getElementById(id);let currentCat=0,currentPage=0,chosen="#ff5f9e";
 function hideAll(){["home","categories","pages","editor","saved"].forEach(x=>$(x).classList.add("hidden"))}
 function showHome(){hideAll();$("home").classList.remove("hidden")}
-function showCategories(){ac();sfx("tap");hideAll();$("categories").classList.remove("hidden")}
+function showCategories(){ac();sfx("start");hideAll();$("categories").classList.remove("hidden")}
 function showSaved(){hideAll();$("saved").classList.remove("hidden");renderSaved()}
 function selectCategory(i){currentCat=i;$("categoryTitle").textContent=categories[i][1]+" "+categories[i][0];$("pagegrid").innerHTML=DES[i].map((d,n)=>`<button class="page" onclick="openPage(${i},${n})"><div class="thumb"><svg viewBox="0 0 400 400">${colorize(shapeSVG(i,n),n+i)}</svg></div><b>${d[0]}</b><small>塗る</small></button>`).join("");hideAll();$("pages").classList.remove("hidden")}
 function showPages(){selectCategory(currentCat)}
@@ -813,7 +813,7 @@ d.addEventListener("pointermove",e=>{if(!down)return;const p=pos(e),dt=Math.max(
 ["pointerup","pointercancel"].forEach(t=>d.addEventListener(t,()=>{down=false;scratch(0)}));
 document.addEventListener("pointerdown",e=>{if(e.target.closest("button")){ac();sfx("tap")}},true)})();
 let AC,master,mus,NB,nzG,nzF,musicOn=true,timer=null,step=0,nextT=0;
-function ac(){if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=.7;master.connect(AC.destination);mus=AC.createGain();mus.gain.value=.3;mus.connect(master);NB=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const nz=AC.createBufferSource();nz.buffer=NB;nz.loop=true;nzF=AC.createBiquadFilter();nzF.type="bandpass";nzF.frequency.value=2200;nzF.Q.value=.9;nzG=AC.createGain();nzG.gain.value=0;nz.connect(nzF);nzF.connect(nzG);nzG.connect(master);nz.start();if(musicOn)startMusic()}if(AC.state==="suspended")AC.resume()}
+function ac(){if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=.9;master.connect(AC.destination);mus=AC.createGain();mus.gain.value=.5;mus.connect(master);NB=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const nz=AC.createBufferSource();nz.buffer=NB;nz.loop=true;nzF=AC.createBiquadFilter();nzF.type="bandpass";nzF.frequency.value=2200;nzF.Q.value=.9;nzG=AC.createGain();nzG.gain.value=0;nz.connect(nzF);nzF.connect(nzG);nzG.connect(master);nz.start();if(musicOn)startMusic()}if(AC.state==="suspended")AC.resume()}
 function scratch(v){if(!AC)return;const t=AC.currentTime;nzG.gain.setTargetAtTime(v,t,.025);nzF.frequency.setTargetAtTime(erase?3800:1500+v*5000,t,.04)}
 const hz=s=>261.63*Math.pow(2,s/12),PENTA=[0,2,4,7,9];
 function tone(f,t,d,type,v,dest,slide){const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(f*slide,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(dest||master);o.start(t);o.stop(t+d+.05)}
@@ -839,6 +839,7 @@ if(i%8===0)tone(130,t,.14,"sine",.3,mus,.4);
 if(i%2===1)puff(t,.05,7000,.06,mus);
 step++;nextT+=.24}},100)}
 function stopMusic(){clearInterval(timer);timer=null}
+function testSound(){ac();sfx("ok");toast("🔔 効果音OK！ BGMも再生中だよ")}
 function toggleMusic(){ac();musicOn=!musicOn;$("musicBtn").textContent=musicOn?"🎵 BGM ON":"🔇 BGM OFF";$("musicBtn").classList.toggle("off",!musicOn);musicOn?startMusic():stopMusic()}
 function resetPage(){openPage(currentCat,currentPage)}
 function compose(cb,S=800){const o=document.createElement("canvas");o.width=o.height=S;const x=o.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,S,S);x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";x.drawImage(pc,0,0,S,S);svgImg($("drawing").innerHTML,im=>{x.drawImage(im,0,0,S,S);cb(o)},S)}
