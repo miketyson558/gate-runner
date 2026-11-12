@@ -1,93 +1,12 @@
-<!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#ffeff7">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ぬりえスマイル">
-<title>ぬりえスマイル 🌈｜600作品版</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body><main>
-<div class="top"><div class="brand"><span id="logo" style="display:inline-block;width:30px;height:30px;vertical-align:middle"></span> ぬりえスマイル</div><span><button class="pill" id="musicBtn" onclick="toggleMusic()">🎵 ON</button> <button class="pill" onclick="showSaved()">💖 アルバム</button></span></div>
-<section id="home">
-<div class="hero">
-<div style="font-size:13px;font-weight:900;color:#ffd76a;letter-spacing:3px">COLORING STUDIO</div>
-<h1 id="ttl">ぬりえスマイル</h1>
-<div class="sub">600種類のオリジナル線画から、好きな一枚を選ぼう</div>
-<div class="cast" id="cast"></div>
-<button class="start" onclick="showCategories()">🎨 ぬりえを始める</button><br><button class="pill" style="margin-top:12px" onclick="$('imp').click()">📷 携帯の画像をぬりえに</button><input id="imp" type="file" accept="image/*" hidden onchange="importArt(this)"><button class="pill" style="margin-top:12px" onclick="var r=$('urlRow');r.style.display=r.style.display=='none'?'block':'none'">🌐 ネットの画像をぬりえに</button>
-<div id="urlRow" style="display:none;margin-top:8px"><input id="urlIn" placeholder="画像のURLを貼り付け" style="padding:10px;border-radius:12px;border:0;width:min(78vw,320px)"> <button class="pill" onclick="importURL()">読み込む</button><div id="urlNote" style="font-size:12px;margin-top:6px;max-width:340px;margin-left:auto;margin-right:auto"></div><div style="font-size:11px;opacity:.8;margin-top:4px">画像のコピペ・ドラッグ＆ドロップもOK。自分で楽しむ用にしてね（著作権に注意）</div></div>
-
-<div class="panel" style="margin-top:12px;background:#ffffff18;border-color:#ffffff25;color:#fff">
-  <div style="font-weight:900;margin-bottom:7px">🎵 サウンドスタジオ</div>
-  <div style="display:flex;gap:7px;flex-wrap:wrap;justify-content:center">
-    <select id="bgmSelect" class="pill" aria-label="BGM選択"></select>
-    <label class="pill">音量 <input id="volRange" type="range" min="0" max="100" value="70" style="vertical-align:middle"></label>
-    <button class="pill" onclick="toggleMusic()">🔊 BGM ON/OFF</button>
-  </div>
-  <div style="font-size:11px;opacity:.8;margin-top:6px">端末の「タップ操作」のあとに音声を開始します。</div>
-</div>
-<div class="features"><span class="feature">🌟 全600作品</span><span class="feature">✨ 20テーマ</span><span class="feature">📷 写真もぬりえ</span><span class="feature">🖍️ 96色</span><span class="feature">🎵 かわいい音</span></div>
-</div>
-<div class="stats"><div class="stat"><b id="total">0</b>ぬりえ</div><div class="stat"><b>96</b>カラー</div><div class="stat"><b id="catn">0</b>テーマ</div></div>
-<h2 class="section">🎪 キャラクター</h2><div class="parade" id="parade"></div>
-<h2 class="section">💝 おすすめ</h2>
-<div class="grid">
-<button class="cat" id="reco1" onclick="openPage(14,0)"></button>
-<button class="cat" id="reco2" onclick="openPage(20,0)"></button>
-</div>
-</section>
-<section id="categories" class="hidden">
-<div class="toolbar"><button class="back" onclick="showHome()">← ホーム</button><span>テーマ選択</span></div>
-<h2 class="section">テーマを選ぶ</h2><div id="catgrid" class="grid"></div>
-</section>
-<section id="pages" class="hidden">
-<div class="toolbar"><button class="back" onclick="showCategories()">← カテゴリー</button><b id="categoryTitle"></b></div>
-<p class="hint">好きな絵を選んでください。</p><div id="pagegrid" class="pages"></div>
-</section>
-<section id="editor" class="hidden">
-<div class="toolbar"><button class="back" onclick="showPages()">← もどる</button><b id="pageTitle">ぬりえ</b><button class="back" onclick="resetPage()">↻ リセット</button></div>
-<div class="panel"><div id="stage"><canvas id="paint" width="800" height="800"></canvas><div id="lines"><svg id="drawing" viewBox="0 0 400 400"></svg></div></div>
-<p class="hint">色を選んで、なぞって塗るか 🪣 でタッチしてひとぬり</p>
-
-<div class="actions" style="margin-bottom:8px">
-  <button class="action tl sel" data-tool="crayon" onclick="setMaterial('crayon')">🖍️ クレヨン</button>
-  <button class="action tl" data-tool="spray" onclick="setMaterial('spray')">💨 スプレー</button>
-  <button class="action tl" data-tool="brush" onclick="setMaterial('brush')">🖌️ 水彩筆</button>
-  <button class="action tl" data-tool="pencil" onclick="setMaterial('pencil')">✏️ 鉛筆</button>
-</div>
-<div class="actions tools"><button class="action tl" id="sz10" onclick="setSize(10)">細</button><button class="action tl sel" id="sz22" onclick="setSize(22)">中</button><button class="action tl" id="sz46" onclick="setSize(46)">太</button><button class="action tl" id="bkt" onclick="toggleBucket()">🪣 ぬる</button><button class="action tl" id="ers" onclick="toggleErase()">🧽 消す</button><button class="action tl sel" id="ins" onclick="toggleInside()">🔒 はみ出し防止</button></div><div id="palette" class="palette"></div>
-<div class="actions"><button class="action" onclick="undo()">↶ 一つ戻す</button><button class="action" onclick="clearAll()">🗑 全部消す</button><button class="action primary" onclick="saveArtwork()">💾 作品を保存</button><button class="action" onclick="downloadArtwork()">📥 画像をダウンロード</button></div>
-</div>
-</section>
-<section id="saved" class="hidden">
-<div class="toolbar"><button class="back" onclick="showHome()">← ホーム</button><b>💖 作品アルバム</b></div>
-<p class="hint">この端末に保存した作品だよ。</p><div id="savedList" class="saved-list"></div>
-</section>
-<p class="hint" style="margin-top:22px">ぬりえスマイル 🌈 たのしく、じゆうに、ぬってみよう！</p>
-</main>
-<script src="data/cat01.js" defer></script>
-<script src="data/cat02.js" defer></script>
-<script src="data/cat03.js" defer></script>
-<script src="data/cat04.js" defer></script>
-<script src="data/cat05.js" defer></script>
-<script src="data/cat06.js" defer></script>
-<script src="data/cat07.js" defer></script>
-<script src="data/cat08.js" defer></script>
-<script src="data/cat09.js" defer></script>
-<script src="data/cat10.js" defer></script>
-<script src="data/cat11.js" defer></script>
-<script src="data/cat12.js" defer></script>
-<script src="data/cat13.js" defer></script>
-<script src="data/cat14.js" defer></script>
-<script src="data/cat15.js" defer></script>
-<script src="data/cat16.js" defer></script>
-<script src="data/cat17.js" defer></script>
-<script src="data/cat18.js" defer></script>
-<script src="data/cat19.js" defer></script>
-<script src="data/cat20.js" defer></script>
-<script src="app.js" defer></script>
-</body></html>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#eef1ff"><title>ぬりえスマイル｜高品質プロトタイプ</title><link rel="stylesheet" href="style.css"></head><body>
+<header class="top"><div class="brand">🌈 ぬりえスマイル</div><div><button class="pill" onclick="album()">💖 アルバム</button></div></header><main>
+<section id="home"><div class="hero"><div id="floaters" class="home-floaters"></div><div style="position:relative;z-index:4;font-weight:950;letter-spacing:3px">COLORING STUDIO</div><h1>ぬりえスマイル</h1><div class="sub">かわいい×かっこいいオリジナル線画を、指一本で楽しく塗ろう</div><button class="start" onclick="categories()">🎨 ぬりえを始める</button><div class="features"><span class="feature">✨ 20カテゴリー</span><span class="feature">🖼️ 600作品データ</span><span class="feature">🎵 10 BGM</span><span class="feature">📷 写真→線画</span></div><div class="stats"><div class="stat"><b id="total">0</b>作品</div><div class="stat"><b>20</b>テーマ</div><div class="stat"><b>96</b>カラー</div></div></div>
+<div class="studio"><b>🎵 サウンドスタジオ</b><div class="row" style="margin-top:8px"><select id="bgm"><option value="0">オルゴール</option><option value="1">楽しいマーチ</option><option value="2">リラックスピアノ</option><option value="3">冒険</option><option value="4">森の環境音風</option><option value="5">夢見る夜</option><option value="6">海のゆらぎ風</option><option value="7">カフェ</option><option value="8">星空</option><option value="9">ハッピー</option></select><label>音量 <input id="vol" type="range" min="0" max="1" step=".01" value=".4"></label><button id="mute" class="pill">🔊 BGM ON</button></div></div>
+<div class="studio"><b>📷 写真→塗り絵線画</b><div class="row" style="margin-top:8px"><input id="photo" type="file" accept="image/*" capture="environment"><label>線の強さ <input id="threshold" type="range" min="20" max="150" value="60"></label></div><div class="note">端末内でエッジ検出・二値化します。写真はサーバーへ送信しません。</div></div></section>
+<section id="categories" class="hidden"><div class="toolbar"><button class="back" onclick="home()">← ホーム</button><b>20カテゴリー</b></div><div id="catGrid" class="grid"></div></section>
+<section id="items" class="hidden"><div class="toolbar"><button class="back" onclick="categories()">← カテゴリー</button><b id="catTitle"></b></div><div id="itemGrid" class="grid"></div></section>
+<section id="editor" class="hidden"><div class="toolbar"><button class="back" onclick="items()">← 作品一覧</button><b id="title"></b><button class="back" onclick="reloadArt()">↻</button></div><div class="panel"><div id="stage"><canvas id="paint" width="800" height="800"></canvas><canvas id="line" width="800" height="800"></canvas></div><p class="note">指でドラッグして塗れます。Canvasは高DPIでも座標ズレが起きにくいよう内部800×800座標へ変換しています。マルチタッチは無視します。</p><div class="controls"><button class="action tool sel" data-tool="brush" onclick="tool('brush',this)">🖍️ 塗る</button><button class="action tool" data-tool="bucket" onclick="tool('bucket',this)">🪣 バケツ</button><button class="action tool" data-tool="eraser" onclick="tool('eraser',this)">🧽 消す</button><button class="action" onclick="size(10)">細</button><button class="action" onclick="size(20)">中</button><button class="action" onclick="size(34)">太</button></div><div class="controls"><button class="action" onclick="material='crayon';sfx('crayon')">クレヨン</button><button class="action" onclick="material='spray';sfx('spray')">スプレー</button><button class="action" onclick="material='brush';sfx('brush')">水彩筆</button><button class="action" onclick="material='pencil';sfx('pencil')">鉛筆</button></div><div id="palette" class="palette"></div><div class="controls"><button class="action" onclick="undo()">↶ 戻す</button><button class="action" onclick="clearPaint()">🗑 全消し</button><button class="action primary" onclick="saveArt()">💾 保存</button><button class="action" onclick="downloadArt()">📥 PNG</button></div></div></section>
+<section id="album" class="hidden"><div class="toolbar"><button class="back" onclick="home()">← ホーム</button><b>💖 アルバム</b></div><div id="albumGrid" class="grid"></div></section>
+</main><div id="toast" class="toast"></div>
+<script>window.NURIE_DATA=[];</script>
+<script src="data/cat01.js"></script><script src="data/cat02.js"></script><script src="data/cat03.js"></script><script src="data/cat04.js"></script><script src="data/cat05.js"></script><script src="data/cat06.js"></script><script src="data/cat07.js"></script><script src="data/cat08.js"></script><script src="data/cat09.js"></script><script src="data/cat10.js"></script><script src="data/cat11.js"></script><script src="data/cat12.js"></script><script src="data/cat13.js"></script><script src="data/cat14.js"></script><script src="data/cat15.js"></script><script src="data/cat16.js"></script><script src="data/cat17.js"></script><script src="data/cat18.js"></script><script src="data/cat19.js"></script><script src="data/cat20.js"></script><script src="app.js"></script></body></html>
