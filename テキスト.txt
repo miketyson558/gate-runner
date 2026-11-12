@@ -1,339 +1,423 @@
+
 <!doctype html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#fff8ee">
-<title>ぬりえスマイル</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#16192b">
+<title>ぬりえアトリエ</title>
 <style>
-:root{—ink:#342b3b;—pink:#ef7a9d;—cream:#fff8ee;—card:#fff;—line:#eadde0;—mint:#c9eee0}
+:root{color-scheme:dark;--bg:#121526;--panel:#1d2238;--panel2:#272e49;--ink:#f5f4ff;--muted:#aeb5d0;--pink:#ff78ad;--cyan:#62e4dc;--gold:#ffd875}
 *{box-sizing:border-box}
-body{margin:0;background:var(—cream);color:var(—ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header{padding:22px 16px 12px;text-align:center}
-h1{font-size:26px;margin:0 0 5px}
-header p{margin:0;color:#746a76;font-size:14px}
-main{max-width:950px;margin:auto;padding:12px}
-.panel{background:var(—card);border:1px solid var(—line);border-radius:18px;padding:16px;margin:0 0 14px;box-shadow:0 4px 14px #4533440b}
-h2{font-size:18px;margin:0 0 12px}
-.categories{display:flex;gap:8px;overflow:auto;padding:2px 0 8px}
-button,.file-label{border:0;border-radius:12px;background:#f4eaf0;color:var(—ink);padding:11px 14px;font-size:15px;font-weight:650;cursor:pointer;white-space:nowrap}
-button.active{background:var(—pink);color:white}
-button.primary{background:var(—pink);color:white}
-button.secondary{background:var(—mint)}
-button:disabled{opacity:.45}
-.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.art-card{border:1px solid var(—line);border-radius:14px;padding:8px;background:white;text-align:center}
-.art-card canvas{width:100%;height:auto;display:block;background:white;border-radius:9px;touch-action:manipulation}
-.art-card button{margin-top:7px;width:100%;font-size:14px;padding:9px}
-.workspace{display:grid;grid-template-columns:1fr;gap:12px}
-.canvas-wrap{width:100%;max-width:600px;margin:auto;background:white;border:1px solid var(—line);border-radius:14px;overflow:hidden;touch-action:none}
-#paintCanvas{display:block;width:100%;height:auto;touch-action:none}
-.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.colors{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
-.swatch{width:31px;height:31px;border-radius:50%;border:2px solid #ffffff;box-shadow:0 0 0 1px #cdbfc5;padding:0}
-.swatch.selected{box-shadow:0 0 0 3px var(—ink)}
-input[type="range"]{width:100%;accent-color:var(—pink)}
-label{font-size:14px}
-small,.note{color:#746a76;font-size:13px;line-height:1.55}
-.row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:10px 0}
-#photoInput{display:none}
-.saved-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.saved-item{border:1px solid var(—line);border-radius:10px;padding:5px;background:white}
-.saved-item img{width:100%;display:block;border-radius:7px}
-.saved-item button{width:100%;margin-top:5px;padding:7px;font-size:12px}
-.status{min-height:20px;color:#6d5664;font-size:13px;margin-top:8px}
-footer{text-align:center;padding:8px 16px 28px;color:#827780;font-size:12px}
-@media(min-width:700px){.gallery{grid-template-columns:repeat(4,minmax(0,1fr))}.workspace{grid-template-columns:minmax(0,1fr) 260px}.saved-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+html,body{margin:0;min-height:100%;background:radial-gradient(ellipse at top,#29304e 0,#16192b 48%,#111321 100%);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}
+body{overscroll-behavior:none}
+button,input,select{font:inherit}
+button{color:inherit}
+.app{max-width:1120px;margin:auto;padding:18px 18px calc(30px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:2px 0 20px}
+.brand{display:flex;align-items:center;gap:12px}.brandmark{width:48px;height:48px;border-radius:16px;background:linear-gradient(145deg,#ff9ac4,#a780ff);display:grid;place-items:center;box-shadow:0 7px 22px #0005}
+.brandmark svg{width:31px}.brand h1{font-size:clamp(20px,4vw,27px);margin:0;letter-spacing:.02em}.brand small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.top-controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+select,.small-btn,.tool-btn,.primary,.secondary{border:1px solid #ffffff20;background:linear-gradient(145deg,#303854,#20263d);border-radius:13px;padding:10px 13px;color:var(--ink);box-shadow:0 4px 12px #0003}
+select{max-width:190px}.small-btn{min-height:42px;cursor:pointer}
+.hero{position:relative;overflow:hidden;border:1px solid #ffffff17;border-radius:25px;padding:27px 25px 23px;background:linear-gradient(115deg,#342b56dd,#1d3950dd 65%,#264b58dd);box-shadow:0 14px 35px #0003}
+.hero h2{margin:0 0 8px;font-size:clamp(24px,5vw,39px);line-height:1.2;max-width:600px}
+.hero p{margin:0;color:#e0e4f5;max-width:560px;line-height:1.65}
+.hero .primary{margin-top:17px;background:linear-gradient(135deg,#ff77ad,#a078ff);border:0;font-weight:800;padding:13px 19px;cursor:pointer}
+.buddies{position:absolute;right:4%;bottom:5px;width:310px;height:145px;pointer-events:none}
+.buddy{position:absolute;font-size:46px;filter:drop-shadow(0 8px 8px #0005);animation:float 3.2s ease-in-out infinite}
+.buddy:nth-child(1){left:8%;top:37px;animation-delay:-.4s}.buddy:nth-child(2){left:42%;top:12px;animation-delay:-1.4s;font-size:53px}.buddy:nth-child(3){left:72%;top:52px;animation-delay:-2s}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-13px) rotate(5deg)}}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:23px 2px 12px}
+.section-title h2{font-size:18px;margin:0}.section-title span{font-size:12px;color:var(--muted)}
+.categories{display:flex;gap:8px;overflow:auto;padding:2px 1px 12px;scrollbar-width:thin}
+.cat{flex:none;border:1px solid #ffffff1c;background:#20263c;color:#dce1f4;border-radius:999px;padding:9px 13px;cursor:pointer;white-space:nowrap}
+.cat.active{background:linear-gradient(135deg,#ff78ad,#a17cff);border-color:transparent;color:#fff;font-weight:700}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+.card{min-width:0;text-align:left;background:linear-gradient(145deg,#272e49,#1d2237);border:1px solid #ffffff17;border-radius:17px;padding:9px;cursor:pointer;box-shadow:0 7px 18px #0002;transition:transform .15s,border-color .15s}
+.card:active{transform:scale(.97)}.thumb{height:120px;border-radius:11px;background:#fff;display:grid;place-items:center;overflow:hidden}
+.thumb svg{width:100%;height:100%}.card b{display:block;padding:9px 3px 2px;font-size:14px}.card small{display:block;padding:0 3px 3px;color:var(--muted)}
+.workspace{display:none;margin-top:21px}.workspace.show{display:block}
+.work-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;flex-wrap:wrap}
+.work-top h2{font-size:18px;margin:0}.actions{display:flex;gap:7px;flex-wrap:wrap}.tool-btn,.secondary{min-height:40px;cursor:pointer}
+.primary{cursor:pointer}.board{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px;align-items:start}
+.canvas-wrap{width:100%;aspect-ratio:1;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 12px 32px #0005;touch-action:none;position:relative}
+#paint{display:block;width:100%;height:100%;touch-action:none}
+.sidebar{background:#1d2238;border:1px solid #ffffff16;border-radius:18px;padding:14px}
+.control{margin:0 0 15px}.control label{display:flex;justify-content:space-between;color:#e6e9f7;font-size:13px;margin-bottom:7px}
+input[type=range]{width:100%;accent-color:#ff82b5}
+.colors{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+.swatch{width:100%;aspect-ratio:1;border-radius:50%;border:2px solid #ffffff55;cursor:pointer}.swatch.active{outline:2px solid white;outline-offset:2px}
+.toolrow{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.toolrow button{padding:9px 5px;font-size:12px}
+.sound-note{font-size:11px;color:var(--muted);line-height:1.5;margin:6px 0 0}
+.import-box{margin-top:14px;background:#1d2238;border:1px solid #ffffff16;border-radius:18px;padding:14px}
+.import-box h3{margin:0 0 8px;font-size:15px}.import-box p{font-size:12px;line-height:1.5;color:var(--muted);margin:0 0 10px}
+.import-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.file-label{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 13px;border-radius:12px;background:linear-gradient(135deg,#3c4665,#29334e);border:1px solid #ffffff24;cursor:pointer}
+.file-label input{display:none}
+footer{color:#929bb9;font-size:11px;text-align:center;margin:23px 0 0}
+@media(max-width:760px){.app{padding:12px 12px calc(24px + env(safe-area-inset-bottom))}.buddies{opacity:.65;right:-24px;transform:scale(.75);transform-origin:right bottom}.hero{padding-right:130px}.board{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.sidebar .colors-box{grid-column:1/-1}.sidebar .tool-box{grid-column:1/-1}.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.thumb{height:130px}}
+@media(max-width:420px){header{align-items:flex-start}.top-controls{gap:6px}.top-controls select{max-width:132px;font-size:12px}.hero{padding:20px 112px 18px 17px}.hero p{font-size:13px}.buddies{right:-38px;transform:scale(.65)}.gallery{gap:9px}.thumb{height:110px}.sidebar{padding:11px}}
 </style>
 </head>
 <body>
+<div class="app">
 <header>
-  <h1>ぬりえスマイル</h1>
-  <p>好きな絵を選んで、自由に色をぬろう</p>
+  <div class="brand">
+    <div class="brandmark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M20 4 24 15 36 15 27 22 30 34 20 27 10 34 13 22 4 15 16 15 20 4Z" fill="white" stroke="#fff" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="#ff78ad"/></svg></div>
+    <div><h1>ぬりえアトリエ</h1><small>ひらめきを、カラフルに。</small></div>
+  </div>
+  <div class="top-controls">
+    <select id="bgm" aria-label="BGMを選択">
+      <option value="off">BGM：オフ</option><option value="musicbox">オルゴール</option><option value="march">たのしいマーチ</option><option value="piano">リラックスピアノ</option><option value="adventure">冒険の旅</option><option value="forest">森のそよ風</option><option value="ocean">海のきらめき</option><option value="dream">夢の星空</option><option value="play">わくわく遊園地</option><option value="calm">やさしい午後</option><option value="night">月夜のさんぽ</option>
+    </select>
+    <button class="small-btn" id="mute" aria-label="サウンドのミュート">♪ ON</button>
+  </div>
 </header>
-<main>
-  <section class="panel">
-    <h2>ぬりえを選ぶ</h2>
-    <div class="categories" id="categories"></div>
-    <div class="gallery" id="gallery"></div>
-  </section>
 
-  <section class="panel">
-    <h2>ぬりえを楽しむ</h2>
-    <div class="workspace">
-      <div class="canvas-wrap"><canvas id="paintCanvas" width="800" height="800"></canvas></div>
-      <div>
-        <div class="colors" id="colors"></div>
-        <div class="controls">
-          <button id="undoBtn">↶ もどす</button>
-          <button id="clearBtn">消す</button>
-          <button class="primary" id="saveBtn">作品を保存</button>
-          <button class="secondary" id="downloadBtn">PNG保存</button>
-        </div>
-        <p class="note">線で囲まれた場所をタップすると色をぬれます。線の上をドラッグして自由に描くこともできます。</p>
+<section class="hero">
+  <h2>きょうは何を<br>ぬってみる？</h2>
+  <p>お気に入りの線画を選んで、あなただけの色に仕上げよう。写真から線画を作ることもできます。</p>
+  <button class="primary" id="browse">ぬりえを見つける　↓</button>
+  <div class="buddies" aria-hidden="true"><span class="buddy">🐙</span><span class="buddy">🦊</span><span class="buddy">🌱</span></div>
+</section>
+
+<div class="section-title"><h2>カテゴリー</h2><span>全20カテゴリー</span></div>
+<nav class="categories" id="categories" aria-label="カテゴリー"></nav>
+<div class="section-title"><h2 id="galleryTitle">ぬりえを選ぼう</h2><span id="countLabel"></span></div>
+<section class="gallery" id="gallery"></section>
+
+<section class="workspace" id="workspace">
+  <div class="work-top">
+    <h2 id="drawingTitle">ぬりえ</h2>
+    <div class="actions">
+      <button class="tool-btn" id="undo">↶ もどす</button>
+      <button class="tool-btn" id="clear">消す</button>
+      <button class="tool-btn" id="save">PNG保存</button>
+      <button class="tool-btn" id="close">一覧へ</button>
+    </div>
+  </div>
+  <div class="board">
+    <div class="canvas-wrap"><canvas id="paint" aria-label="塗り絵キャンバス"></canvas></div>
+    <aside class="sidebar">
+      <div class="control">
+        <label for="brushSize"><span>線の太さ</span><span id="sizeValue">18 px</span></label>
+        <input id="brushSize" type="range" min="3" max="70" value="18">
       </div>
-    </div>
-  </section>
+      <div class="control">
+        <label for="tool"><span>画材</span></label>
+        <select id="tool" style="width:100%">
+          <option value="brush">水彩筆</option><option value="crayon">クレヨン</option><option value="pencil">色鉛筆</option><option value="spray">スプレー</option><option value="fill">バケツ塗り</option>
+        </select>
+      </div>
+      <div class="control colors-box">
+        <label><span>カラー</span><span id="colorName">コーラル</span></label>
+        <div class="colors" id="colors"></div>
+      </div>
+      <div class="control tool-box">
+        <label><span>効果音</span><span id="soundStatus">ON</span></label>
+        <p class="sound-note">画材に合わせた音を、塗っている間だけ再生します。音声は最初のタップ後に有効になります。</p>
+      </div>
+    </aside>
+  </div>
+</section>
 
-  <section class="panel">
-    <h2>写真からぬりえを作る</h2>
-    <p class="note">写真はこの端末内で処理します。顔や物の輪郭が見えやすい写真を選ぶと、塗りやすい線画になります。</p>
-    <div class="controls">
-      <label class="file-label primary" for="photoInput">写真を選ぶ</label>
-      <input id="photoInput" type="file" accept="image/*">
-      <button class="secondary" id="convertBtn" disabled>線画に変換して使う</button>
-    </div>
-    <div class="row"><label for="detail">細かさ</label><span id="detailText">標準</span></div>
-    <input id="detail" type="range" min="1" max="5" value="3">
-    <div class="row"><label for="threshold">線の濃さ</label><span id="thresholdText">標準</span></div>
-    <input id="threshold" type="range" min="1" max="5" value="3">
-    <div class="status" id="photoStatus"></div>
-  </section>
-
-  <section class="panel">
-    <h2>保存した作品</h2>
-    <div class="saved-grid" id="savedGrid"></div>
-    <p class="note">作品はこのブラウザの端末内に保存されます。</p>
-  </section>
-</main>
-<footer>オリジナルのぬりえアプリ</footer>
+<section class="import-box" id="importBox">
+  <h3>写真を線画に変換</h3>
+  <p>カメラで撮影、またはアルバムから写真を選択できます。画像は端末内で処理され、サーバーへ送信されません。</p>
+  <div class="import-controls">
+    <label class="file-label">写真を選ぶ / 撮影<input id="photo" type="file" accept="image/*" capture="environment"></label>
+    <label style="font-size:12px;color:#e6e9f7">線の強さ <input id="threshold" type="range" min="15" max="120" value="48"></label>
+    <label style="font-size:12px;color:#e6e9f7">ノイズ除去 <input id="denoise" type="range" min="0" max="3" value="1"></label>
+    <label style="font-size:12px;color:#e6e9f7">線の太さ <input id="lineWidth" type="range" min="1" max="4" value="1"></label>
+    <button class="secondary" id="convert" disabled>線画に変換</button>
+  </div>
+</section>
+<footer>試作版 · オリジナルの線画サンプル · ブラウザ内で動作</footer>
+</div>
 
 <script>
 "use strict";
 
-const SIZE=800, MAX_UNDO=20, STORE_KEY="nurieSmileSaved";
-const palette=[
- "#111111","#ffffff","#f44336","#e91e63","#9c27b0","#673ab7","#3f51b5","#2196f3",
- "#03a9f4","#00bcd4","#009688","#4caf50","#8bc34a","#cddc39","#ffeb3b","#ffc107",
- "#ff9800","#ff5722","#795548","#9e9e9e","#f8bbd0","#fce4ec","#d1c4e9","#bbdefb",
- "#b2dfdb","#c8e6c9","#fff9c4","#ffe0b2","#d7ccc8","#b0bec5","#8d6e63","#607d8b",
- "#ef9a9a","#f48fb1","#ce93d8","#b39ddb","#9fa8da","#90caf9","#81d4fa","#80deea",
- "#80cbc4","#a5d6a7","#c5e1a5","#e6ee9c","#fff59d","#ffe082","#ffcc80","#ffab91",
- "#bcaaa4","#bdbdbd","#ff1744","#f50057","#d500f9","#651fff","#3d5afe","#2979ff",
- "#00b0ff","#00e5ff","#1de9b6","#00e676","#76ff03","#c6ff00","#ffea00","#ffc400",
- "#ff9100","#ff3d00","#5d4037","#424242","#f6d7b0","#d9a066","#bb774b","#8f563b",
- "#ffe6c7","#f3c9a9","#d99b72","#a96f50","#fff1a8","#f4d35e","#ee964b","#f95738",
- "#b8e0d2","#95d5b2","#52b788","#40916c","#bde0fe","#a2d2ff","#6ea8fe","#4361ee",
- "#f1faee","#a8dadc","#457b9d","#1d3557"
+/* 拡張用データ形式：category ごとに drawings を追加し、各カテゴリー30点まで登録できます。 */
+const CATEGORIES=[
+ {id:"animals",name:"動物",emoji:"🐾",drawings:[["まるまるキツネ","fox"],["おさんぽネコ","cat"]]},
+ {id:"plants",name:"植物",emoji:"🌿",drawings:[["小さな花束","flower"],["森のきのこ","mushroom"]]},
+ {id:"birds",name:"鳥",emoji:"🪶",drawings:[["ことりの歌","bird"],["羽ひろげるクジャク","peacock"]]},
+ {id:"sea",name:"海の生き物",emoji:"🐠",drawings:[["なかよしタコ","octopus"],["ゆらゆらクラゲ","jellyfish"]]},
+ {id:"vehicles",name:"乗り物",emoji:"🚗",drawings:[["雲のバス","bus"],["月面探査車","rover"]]},
+ {id:"landscapes",name:"風景",emoji:"🏞️",drawings:[["山の朝","mountain"],["海辺の灯台","lighthouse"]]},
+ {id:"heroes",name:"ヒーロー",emoji:"🦸",drawings:[["星のレスキュー隊","hero"],["風のガーディアン","guardian"]]},
+ {id:"aliens",name:"宇宙人",emoji:"👽",drawings:[["まんまる宇宙人","alien"],["月から来た友だち","moonpal"]]},
+ {id:"history",name:"歴史上の人物",emoji:"🏺",drawings:[["古代の探検家","explorer"],["星を見つめる学者","scholar"]]},
+ {id:"buildings",name:"建築物",emoji:"🏰",drawings:[["丘の上のお城","castle"],["まちの時計台","clocktower"]]},
+ {id:"fairytale",name:"おとぎ話の人物",emoji:"🧚",drawings:[["森の小さな魔法使い","wizard"],["花のフェアリー","fairy"]]},
+ {id:"dinosaurs",name:"恐竜・古生物",emoji:"🦕",drawings:[["おだやかステゴサウルス","stego"],["空飛ぶ翼竜","pterosaur"]]},
+ {id:"insects",name:"昆虫",emoji:"🦋",drawings:[["ひらひら蝶々","butterfly"],["てんとう虫の散歩","ladybug"]]},
+ {id:"food",name:"スイーツ・食べ物",emoji:"🍰",drawings:[["いちごのケーキ","cake"],["おやつのドーナツ","donut"]]},
+ {id:"fantasy",name:"ファンタジー生物",emoji:"🐉",drawings:[["星を守る小竜","dragon"],["雲のユニコーン","unicorn"]]},
+ {id:"space",name:"宇宙・惑星",emoji:"🪐",drawings:[["わっかの惑星","planet"],["宇宙ステーション","station"]]},
+ {id:"robots",name:"ロボット・メカ",emoji:"🤖",drawings:[["お手伝いロボ","robot"],["未来の小型メカ","mech"]]},
+ {id:"sports",name:"スポーツ",emoji:"⚽",drawings:[["ゴールをねらう","soccer"],["空へジャンプ","basketball"]]},
+ {id:"music",name:"楽器・音楽",emoji:"🎵",drawings:[["星のトランペット","trumpet"],["森のバイオリン","violin"]]},
+ {id:"events",name:"季節のイベント",emoji:"🎃",drawings:[["秋のおばけランタン","lantern"],["冬の雪だるま","snowman"]]}
 ];
 
-const animals=[
- {id:"cat",name:"おしゃれな子ねこ",kind:"cat"},
- {id:"fox",name:"森のきつね",kind:"fox"},
- {id:"rabbit",name:"花かんむりのうさぎ",kind:"rabbit"},
- {id:"bear",name:"ぼうしのくま",kind:"bear"}
-];
-const fantasy=[
- {id:"dragon",name:"小さなドラゴン",kind:"dragon"},
- {id:"fairy",name:"星の妖精",kind:"fairy"},
- {id:"unicorn",name:"ユニコーン",kind:"unicorn"},
- {id:"castle",name:"森のお城",kind:"castle"}
-];
-const food=[
- {id:"cake",name:"いちごケーキ",kind:"cake"},
- {id:"icecream",name:"アイスクリーム",kind:"icecream"},
- {id:"apple",name:"りんご",kind:"apple"},
- {id:"donut",name:"ドーナツ",kind:"donut"}
-];
-const categories=[
- {id:"animals",label:"どうぶつ",items:animals},
- {id:"fantasy",label:"ファンタジー",items:fantasy},
- {id:"food",label:"たべもの",items:food}
-];
+const drawings={
+fox:`<path d="M28 45 34 14 51 30Q64 25 76 30L94 14 99 46Q106 58 99 72 91 89 64 90 38 88 29 72 22 60 28 45Z"/><path d="M38 49Q50 41 62 51Q75 41 89 49L84 65Q76 75 64 74 51 75 43 65Z"/><path d="M51 58h1m23 0h1M59 67q5 5 10 0"/><path d="M35 77q-18 2-13 18 20 7 31-2"/><path d="M39 34 36 24m52 10 3-10"/>`,
+cat:`<path d="M31 43 30 15 50 31Q64 25 77 31L96 15 96 44Q104 55 99 70 92 91 64 91 36 90 28 70 24 55 31 43Z"/><path d="M39 52q9-7 18 0m13 0q9-7 18 0"/><path d="M60 63q4-4 8 0l-4 5Z"/><path d="M64 68q-6 8-12 2m12-2q6 8 12 2"/><path d="M43 65 20 61m24 10-24 6m47-12 24-4m-24 10 24 6"/><path d="M42 33 40 23m42 10 3-10"/>`,
+flower:`<path d="M64 52v48m0-22q-26-21-30 4 19 9 30-4m0-10q24-23 31 1-18 12-31-1"/><circle cx="64" cy="34" r="11"/><ellipse cx="64" cy="17" rx="9" ry="13"/><ellipse cx="81" cy="27" rx="9" ry="13" transform="rotate(60 81 27)"/><ellipse cx="80" cy="45" rx="9" ry="13" transform="rotate(120 80 45)"/><ellipse cx="47" cy="45" rx="9" ry="13" transform="rotate(60 47 45)"/><ellipse cx="47" cy="27" rx="9" ry="13" transform="rotate(120 47 27)"/>`,
+mushroom:`<path d="M24 51Q28 22 64 19 99 20 104 51Z"/><path d="M50 51 45 91Q64 99 83 91L78 51Z"/><path d="M38 43q5-6 10 0m17-12q5-6 10 0m9 11q5-6 10 0"/><path d="M53 66q11 8 22 0"/>`,
+bird:`<path d="M29 58Q34 32 62 31 87 31 96 52L108 44 101 63Q95 81 72 84L62 98 55 83Q34 79 29 58Z"/><path d="M48 55q19-23 36 2-17 21-36-2Z"/><circle cx="78" cy="48" r="2.5"/><path d="m96 54 17 4-16 7m-45 17-8 15m25-12 5 12"/>`,
+peacock:`<path d="M62 69Q32 58 29 32 50 34 63 57 64 30 79 20 91 45 72 62 97 45 111 51 104 72 72 76"/><path d="M60 53Q51 79 61 97L76 97Q85 75 70 53Z"/><circle cx="64" cy="45" r="4"/><circle cx="45" cy="40" r="5"/><circle cx="81" cy="32" r="5"/><circle cx="102" cy="56" r="5"/><path d="M63 96v7m12-7v7m-15 0h8m4 0h8"/>`,
+octopus:`<path d="M34 55Q34 23 64 22 94 22 94 55 94 71 80 76H48Q34 71 34 55Z"/><path d="M42 74Q24 82 27 101 42 107 50 82m7-5q-12 14-4 28 14 4 17-15m9-12q-3 18 12 23 12-7 1-27m4-6q20 1 20 18-9 12-25 1"/><circle cx="54" cy="52" r="3"/><circle cx="74" cy="52" r="3"/><path d="M57 63q7 6 14 0"/>`,
+jellyfish:`<path d="M28 53Q30 22 64 20 98 22 100 53 95 72 64 72 34 72 28 53Z"/><path d="M39 69q-12 15 1 31 10-5 7-17m10-10q-9 19 2 30 11-7 7-20m9-9q1 18 13 24 9-10-1-23m10-5q14 11 7 25-12 3-15-15"/><circle cx="51" cy="48" r="2.7"/><circle cx="75" cy="48" r="2.7"/><path d="M57 58q7 5 14 0"/>`,
+bus:`<path d="M21 39Q21 28 34 28H94Q108 28 108 42V81H21Z"/><path d="M31 39h22v22H31Zm30 0h35v22H61Z"/><path d="M29 69h70"/><circle cx="39" cy="83" r="9"/><circle cx="89" cy="83" r="9"/><path d="M38 28q8-15 27-15t27 15"/>`,
+rover:`<path d="m25 64 10-24h45l16 24v16H25Z"/><path d="M41 40V26h27l12 14m-33 0 9-14"/><circle cx="40" cy="80" r="11"/><circle cx="82" cy="80" r="11"/><path d="M61 64v16m-27-8h53M69 26l19-13m-2 0h7"/>`,
+mountain:`<path d="m12 91 35-54 17 25 18-42 34 71Z"/><path d="m40 54 7-17 10 15-7-2-5 5m18 7 14-22 11 24-9-5-6 6"/><path d="M21 91q15-14 30 0 16-14 31 0 15-14 31 0"/><circle cx="31" cy="27" r="9"/>`,
+lighthouse:`<path d="m46 91 8-54h23l8 54Z"/><path d="M49 49H82m-27-12V24h22v13m-26-5h30"/><path d="m54 28-20-10m45 10 20-10"/><path d="M31 91q12-9 24 0 12-9 24 0 12-9 24 0"/><path d="M58 60h14m-17 13h20"/>`,
+hero:`<path d="M45 46q0-25 20-25t20 25l11 48H35Z"/><path d="M42 51 19 41 14 62l29 15m45-26 23-10 5 21-29 15"/><path d="M51 37q14-12 28 0M56 48h1m16 0h1m-12 9 5 2m-27 35 0 9m32-9 0 9"/><path d="m35 63-14 5m68-5 14 5"/>`,
+guardian:`<path d="M64 16 96 31v28Q92 83 64 99 36 83 32 59V31Z"/><path d="m64 28 20 10v20q-4 18-20 28-16-10-20-28V38Z"/><path d="m52 57 8 8 17-19"/><path d="M24 46 13 59l11 13m80-26 11 13-11 13"/>`,
+alien:`<path d="M28 58Q28 24 64 21 100 24 100 58 99 82 64 87 30 82 28 58Z"/><ellipse cx="48" cy="53" rx="12" ry="17"/><ellipse cx="80" cy="53" rx="12" ry="17"/><path d="M57 70q7 7 14 0m-7-49V12m-7 5q7-8 14 0"/><path d="M32 91q12-9 24 0m16 0q12-9 24 0"/>`,
+moonpal:`<path d="M83 18Q47 20 47 54t36 38Q40 102 25 68 9 34 39 17q21-12 44 1Z"/><circle cx="62" cy="51" r="2"/><circle cx="76" cy="61" r="2"/><path d="M57 72q9 8 18 0"/><path d="M35 86q-8 7-8 15m23-12-1 12"/>`,
+explorer:`<path d="M39 47q0-26 25-26t25 26v44H39Z"/><path d="M28 43q36-22 73 0l-9 8H37Z"/><path d="M49 53q7-5 14 0m10 0q7-5 14 0m-23 14q8 8 16 0"/><path d="m47 91-12 14m38-14 12 14"/><path d="m46 59-13 5m45-5 13 5"/>`,
+scholar:`<path d="M42 48q0-25 22-25t22 25v42H42Z"/><path d="m29 37 35-17 35 17-35 16Z"/><path d="M51 49q6-5 12 0m10 0q6-5 12 0m-25 15q9 7 18 0"/><circle cx="64" cy="72" r="8"/><path d="m43 89-8 14m48-14 8 14"/>`,
+castle:`<path d="M20 93V43h21V28l12 10 11-10 11 10 12-10v15h21v50Z"/><path d="M20 44h84M42 93V68q0-12 12-12t12 12v25m15-38V45m12 10V45M30 56V45"/><path d="M14 44V29h15v15m58 0V29h15v15"/><path d="M58 93V79h13v14"/>`,
+clocktower:`<path d="M34 95V49h60v46Z"/><path d="M41 49V25h46v24L64 12Z"/><circle cx="64" cy="39" r="10"/><path d="M64 32v8l6 3m-26 15h12v13H44Zm28 0h12v13H72Z"/><path d="M54 95V78h20v17"/>`,
+wizard:`<path d="M36 49q0-27 28-27t28 27v42H36Z"/><path d="m27 42 36-30 37 30Q64 35 27 42Z"/><path d="M47 53q7-6 14 0m11 0q7-6 14 0m-27 15q9 9 18 0"/><path d="m49 91-12 13m39-13 12 13"/><path d="m95 60 12-10 5 6-13 9"/>`,
+fairy:`<circle cx="64" cy="43" r="19"/><path d="M48 36q16-18 32 0M56 45h1m14 0h1m-8 8q5 4 10 0"/><path d="m53 61-9 34h40l-10-34Z"/><path d="M44 69Q17 45 20 75q8 13 24 8m32-14q27-24 24 6-8 13-24 8"/><path d="m64 25 3-14m-7 10-10-8m20 8 10-8"/>`,
+stego:`<path d="M24 77Q20 53 39 44l11-21 12 18 12-25 13 28 13-18 8 24q10 25-10 37H42Q26 87 24 77Z"/><path d="m39 45 11-22 12 18 12-25 13 28 13-18 8 24"/><circle cx="81" cy="54" r="2.5"/><path d="M43 87v13m39-13v13M24 67 12 58m10 18L10 72m77 12q12 12 23 5"/>`,
+pterosaur:`<path d="M62 53Q43 29 15 24q14 30 36 44L29 82q22 4 35-18 13 22 36 18L77 68q22-14 32-44-29 5-47 29Z"/><path d="m61 51 9-17 6 7m-13 12 19-7"/><circle cx="68" cy="46" r="2"/>`,
+butterfly:`<path d="M62 58Q41 27 19 33 15 58 45 66 15 74 24 94 48 98 63 66"/><path d="M66 58Q87 27 109 33q4 25-26 33 30 8 21 28-24 4-39-28"/><path d="M64 40v47m-4-43q-15-20-24-16m32 16q15-20 24-16"/><circle cx="47" cy="49" r="3"/><circle cx="83" cy="49" r="3"/>`,
+ladybug:`<ellipse cx="64" cy="64" rx="34" ry="30"/><path d="M64 35v58m-31-24q-15 10-17 24m79-24q15 10 17 24"/><path d="M52 38q-4-20-17-19m41 19q4-20 17-19"/><circle cx="45" cy="56" r="5"/><circle cx="82" cy="51" r="5"/><circle cx="46" cy="77" r="5"/><circle cx="81" cy="78" r="5"/><path d="M47 39q17-12 34 0"/>`,
+cake:`<path d="M24 57h80v34H24Z"/><path d="M24 57q10-14 20 0 10-14 20 0 10-14 20 0 10-14 20 0"/><path d="M34 45q-7-15 7-18 11 4 5 17m20 0q-7-15 7-18 11 4 5 17"/><path d="M22 92q42 12 84 0"/><circle cx="64" cy="28" r="4"/>`,
+donut:`<path d="M64 19Q99 19 102 52q3 36-35 43Q29 97 25 65 21 28 64 19Z"/><path d="M65 43q15-1 15 13t-16 15q-14 0-14-14t15-14Z"/><path d="M36 43q6-9 13-5m25-7q8 1 10 8m-6 46q8-1 13-8"/><path d="m37 66 6 3m39-23 5 4m-37 33 4-5"/>`,
+dragon:`<path d="M28 70Q28 44 55 43l9-25 14 17 22-9-10 28q18 20-4 33-24 15-45 0-13-7-13-17Z"/><path d="M54 45 39 25l22 9m20-1 13-18 3 22"/><path d="m80 55 16 10-18 1"/><circle cx="79" cy="47" r="2.5"/><path d="M49 79q-10 14-25 8m44 7-2 9m18-12 6 9"/>`,
+unicorn:`<path d="M34 54Q34 30 61 29 91 29 95 56l-5 31H40Z"/><path d="m55 31 9-24 10 23"/><path d="M41 39 25 25l5 27m55-8 12 19-9 18"/><path d="M49 55q7-6 14 0m10 0q7-6 14 0m-25 14q8 8 16 0"/><path d="M43 87q-12 10-23 1m52 1q12 10 23 1"/>`,
+planet:`<circle cx="64" cy="57" r="32"/><ellipse cx="64" cy="57" rx="53" ry="16" transform="rotate(-20 64 57)"/><path d="M50 48q8-10 17 0m7 18q7-8 14 0M46 70q8 4 14-2"/><circle cx="53" cy="53" r="2"/>`,
+station:`<path d="M53 46h22v36H53Z"/><path d="M28 48h20v31H28Zm48 0h20v31H76Z"/><path d="M34 53h8v21h-8Zm48 0h8v21h-8Z"/><path d="M64 46V29m-9 0h18M53 62H28m67 0H75M64 82v14m-9 0h18"/><circle cx="64" cy="61" r="6"/>`,
+robot:`<rect x="37" y="34" width="54" height="44" rx="12"/><path d="M64 34V22m-8 0h16m-35 26H23v20h14m54-20h14v20H91M48 78v17m32-17v17m-36 0h12m12 0h12"/><circle cx="53" cy="53" r="4"/><circle cx="75" cy="53" r="4"/><path d="M54 67q10 8 20 0"/>`,
+mech:`<path d="m42 34 22-15 22 15v38L64 87 42 72Z"/><path d="M42 45H25v25h17m44-25h17v25H86M52 87l-8 14m32-14 8 14"/><path d="m53 40 11-8 11 8v19L64 68 53 59Z"/><circle cx="64" cy="51" r="4"/><path d="M64 19V9m-7 4h14"/>`,
+soccer:`<circle cx="64" cy="59" r="32"/><path d="m64 43 12 9-5 14H57l-5-14Zm0-19-7 19m26-10-7 13m18 22-23-2m-26 0 18-2m-19-18 11 13m27 34 3 11m-35-11-3 11"/><path d="M45 97h12m14 0h12"/>`,
+basketball:`<circle cx="64" cy="46" r="25"/><path d="M40 46h48M64 21v50M47 28q17 18 34 36M81 28Q64 46 47 64"/><path d="M31 80h66m-53 0v18m40-18v18m-51 0h22m18 0h22"/>`,
+trumpet:`<path d="M27 57h43l32-16v40L70 65H27Z"/><path d="M70 57v8m-26-8v8m-8-8v8m66-24v40"/><circle cx="40" cy="54" r="3"/><path d="M104 41q13 20 0 40"/>`,
+violin:`<path d="M57 27q-14 10-3 23-14 12-2 24-12 12 4 22 11 7 18-3 10-12-1-22 12-13 0-24 11-13-3-21-8-4-13 1Z"/><path d="M64 22v73m-6-52 13 1m-14 24 14 1m-8-52 3-8 4 8"/><path d="m26 16 73 89"/>`,
+lantern:`<path d="M43 38h42l8 48H35Z"/><path d="M48 38V26h32v12M43 26q21-19 42 0m-21 0V12"/><path d="M49 56q15-14 30 0v17q-15 13-30 0Z"/><path d="M64 57q-10 11 0 16 10-5 0-16Z"/>`,
+snowman:`<circle cx="64" cy="70" r="25"/><circle cx="64" cy="35" r="18"/><path d="M49 19h30l-4-12H54Z"/><circle cx="58" cy="33" r="2"/><circle cx="70" cy="33" r="2"/><path d="m64 37 13 4-13 4m-7 0q7 7 14 0m-50 20 21 8m69-8-21 8m-24 20v10m18-10v10"/><path d="M45 67h38"/>`
+};
 
-const $=s=>document.querySelector(s);
-const gallery=$("#gallery"), categoryBox=$("#categories");
-const canvas=$("#paintCanvas"), ctx=canvas.getContext("2d",{willReadFrequently:true});
-let selectedCategory="animals", currentColor=palette[2], currentBase=null;
-let undoStack=[], drawing=false, lastPoint=null, photoImage=null;
-
-function svgFrame(content){
- return `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
- <rect width="800" height="800" fill="white"/>
- <g fill="white" stroke="#222" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">${content}</g>
- </svg>`;
+function svgFor(key){
+ const inner=drawings[key]||drawings.fox;
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 112" fill="none" stroke="#242333" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><rect width="128" height="112" fill="white" stroke="none"/>${inner}</svg>`;
 }
-function drawingSvg(kind){
- const face=(x,y,r=135)=>`<circle cx="${x}" cy="${y}" r="${r}"/><ellipse cx="${x-50}" cy="${y-8}" rx="13" ry="21" fill="#222"/><ellipse cx="${x+50}" cy="${y-8}" rx="13" ry="21" fill="#222"/><path d="M${x-25} ${y+45} Q${x} ${y+68} ${x+25} ${y+45}"/>`;
- const flower=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}"/><circle cx="${x}" cy="${y}" r="${r/3}"/>`;
- let c="";
- if(kind==="cat") c=`<path d="M250 340 L260 150 L390 255 Q450 220 520 255 L645 150 L650 350 Q700 520 600 630 Q520 700 400 670 Q260 650 220 530 Q190 430 250 340Z"/>${face(450,430,125)}<path d="M340 500 L250 475 M340 525 L245 535 M560 500 L650 475 M560 525 L655 535"/><path d="M340 630 Q450 570 560 630"/><path d="M300 700 Q270 620 305 600 M600 700 Q630 620 595 600"/>${flower(235,250,38)}`;
- if(kind==="fox") c=`<path d="M220 350 L190 140 L360 255 Q440 220 520 255 L680 140 L650 360 Q700 500 590 610 Q480 710 360 650 Q230 600 200 490Z"/><path d="M250 410 Q440 350 625 410 Q600 600 440 630 Q290 600 250 410Z"/>${face(440,435,110)}<path d="M390 535 Q440 500 490 535 Q440 580 390 535Z"/><path d="M300 660 Q440 720 580 660"/>`;
- if(kind==="rabbit") c=`<path d="M310 350 Q245 130 315 120 Q375 120 395 330 M480 330 Q500 110 570 125 Q635 145 555 365"/><ellipse cx="440" cy="465" rx="220" ry="210"/>${face(440,450,120)}<path d="M405 540 Q440 575 475 540"/><path d="M300 660 Q440 710 580 660"/>${flower(285,350,35)}${flower(595,355,35)}`;
- if(kind==="bear") c=`<circle cx="300" cy="300" r="90"/><circle cx="580" cy="300" r="90"/><circle cx="440" cy="440" r="235"/>${face(440,420,125)}<ellipse cx="440" cy="480" rx="55" ry="40"/><path d="M300 640 Q440 700 580 640"/><path d="M340 205 L440 90 L550 205Z"/><circle cx="440" cy="160" r="30"/>`;
- if(kind==="dragon") c=`<path d="M250 490 Q180 340 260 270 Q340 210 430 275 Q560 200 635 300 Q700 400 620 500 L680 620 L570 600 Q480 710 350 620 L230 660Z"/><path d="M300 300 L200 180 L380 260 M535 275 L620 155 L630 330"/><circle cx="380" cy="380" r="18" fill="#222"/><circle cx="530" cy="370" r="18" fill="#222"/><path d="M410 450 Q470 490 535 445"/><path d="M350 570 Q450 620 550 565"/><path d="M350 250 L400 180 L440 275 M500 250 L540 180 L565 290"/>`;
- if(kind==="fairy") c=`<circle cx="430" cy="350" r="95"/><path d="M340 320 Q430 180 530 310 Q490 280 470 285"/><path d="M400 440 L370 600 L490 600 L460 440Z"/><path d="M370 480 Q210 350 245 300 Q340 320 400 440 M490 440 Q570 300 660 290 Q680 370 490 480Z"/><circle cx="400" cy="350" r="10" fill="#222"/><circle cx="465" cy="350" r="10" fill="#222"/><path d="M405 390 Q435 415 465 390"/><path d="M350 610 L300 700 M500 610 L560 700"/>${flower(430,180,30)}`;
- if(kind==="unicorn") c=`<path d="M250 350 Q300 220 440 240 Q580 220 640 360 L600 540 Q520 650 400 620 Q270 600 220 480Z"/><path d="M400 250 L460 90 L500 260"/><path d="M270 350 Q200 270 220 180 Q320 240 350 300"/><circle cx="365" cy="400" r="16" fill="#222"/><path d="M430 470 Q480 510 530 465"/><path d="M250 500 Q150 600 250 680 Q350 700 360 610"/><path d="M440 620 L440 740 M550 590 L590 700"/>${flower(570,300,30)}`;
- if(kind==="castle") c=`<path d="M150 680 L150 350 L250 350 L250 250 L350 250 L350 350 L450 350 L450 200 L550 200 L550 350 L650 350 L650 680Z"/><path d="M125 350 L200 260 L275 350 M325 250 L400 150 L475 250 M525 350 L600 260 L675 350"/><path d="M360 680 L360 520 Q400 450 440 520 L440 680"/><path d="M210 430 L270 430 L270 500 L210 500Z M510 430 L570 430 L570 500 L510 500Z"/><path d="M400 150 L400 80 L470 110 L400 135"/>`;
- if(kind==="cake") c=`<path d="M220 470 L660 470 L610 680 L270 680Z"/><path d="M250 470 Q280 400 330 455 Q370 380 420 450 Q480 370 520 450 Q580 390 630 470"/><path d="M320 420 L320 300 M440 420 L440 270 M560 420 L560 300"/><path d="M300 300 Q320 270 340 300 M420 270 Q440 240 460 270 M540 300 Q560 270 580 300"/><path d="M270 550 L630 550"/>`;
- if(kind==="icecream") c=`<path d="M330 400 L550 400 L450 700Z"/><circle cx="350" cy="340" r="100"/><circle cx="470" cy="300" r="110"/><circle cx="560" cy="370" r="90"/><path d="M410 300 Q470 350 530 300"/>${flower(470,200,25)}`;
- if(kind==="apple") c=`<path d="M440 280 Q330 190 250 270 Q160 370 240 540 Q300 680 430 640 Q560 690 630 530 Q700 370 610 280 Q530 205 440 280Z"/><path d="M440 290 Q430 200 490 140"/><path d="M470 190 Q560 120 620 180 Q560 245 470 220Z"/><path d="M260 430 Q310 390 350 430"/>`;
- if(kind==="donut") c=`<path d="M440 180 C600 180 690 290 680 430 C670 580 570 650 430 650 C280 650 170 560 170 420 C170 280 290 180 440 180Z"/><path d="M440 330 C500 330 540 370 540 420 C540 470 500 510 440 510 C390 510 350 470 350 420 C350 370 390 330 440 330Z"/><path d="M230 350 Q270 300 310 340 M570 280 Q620 310 630 360 M250 520 Q300 560 340 540 M550 550 Q590 520 620 490"/>`;
- return svgFrame(c);
-}
-function loadSvgImage(svg){
- return new Promise((resolve,reject)=>{
-  const img=new Image();
-  img.onload=()=>resolve(img);
-  img.onerror=reject;
-  img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
- });
-}
+const $=s=>document.querySelector(s), gallery=$("#gallery"), categoryNav=$("#categories");
+let currentCategory=CATEGORIES[0], currentDrawing=null, selectedColor="#ff6b77", colorLabel="コーラル";
+const colorList=[["#ff6b77","コーラル"],["#ffad4d","オレンジ"],["#ffd84d","ひまわり"],["#91d75b","若葉"],["#42cda5","ミント"],["#54c9ed","空色"],["#6687ff","ブルー"],["#9a73f5","すみれ"],["#ed75d1","ピンク"],["#8c5a44","ブラウン"],["#38435d","ネイビー"],["#25252d","ブラック"],["#ffffff","ホワイト"],["#f2c8a0","肌色"],["#a7b4c7","シルバー"],["#f7a8b8","さくら"]];
 function renderCategories(){
- categoryBox.innerHTML="";
- categories.forEach(cat=>{
-  const b=document.createElement("button");
-  b.textContent=cat.label;b.className=cat.id===selectedCategory?"active":"";
-  b.onclick=()=>{selectedCategory=cat.id;renderCategories();renderGallery()};
-  categoryBox.appendChild(b);
+ categoryNav.innerHTML="";
+ CATEGORIES.forEach(cat=>{
+  const b=document.createElement("button");b.className="cat"+(cat===currentCategory?" active":"");
+  b.textContent=cat.emoji+" "+cat.name;b.onclick=()=>{currentCategory=cat;renderCategories();renderGallery()};
+  categoryNav.appendChild(b);
  });
 }
-async function renderGallery(){
- const cat=categories.find(x=>x.id===selectedCategory);gallery.innerHTML="";
- for(const item of cat.items){
-  const card=document.createElement("div");card.className="art-card";
-  const thumb=document.createElement("canvas");thumb.width=400;thumb.height=400;
-  const tctx=thumb.getContext("2d");
-  try{const img=await loadSvgImage(drawingSvg(item.kind));tctx.drawImage(img,0,0,400,400)}catch{}
-  const b=document.createElement("button");b.textContent=item.name;
-  b.onclick=()=>loadDrawing(item);
-  card.append(thumb,b);gallery.appendChild(card);
+function renderGallery(){
+ $("#galleryTitle").textContent=currentCategory.emoji+" "+currentCategory.name;
+ $("#countLabel").textContent=`試作サンプル ${currentCategory.drawings.length}点`;
+ gallery.innerHTML="";
+ currentCategory.drawings.forEach(([name,key])=>{
+  const card=document.createElement("button");card.className="card";
+  card.innerHTML=`<div class="thumb">${svgFor(key)}</div><b>${name}</b><small>${currentCategory.name}</small>`;
+  card.onclick=()=>openDrawing(name,svgFor(key));gallery.appendChild(card);
+ });
+}
+renderCategories();renderGallery();
+
+const canvas=$("#paint"),ctx=canvas.getContext("2d",{willReadFrequently:true});
+const lineCanvas=document.createElement("canvas"),lineCtx=lineCanvas.getContext("2d");
+let history=[], drawing=false, lastPoint=null, activePointer=null, photoImage=null;
+function setupCanvas(){
+ const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,3);
+ const w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
+ if(canvas.width!==w||canvas.height!==h){
+  canvas.width=w;canvas.height=h;
+  if(currentDrawing){redrawBase();} else {ctx.fillStyle="#fff";ctx.fillRect(0,0,w,h);}
  }
 }
-async function loadDrawing(item){
- const img=await loadSvgImage(drawingSvg(item.kind));
- ctx.clearRect(0,0,SIZE,SIZE);ctx.fillStyle="#fff";ctx.fillRect(0,0,SIZE,SIZE);ctx.drawImage(img,0,0,SIZE,SIZE);
- currentBase=ctx.getImageData(0,0,SIZE,SIZE);undoStack=[];updateUndo();
- document.querySelector(".workspace").scrollIntoView({behavior:"smooth",block:"start"});
+function drawSvgToBase(svg){
+ return new Promise(resolve=>{
+  const img=new Image();img.onload=()=>{
+   lineCanvas.width=canvas.width;lineCanvas.height=canvas.height;
+   lineCtx.fillStyle="#fff";lineCtx.fillRect(0,0,lineCanvas.width,lineCanvas.height);
+   lineCtx.drawImage(img,0,0,lineCanvas.width,lineCanvas.height);
+   redrawBase();resolve();
+  };img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+ });
 }
-function updateUndo(){$("#undoBtn").disabled=!undoStack.length}
-function snapshot(){undoStack.push(ctx.getImageData(0,0,SIZE,SIZE));if(undoStack.length>MAX_UNDO)undoStack.shift();updateUndo()}
+function redrawBase(){
+ if(!lineCanvas.width)return;
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.drawImage(lineCanvas,0,0);
+}
+function openDrawing(name,svg){
+ currentDrawing={name,svg};history=[];$("#drawingTitle").textContent=name;
+ $("#workspace").classList.add("show");
+ $("#workspace").scrollIntoView({behavior:"smooth",block:"start"});
+ requestAnimationFrame(()=>{setupCanvas();drawSvgToBase(svg)});
+}
+window.addEventListener("resize",()=>{if($("#workspace").classList.contains("show"))setupCanvas()});
+$("#close").onclick=()=>{$("#workspace").classList.remove("show");currentDrawing=null};
+$("#browse").onclick=()=>$("#categories").scrollIntoView({behavior:"smooth",block:"start"});
+$("#brushSize").oninput=e=>$("#sizeValue").textContent=e.target.value+" px";
+
+function pushHistory(){
+ try{history.push(ctx.getImageData(0,0,canvas.width,canvas.height));if(history.length>20)history.shift()}catch(_){}
+}
+$("#undo").onclick=()=>{const snap=history.pop();if(snap)ctx.putImageData(snap,0,0)};
+$("#clear").onclick=()=>{if(currentDrawing){pushHistory();redrawBase()}};
+$("#save").onclick=()=>{
+ const link=document.createElement("a");link.download="nurie-art.png";link.href=canvas.toDataURL("image/png");link.click();
+};
+
+const colorBox=$("#colors");
+colorList.forEach(([color,label],i)=>{
+ const b=document.createElement("button");b.className="swatch"+(i===0?" active":"");b.style.background=color;b.title=label;b.setAttribute("aria-label",label);
+ b.onclick=()=>{document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("active"));b.classList.add("active");selectedColor=color;colorLabel=label;$("#colorName").textContent=label};
+ colorBox.appendChild(b);
+});
+
 function pointFromEvent(e){
  const r=canvas.getBoundingClientRect();
- return {x:Math.floor((e.clientX-r.left)*SIZE/r.width),y:Math.floor((e.clientY-r.top)*SIZE/r.height)};
+ return {x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height};
 }
-function getPixel(data,x,y){const i=(y*SIZE+x)*4;return [data[i],data[i+1],data[i+2],data[i+3]]}
-function isLine(p){return p[0]<110&&p[1]<110&&p[2]<110}
-function floodFill(x,y,color){
- const im=ctx.getImageData(0,0,SIZE,SIZE),d=im.data,idx=(y*SIZE+x)*4;
- if(isLine([d[idx],d[idx+1],d[idx+2],d[idx+3]]))return false;
- const target=[d[idx],d[idx+1],d[idx+2],d[idx+3]],rgb=color.match(/\w\w/g).map(v=>parseInt(v,16));
- if(target[0]===rgb[0]&&target[1]===rgb[1]&&target[2]===rgb[2])return false;
- const stack=[[x,y]],seen=new Uint8Array(SIZE*SIZE),tol=36;
- while(stack.length){
-  const [cx,cy]=stack.pop();if(cx<0||cy<0||cx>=SIZE||cy>=SIZE)continue;
-  const p=cy*SIZE+cx;if(seen[p])continue;seen[p]=1;
-  const i=p*4;if(isLine([d[i],d[i+1],d[i+2],d[i+3]]))continue;
-  if(Math.abs(d[i]-target[0])+Math.abs(d[i+1]-target[1])+Math.abs(d[i+2]-target[2])>tol)continue;
-  d[i]=rgb[0];d[i+1]=rgb[1];d[i+2]=rgb[2];d[i+3]=255;
-  stack.push([cx+1,cy],[cx-1,cy],[cx,cy+1],[cx,cy-1]);
+function drawSegment(a,b){
+ const size=Number($("#brushSize").value)*(canvas.width/canvas.clientWidth);
+ ctx.save();ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle=selectedColor;ctx.fillStyle=selectedColor;
+ const tool=$("#tool").value;
+ if(tool==="spray"){
+  const radius=size*1.5,n=24;
+  for(let i=0;i<n;i++){const ang=Math.random()*Math.PI*2,rad=Math.random()*radius;ctx.globalAlpha=.42;ctx.beginPath();ctx.arc(b.x+Math.cos(ang)*rad,b.y+Math.sin(ang)*rad,Math.max(1,size*.055),0,Math.PI*2);ctx.fill()}
+ }else{
+  ctx.globalAlpha=tool==="brush"?.74:tool==="crayon"?.75:1;
+  ctx.lineWidth=tool==="pencil"?Math.max(1,size*.42):size;
+  if(tool==="crayon"){ctx.setLineDash([size*.24,size*.12]);ctx.lineWidth=size*.8}
+  ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+  if(tool==="crayon")ctx.setLineDash([]);
  }
- ctx.putImageData(im,0,0);return true;
+ ctx.restore();
 }
 canvas.addEventListener("pointerdown",e=>{
- if(!currentBase)return;
- e.preventDefault();const p=pointFromEvent(e),pixel=getPixel(ctx.getImageData(p.x,p.y,1,1).data,0,0);
- if(isLine(pixel)){
-  snapshot();drawing=true;lastPoint=p;canvas.setPointerCapture(e.pointerId);
- }else{
-  snapshot();if(!floodFill(p.x,p.y,currentColor)){undoStack.pop();updateUndo()}
- }
+ e.preventDefault();unlockAudio();
+ if(e.pointerType==="touch"&&activePointer!==null)return;
+ activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);
+ const p=pointFromEvent(e);
+ if($("#tool").value==="fill"){pushHistory();floodFill(Math.round(p.x),Math.round(p.y),selectedColor);playToolSound("fill");activePointer=null;return}
+ pushHistory();drawing=true;lastPoint=p;drawSegment(p,p);playToolSound($("#tool").value);
 });
 canvas.addEventListener("pointermove",e=>{
- if(!drawing)return;e.preventDefault();const p=pointFromEvent(e);
- ctx.beginPath();ctx.moveTo(lastPoint.x,lastPoint.y);ctx.lineTo(p.x,p.y);
- ctx.strokeStyle=currentColor;ctx.lineWidth=12;ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();lastPoint=p;
+ if(!drawing||e.pointerId!==activePointer)return;e.preventDefault();
+ const p=pointFromEvent(e);drawSegment(lastPoint,p);lastPoint=p;
 });
-function stopDraw(){drawing=false;lastPoint=null}
-canvas.addEventListener("pointerup",stopDraw);canvas.addEventListener("pointercancel",stopDraw);
+function stopDraw(e){if(e&&activePointer!==null&&e.pointerId!==activePointer)return;drawing=false;lastPoint=null;activePointer=null;stopToolSound()}
+canvas.addEventListener("pointerup",stopDraw);canvas.addEventListener("pointercancel",stopDraw);canvas.addEventListener("lostpointercapture",stopDraw);
 
-function renderColors(){
- const box=$("#colors");box.innerHTML="";
- palette.forEach(col=>{
-  const b=document.createElement("button");b.className="swatch"+(col===currentColor?" selected":"");
-  b.style.background=col;b.setAttribute("aria-label",col);b.onclick=()=>{currentColor=col;renderColors()};
-  box.appendChild(b);
- });
+function parseColor(hex){const n=parseInt(hex.slice(1),16);return [(n>>16)&255,(n>>8)&255,n&255,255]}
+function floodFill(startX,startY,hex){
+ const w=canvas.width,h=canvas.height;if(startX<0||startY<0||startX>=w||startY>=h)return;
+ const image=ctx.getImageData(0,0,w,h),d=image.data,idx=(startY*w+startX)*4;
+ const target=[d[idx],d[idx+1],d[idx+2],d[idx+3]],fill=parseColor(hex);
+ if(target[0]<245&&target[1]<245&&target[2]<245)return;
+ const tolerance=46;
+ const close=(i)=>Math.abs(d[i]-target[0])<=tolerance&&Math.abs(d[i+1]-target[1])<=tolerance&&Math.abs(d[i+2]-target[2])<=tolerance;
+ const stack=[startY*w+startX],seen=new Uint8Array(w*h);let count=0;
+ while(stack.length&&count<w*h){
+  const p=stack.pop();if(p<0||p>=w*h||seen[p])continue;seen[p]=1;count++;
+  const i=p*4;if(!close(i))continue;
+  d[i]=fill[0];d[i+1]=fill[1];d[i+2]=fill[2];d[i+3]=255;
+  const x=p%w,y=(p/w)|0;
+  if(x)stack.push(p-1);if(x<w-1)stack.push(p+1);if(y)stack.push(p-w);if(y<h-1)stack.push(p+w);
+ }
+ ctx.putImageData(image,0,0);
 }
-$("#undoBtn").onclick=()=>{if(undoStack.length){ctx.putImageData(undoStack.pop(),0,0);updateUndo()}};
-$("#clearBtn").onclick=()=>{if(!currentBase)return;snapshot();ctx.putImageData(currentBase,0,0)};
-$("#downloadBtn").onclick=()=>{
- const a=document.createElement("a");a.download="nurie-smile.png";a.href=canvas.toDataURL("image/png");a.click();
-};
-function getSaved(){try{return JSON.parse(localStorage.getItem(STORE_KEY)||"[]")}catch{return []}}
-function setSaved(x){localStorage.setItem(STORE_KEY,JSON.stringify(x))}
-$("#saveBtn").onclick=()=>{
- try{
-  const data=canvas.toDataURL("image/png"),arr=getSaved();arr.unshift({data,at:Date.now()});setSaved(arr.slice(0,30));renderSaved();
-  $("#photoStatus").textContent="作品を端末内に保存しました。";
- }catch{$("#photoStatus").textContent="保存できませんでした。PNG保存をお試しください。"}
-};
-function renderSaved(){
- const box=$("#savedGrid");box.innerHTML="";
- getSaved().forEach((item,i)=>{
-  const wrap=document.createElement("div");wrap.className="saved-item";
-  const img=document.createElement("img");img.src=item.data;img.alt="保存した作品";
-  const b=document.createElement("button");b.textContent="開く";b.onclick=()=>loadSaved(item.data);
-  const del=document.createElement("button");del.textContent="削除";del.onclick=()=>{const a=getSaved();a.splice(i,1);setSaved(a);renderSaved()};
-  wrap.append(img,b,del);box.appendChild(wrap);
- });
-}
-function loadSaved(src){
- const img=new Image();img.onload=()=>{ctx.clearRect(0,0,SIZE,SIZE);ctx.drawImage(img,0,0,SIZE,SIZE);currentBase=ctx.getImageData(0,0,SIZE,SIZE);undoStack=[];updateUndo();canvas.scrollIntoView({behavior:"smooth",block:"center"})};img.src=src;
-}
-renderSaved();
 
-const photoInput=$("#photoInput");
-photoInput.onchange=()=>{
- const f=photoInput.files&&photoInput.files[0];if(!f)return;
- const url=URL.createObjectURL(f),img=new Image();
- img.onload=()=>{photoImage=img;$("#convertBtn").disabled=false;$("#photoStatus").textContent="写真を読み込みました。細かさと線の濃さを調整できます。";URL.revokeObjectURL(url)};
- img.onerror=()=>{$("#photoStatus").textContent="画像を読み込めませんでした。別の写真を選んでください。"};
+let audioCtx=null, master=null, muted=false,bgmTimer=null,bgmStep=0,activeSound=null;
+function unlockAudio(){
+ if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)();master=audioCtx.createGain();master.gain.value=muted?0:.25;master.connect(audioCtx.destination)}
+ if(audioCtx.state==="suspended")audioCtx.resume();
+}
+function tone(freq,duration=.18,type="sine",volume=.16,when=0){
+ if(!audioCtx||muted)return;
+ const osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),t=audioCtx.currentTime+when;
+ osc.type=type;osc.frequency.setValueAtTime(freq,t);
+ gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(volume,t+.015);gain.gain.exponentialRampToValueAtTime(.0001,t+duration);
+ osc.connect(gain);gain.connect(master);osc.start(t);osc.stop(t+duration+.03);
+}
+const tunes={
+ musicbox:[523,659,784,659,587,698,880,698],
+ march:[392,392,523,440,392,523,587,523],
+ piano:[262,330,392,330,294,349,440,349],
+ adventure:[392,494,587,659,587,494,440,494],
+ forest:[523,587,659,587,523,440,392,440],
+ ocean:[330,392,494,523,494,392,349,392],
+ dream:[440,523,659,784,659,523,494,523],
+ play:[523,659,784,659,698,880,1046,880],
+ calm:[349,440,523,440,392,494,587,494],
+ night:[294,349,440,523,440,349,330,392]
+};
+function startBgm(){
+ clearInterval(bgmTimer);bgmStep=0;const name=$("#bgm").value;if(name==="off"||muted)return;
+ unlockAudio();const seq=tunes[name];if(!seq)return;
+ const play=()=>{const f=seq[bgmStep++%seq.length];tone(f,.48,"sine",.07);tone(f/2,.62,"triangle",.035,.02)};
+ play();bgmTimer=setInterval(play,540);
+}
+$("#bgm").onchange=()=>{unlockAudio();startBgm()};
+$("#mute").onclick=()=>{unlockAudio();muted=!muted;master.gain.setTargetAtTime(muted?0:.25,audioCtx.currentTime,.04);$("#mute").textContent=muted?"♪ OFF":"♪ ON";$("#soundStatus").textContent=muted?"OFF":"ON";if(muted)clearInterval(bgmTimer);else startBgm()};
+let soundLoop=null,soundNoise=null;
+function playToolSound(kind){
+ if(muted||!audioCtx)return;
+ stopToolSound();
+ if(kind==="fill"){tone(660,.13,"sine",.09);tone(880,.18,"sine",.06,.06);return}
+ if(kind==="spray"){
+  const n=audioCtx.createBufferSource(),buf=audioCtx.createBuffer(1,audioCtx.sampleRate*.25,audioCtx.sampleRate),data=buf.getChannelData(0);
+  for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*.25;
+  n.buffer=buf;const f=audioCtx.createBiquadFilter();f.type="highpass";f.frequency.value=900;
+  const g=audioCtx.createGain();g.gain.value=.045;n.connect(f);f.connect(g);g.connect(master);n.start();soundNoise=n;return;
+ }
+ const freq=kind==="pencil"?105:kind==="crayon"?75:180;
+ soundLoop=setInterval(()=>{if(!audioCtx||muted)return;tone(freq+Math.random()*55,.055,"sawtooth",kind==="brush"?.018:.025)},90);
+}
+function stopToolSound(){if(soundLoop){clearInterval(soundLoop);soundLoop=null}if(soundNoise){try{soundNoise.stop()}catch(_){}soundNoise=null}}
+$("#photo").onchange=e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ const url=URL.createObjectURL(file),img=new Image();
+ img.onload=()=>{photoImage=img;$("#convert").disabled=false;URL.revokeObjectURL(url)};
+ img.onerror=()=>{URL.revokeObjectURL(url);alert("画像を読み込めませんでした。別の画像を選んでください。"};
  img.src=url;
 };
-$("#detail").oninput=e=>{$("#detailText").textContent=["大きめ","やや大きめ","標準","細かめ","細かい"][e.target.value-1]};
-$("#threshold").oninput=e=>{$("#thresholdText").textContent=["薄め","やや薄め","標準","濃いめ","濃い"][e.target.value-1]};
-
-$("#convertBtn").onclick=()=>{
+$("#convert").onclick=()=>{
  if(!photoImage)return;
- $("#photoStatus").textContent="線画を作成しています…";
- setTimeout(()=>{
-  const work=document.createElement("canvas"),w=600,h=600;work.width=w;work.height=h;
-  const wc=work.getContext("2d",{willReadFrequently:true});
-  wc.fillStyle="#fff";wc.fillRect(0,0,w,h);
-  const scale=Math.min(w/photoImage.width,h/photoImage.height),dw=photoImage.width*scale,dh=photoImage.height*scale;
-  wc.drawImage(photoImage,(w-dw)/2,(h-dh)/2,dw,dh);
-  const im=wc.getImageData(0,0,w,h),src=im.data,gray=new Float32Array(w*h);
-  for(let i=0,p=0;i<src.length;i+=4,p++)gray[p]=.299*src[i]+.587*src[i+1]+.114*src[i+2];
-  const detail=Number($("#detail").value),radius=detail===1?2:detail===2?1:0;
-  let smooth=gray;
-  if(radius){
-   smooth=new Float32Array(gray.length);
-   for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-    let sum=0,n=0;for(let dy=-radius;dy<=radius;dy++)for(let dx=-radius;dx<=radius;dx++){
-     const xx=Math.max(0,Math.min(w-1,x+dx)),yy=Math.max(0,Math.min(h-1,y+dy));sum+=gray[yy*w+xx];n++;
-    }smooth[y*w+x]=sum/n;
-   }
-  }
-  const out=wc.createImageData(w,h),darkness=(Number($("#threshold").value)-3)*9;
-  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-   const p=y*w+x,i=p*4;
-   const left=smooth[y*w+Math.max(0,x-1)],right=smooth[y*w+Math.min(w-1,x+1)];
-   const up=smooth[Math.max(0,y-1)*w+x],down=smooth[Math.min(h-1,y+1)*w+x];
-   const edge=Math.abs(right-left)+Math.abs(down-up);
-   const threshold=detail===1?75:detail===2?58:detail===3?43:detail===4?32:24;
-   const v=edge>threshold-darkness?20:255;
-   out.data[i]=out.data[i+1]=out.data[i+2]=v;out.data[i+3]=255;
-  }
-  const temp=document.createElement("canvas");temp.width=w;temp.height=h;temp.getContext("2d").putImageData(out,0,0);
-  ctx.clearRect(0,0,SIZE,SIZE);ctx.fillStyle="#fff";ctx.fillRect(0,0,SIZE,SIZE);ctx.drawImage(temp,0,0,SIZE,SIZE);
-  currentBase=ctx.getImageData(0,0,SIZE,SIZE);undoStack=[];updateUndo();
-  $("#photoStatus").textContent="線画に変換しました。線で囲まれた場所をタップして色をぬれます。";
-  canvas.scrollIntoView({behavior:"smooth",block:"center"});
- },30);
+ const s=720,src=document.createElement("canvas"),sc=src.getContext("2d",{willReadFrequently:true});
+ src.width=s;src.height=s;sc.fillStyle="#fff";sc.fillRect(0,0,s,s);
+ const scale=Math.min(s/photoImage.width,s/photoImage.height),w=photoImage.width*scale,h=photoImage.height*scale;
+ sc.drawImage(photoImage,(s-w)/2,(s-h)/2,w,h);
+ const pixels=sc.getImageData(0,0,s,s),d=pixels.data,gray=new Uint8Array(s*s);
+ for(let i=0;i<gray.length;i++){const p=i*4;gray[i]=.299*d[p]+.587*d[p+1]+.114*d[p+2]}
+ const smooth=Number($("#denoise").value);
+ if(smooth>0){const tmp=new Uint8Array(gray);for(let y=1;y<s-1;y++)for(let x=1;x<s-1;x++){const i=y*s+x;let sum=0,n=0;for(let dy=-smooth;dy<=smooth;dy++)for(let dx=-smooth;dx<=smooth;dx++){sum+=tmp[i+dy*s+dx];n++}gray[i]=sum/n}}
+ const threshold=Number($("#threshold").value),out=sc.createImageData(s,s),width=Number($("#lineWidth").value);
+ for(let y=1;y<s-1;y++)for(let x=1;x<s-1;x++){
+  const i=y*s+x,gx=-gray[i-s-1]+gray[i-s+1]-2*gray[i-1]+2*gray[i+1]-gray[i+s-1]+gray[i+s+1];
+  const gy=-gray[i-s-1]-2*gray[i-s]-gray[i-s+1]+gray[i+s-1]+2*gray[i+s]+gray[i+s+1];
+  const edge=Math.sqrt(gx*gx+gy*gy),v=edge>threshold*4?0:255;
+  const p=i*4;out.data[p]=out.data[p+1]=out.data[p+2]=v;out.data[p+3]=255;
+ }
+ sc.putImageData(out,0,0);
+ if(width>1){sc.filter=`blur(${Math.max(0,(width-1)*.55)}px)`;const temp=document.createElement("canvas");temp.width=s;temp.height=s;temp.getContext("2d").drawImage(src,0,0);sc.filter="none";sc.clearRect(0,0,s,s);sc.drawImage(temp,0,0)}
+ currentDrawing={name:"写真から作った線画",svg:null};history=[];$("#drawingTitle").textContent=currentDrawing.name;$("#workspace").classList.add("show");
+ requestAnimationFrame(()=>{setupCanvas();lineCanvas.width=canvas.width;lineCanvas.height=canvas.height;lineCtx.fillStyle="#fff";lineCtx.fillRect(0,0,lineCanvas.width,lineCanvas.height);lineCtx.drawImage(src,0,0,lineCanvas.width,lineCanvas.height);redrawBase();$("#workspace").scrollIntoView({behavior:"smooth",block:"start"})});
 };
-
-renderCategories();renderGallery();renderColors();updateUndo();
+document.addEventListener("visibilitychange",()=>{if(document.hidden)stopToolSound()});
 </script>
 </body>
 </html>
