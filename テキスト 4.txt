@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>ぬりえスマイル（v5 キャラ一新）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#243b53;--pop:#ffd93d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none}
+body{font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;font-weight:700;color:var(--ink);touch-action:manipulation}
+button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
+[hidden]{display:none!important}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);background:linear-gradient(135deg,#ffb3e6 0%,#8fe3ea 45%,#fff1a8 100%)}
+
+/* ホーム */
+#floaters{position:absolute;inset:0;overflow:hidden}
+#floaters img{position:absolute;left:0;top:0;pointer-events:auto;filter:drop-shadow(0 5px 0 #243b5330)}
+.hd{position:relative;display:flex;align-items:center;gap:10px;padding:10px 12px 0}
+.appicon{width:54px;height:54px;border-radius:16px;background:#fff;box-shadow:0 4px 0 #0002;overflow:hidden;flex:none}
+.appicon svg{width:100%;height:100%;display:block}
+.title{margin:0;flex:1;min-width:0;font-weight:900;font-size:clamp(22px,6vw,40px);color:#fff;text-shadow:0 4px 0 #ff5fa2,0 8px 14px #0003;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btns{display:flex;gap:8px;flex:none}
+.ibtn{min-width:54px;height:54px;padding:0 10px;border-radius:27px;background:#fff;box-shadow:0 4px 0 #0002;font-size:22px;display:grid;place-items:center}
+.ibtn:active{transform:translateY(3px);box-shadow:none}
+.chips{position:relative;display:flex;gap:10px;overflow-x:auto;padding:14px 12px 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:48px;padding:0 15px;border-radius:26px;background:#ffffffc0;font-size:16px;box-shadow:0 3px 0 #ff5fa244;white-space:nowrap}
+.chip.on{background:var(--pop);box-shadow:0 4px 0 #b8860b88;transform:translateY(-2px)}
+.gallery{position:relative;flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;padding:10px 14px 30px;align-content:start}
+.card{background:#8fc31f;border-radius:28px;padding:10px 10px 12px;box-shadow:0 6px 0 #5d7a00aa,0 10px 18px #0002;font-size:15px;position:relative;color:#fff;border:0}
+.card img{display:block;width:100%;aspect-ratio:1;border-radius:18px;background:#fffdf5;margin-bottom:6px}
+.card span{display:block;margin-top:2px;text-shadow:0 2px 0 #0003;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .lock{position:absolute;right:-8px;bottom:-8px;width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e6ff9a,#4f8a00);display:grid;place-items:center;font-size:20px;font-style:normal;box-shadow:0 3px 0 #0003;border:3px solid #fff}
+.card.lk img{opacity:.75}
+.card:active{transform:scale(.97)}
+.empty{grid-column:1/-1;background:#fff9;border-radius:24px;padding:24px;text-align:center;line-height:1.8;font-size:18px}
+
+/* ぬりえ */
+.bar{display:flex;gap:8px;padding:8px 10px;align-items:center}
+.btn{min-height:50px;min-width:50px;padding:0 12px;border-radius:25px;background:#fff;box-shadow:0 4px 0 #0002;font-size:16px;display:flex;align-items:center;justify-content:center;gap:4px;flex:none}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.btn.save{background:var(--pop)}
+.ttl{flex:1;min-width:0;text-align:center;color:#fff;font-size:17px;text-shadow:0 2px 0 #0003;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.stage{flex:1;min-height:0;container-type:size;display:flex;align-items:center;justify-content:center}
+.board{position:relative;width:min(calc(100cqw - 24px),calc(100cqh - 24px));height:min(calc(100cqw - 24px),calc(100cqh - 24px));background:#fff;border-radius:22px;border:5px solid #fff;box-shadow:0 8px 24px #0003;overflow:hidden;touch-action:none}
+.board canvas{position:absolute;inset:0;width:100%;height:100%}
+#lineCv{pointer-events:none}
+.panel{padding:6px 10px 10px;display:flex;flex-direction:column;gap:8px}
+.tools{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.tools .btn{flex-direction:column;font-size:14px;min-height:60px;padding:4px 2px;min-width:0}
+.tools .btn i{font-style:normal;font-size:22px;line-height:1}
+.tools .btn.on{background:var(--pop);outline:4px solid #fff}
+.sizebox{display:flex;align-items:center;gap:10px;background:#fffa;border-radius:26px;padding:0 16px;min-height:42px;font-size:15px}
+.sizebox input{flex:1;accent-color:#ff5fa2}
+.ptabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.ptabs::-webkit-scrollbar{display:none}
+.ptab{flex:none;min-height:34px;padding:0 12px;border-radius:17px;background:#fffc;font-size:13px;box-shadow:0 2px 0 #0002}
+.ptab.on{background:var(--pop)}
+.palette{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;max-height:118px;overflow-y:auto;padding:4px}
+.sw{aspect-ratio:1;width:100%;border-radius:50%;background:var(--c) center/cover;border:2px solid #fff;box-shadow:0 2px 0 #0003}
+.sw.on{outline:3px solid var(--ink);transform:scale(1.12)}
+@media(orientation:landscape) and (min-width:700px){
+ .body{flex-direction:row}
+ .panel{width:380px;justify-content:center}
+ .tools{grid-template-columns:repeat(3,1fr)}
+ .palette{max-height:none;grid-template-columns:repeat(10,1fr)}
+}
+
+/* 設定シート */
+#sheet{position:fixed;inset:0;background:#0007;display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheetBody{background:#fff;border-radius:28px 28px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));width:min(560px,100%);max-height:85%;overflow:auto}
+.sheetBody h2{margin:0 0 12px;font-size:20px}
+.songs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.song{min-height:56px;border-radius:20px;background:#fff0f8;font-size:17px;box-shadow:0 3px 0 #ff5fa244}
+.song.on{background:var(--pop)}
+.row{width:100%;min-height:52px;margin-top:12px;border-radius:26px;background:var(--ink);color:#fff;font-size:16px}
+
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:30px;opacity:0;pointer-events:none;transition:.25s;z-index:30;white-space:nowrap}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<section id="home" class="screen">
+  <div id="floaters"></div>
+  <header class="hd">
+    <div class="appicon" id="appicon"></div>
+    <h1 class="title">ぬりえスマイル</h1>
+    <div class="btns">
+      <button class="ibtn musicBtn" aria-label="おんがく">🎵</button>
+      <button class="ibtn" id="homePhoto" aria-label="しゃしんから ぬりえ">📷</button>
+    </div>
+  </header>
+  <nav class="chips" id="chips"></nav>
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<section id="paint" class="screen" hidden>
+  <div class="bar">
+    <button class="btn" id="back">← もどる</button>
+    <div class="ttl" id="ttl"></div>
+    <button class="btn musicBtn" aria-label="おんがく">🎵</button>
+    <button class="btn" id="undo" aria-label="ひとつもどす">↩️</button>
+    <button class="btn" id="clear" aria-label="ぜんぶけす">🗑️</button>
+    <button class="btn save" id="save">💾</button>
+  </div>
+  <div class="body">
+    <div class="stage">
+      <div class="board" id="board">
+        <canvas id="paintCv" width="800" height="800"></canvas>
+        <canvas id="lineCv" width="800" height="800"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="tools">
+        <button class="btn on" data-tool="bucket"><i>🪣</i>ぬる</button>
+        <button class="btn" data-tool="pen"><i>✏️</i>ペン</button>
+        <button class="btn" data-tool="crayon"><i>🖍️</i>クレヨン</button>
+        <button class="btn" data-tool="brush"><i>🖌️</i>はけ</button>
+        <button class="btn" data-tool="spray"><i>🎨</i>スプレー</button>
+        <button class="btn" data-tool="erase"><i>🧽</i>けし</button>
+      </div>
+      <div class="sizebox" id="sizebox" hidden>📏 <input type="range" id="size" min="6" max="70" value="24" aria-label="太さ"></div>
+      <div class="sizebox" id="lvlbox" hidden>🖼️ 線の多さ <input type="range" id="lvl" min="0" max="100" value="50" aria-label="線の多さ"></div>
+      <div class="ptabs" id="ptabs"></div>
+      <div class="palette" id="palette"></div>
+    </div>
+  </div>
+</section>
+
+<div id="sheet" hidden>
+  <div class="sheetBody">
+    <h2>🎵 BGM をえらんでね</h2>
+    <div class="songs" id="songs"></div>
+    <button class="row" id="sfxToggle"></button>
+    <button class="row" id="exportIcon">🖼️ アプリアイコン（512px）をほぞん</button>
+  </div>
+</div>
+
+<input type="file" id="file" accept="image/*" hidden>
+<div id="toast"></div>
+
+<script>
+const W=800,H=800;
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+const LINE='stroke="#243b53" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"';
+const svgOf=(inner,fill='none')=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800"><g ${LINE} fill="${fill}">${inner}</g></svg>`;
+const urlOf=s=>'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);
+let tt;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
+
+/* 共通パーツヘルパー：キラキラの大きな瞳・ほっぺ・にっこり口 */
+const eyes=(lx,ly,rx,ry,ew=38,eh=46,pr=22,hr=8)=>`
+  <ellipse cx='${lx}' cy='${ly}' rx='${ew}' ry='${eh}' fill='#ffffff'/>
+  <ellipse cx='${rx}' cy='${ry}' rx='${ew}' ry='${eh}' fill='#ffffff'/>
+  <circle cx='${lx+4}' cy='${ly+7}' r='${pr}' fill='#243b53'/>
+  <circle cx='${rx+4}' cy='${ry+7}' r='${pr}' fill='#243b53'/>
+  <circle cx='${lx-6}' cy='${ly-10}' r='${hr}' fill='#ffffff' stroke='none'/>
+  <circle cx='${rx-6}' cy='${ry-10}' r='${hr}' fill='#ffffff' stroke='none'/>
+  <circle cx='${lx+11}' cy='${ly+15}' r='${hr*0.45}' fill='#ffffff' stroke='none'/>
+  <circle cx='${rx+11}' cy='${ry+15}' r='${hr*0.45}' fill='#ffffff' stroke='none'/>`;
+const cheeks=(lx,ly,rx,ry,rw=26,rh=15)=>`
+  <ellipse cx='${lx}' cy='${ly}' rx='${rw}' ry='${rh}'/>
+  <ellipse cx='${rx}' cy='${ry}' rx='${rw}' ry='${rh}'/>`;
+const catMouth=(cx,cy)=>`
+  <path d='M${cx}${cy} Q${cx-18}${cy+20} ${cx-34}${cy+6} M${cx}${cy} Q${cx+18}${cy+20} ${cx+34}${cy+6}'/>`;
+
+/* ===== カテゴリー ===== */
+const CATS=[
+ {label:'どうぶつ',em:'🐱'},{label:'とり',em:'🐦'},{label:'植物',em:'🌷'},{label:'海の生き物',em:'🐠'},
+ {label:'虫',em:'🐞'},{label:'乗り物',em:'🚗'},{label:'風景',em:'🌄'},{label:'宇宙',em:'🚀'},
+ {label:'ヒーロー',em:'🦸'},{label:'宇宙人',em:'👽'},{label:'歴史人物',em:'👑'},{label:'建築物',em:'🏠'},
+ {label:'おとぎ話',em:'🧚'},{label:'食べ物',em:'🍎'},{label:'恐竜',em:'🦖'},{label:'季節',em:'❄️'},
+ {label:'楽器',em:'🎸'},{label:'ロボット',em:'🤖'},{label:'スポーツ',em:'⚽'},{label:'お店',em:'🏪'},
+ {label:'おかし',em:'🍭'},{label:'くだもの',em:'🍓'},{label:'船',em:'🚢'},{label:'空の生き物',em:'🦋'},
+ {label:'おふろ',em:'🛁'},{label:'がっこう',em:'🎒'},{label:'しごと',em:'🚒'},{label:'かぞく',em:'👨‍👩‍👧'},
+ {label:'きのこ',em:'🍄'},{label:'ビーチ',em:'🏖️'}
+];
+
+/* ===== 動物20体（すべて新デザイン・ぷっくり2頭身＆キラキラ瞳） ===== */
+const ANIMALS=[
+{name:'ねこ',inner:`
+  <path d='M500 660 Q650 670 665 550 Q675 480 620 495 Q585 505 600 565 Q610 615 495 620 Z'/>
+  <path d='M235 300 L205 110 L355 235 Z'/><path d='M248 275 L230 155 L330 235 Z'/>
+  <path d='M565 300 L595 110 L445 235 Z'/><path d='M552 275 L570 155 L470 235 Z'/>
+  <path d='M300 530 Q270 725 400 725 Q530 725 500 530 Z'/>
+  <ellipse cx='400' cy='625' rx='72' ry='68'/>
+  <ellipse cx='345' cy='732' rx='46' ry='24'/><ellipse cx='455' cy='732' rx='46' ry='24'/>
+  <ellipse cx='295' cy='590' rx='32' ry='24'/><ellipse cx='505' cy='590' rx='32' ry='24'/>
+  <ellipse cx='400' cy='390' rx='205' ry='170'/>
+  <path d='M385 222 L400 265 L415 222 M355 230 L368 262 M445 230 L432 262'/>
+  ${eyes(322,385,478,385,40,48,24,8)}${cheeks(265,45
