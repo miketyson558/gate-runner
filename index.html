@@ -4523,6 +4523,8 @@ let _voiceNote = "";          // transient UI note about voice availability
 let _listenState = "idle";    // idle | listening | processing | error
 let _listenText = "";         // last recognized text
 let _rec = null;              // SpeechRecognition instance
+let _recognitionBusy = false;
+let _lastVoiceFinal = "";
 
 function loadVoices(){
   try{
@@ -4628,38 +4630,52 @@ function ensureRecognition(){
   _rec = new SR();
   _rec.continuous = false;
   _rec.interimResults = true;
-  _rec.maxAlternatives = 3;
-  _rec.onstart = ()=>{ _listenState = "listening"; _listenText = ""; try{render();}catch(e){} };
+  _rec.maxAlternatives = 5;
+  _rec.onstart = ()=>{ _recognitionBusy = true; _lastVoiceFinal = ""; _listenState = "listening"; _listenText = ""; try{render();}catch(e){} };
   _rec.onresult = (ev)=>{
     let interim = "", final = "";
-    for(let i = ev.resultIndex; i < ev.results.length; i++){
-      const r = ev.results[i];
-      if(r.isFinal) final += r[0].transcript;
-      else interim += r[0].transcript;
+    for(let i = 0; i < ev.results.length; i++){
+      const result = ev.results[i];
+      const transcript = result && result[0] ? result[0].transcript : "";
+      if(result.isFinal) final += transcript + " ";
+      else interim += transcript + " ";
     }
-    _listenText = (final || interim).trim();
-    if(final){
+    const heard = (final || interim).trim();
+    if(heard) _listenText = heard;
+    if(final.trim()){
+      _lastVoiceFinal = final.trim();
       _listenState = "processing";
       try{render();}catch(e){}
-      handleVoiceInput(final.trim());
+      handleVoiceInput(_lastVoiceFinal);
+      _lastVoiceFinal = "";
     }else{
       try{render();}catch(e){}
     }
   };
   _rec.onerror = (ev)=>{
+    _recognitionBusy = false;
     _listenState = "error";
     const code = (ev && ev.error) || "";
-    if(code === "not-allowed" || code === "service-not-allowed"){
-      _listenText = curLang==="ja" ? "マイクの許可が必要です" : "Microphone permission required";
-    }else if(code === "no-speech"){
-      _listenText = curLang==="ja" ? "音声が検出されませんでした" : "No speech detected";
-    }else{
-      _listenText = curLang==="ja" ? "認識エラー: " + code : "Recognition error: " + code;
-    }
+    const messages = {
+      "not-allowed":"マイクの使用が許可されていません。SafariのWebサイト設定でマイクを許可してください。",
+      "service-not-allowed":"音声認識サービスが利用できません。Safariで開き直してください。",
+      "no-speech":"声を検出できませんでした。マイクに近づいて、もう一度お話しください。",
+      "audio-capture":"マイクが見つかりません。マイクの接続・設定を確認してください。",
+      "network":"音声認識の通信に失敗しました。通信状態を確認してください。",
+      "aborted":"音声認識を停止しました。"
+    };
+    _listenText = curLang==="ja" ? (messages[code] || "音声認識エラー: " + code) : ("Speech recognition error: " + code);
     try{render();}catch(e){}
-    setTimeout(()=>{ _listenState = "idle"; try{render();}catch(e){} }, 2500);
+    setTimeout(()=>{ if(_listenState === "error"){_listenState = "idle";try{render();}catch(e){}} }, 4000);
   };
   _rec.onend = ()=>{
+    _recognitionBusy = false;
+    // Some mobile browsers end with only an interim result. Use it as a fallback.
+    if(_listenState === "listening" && _listenText.trim()){
+      const heard = _listenText.trim();
+      _listenState = "processing";
+      try{handleVoiceInput(heard);}catch(e){}
+    }
     if(_listenState === "listening") _listenState = "idle";
     try{render();}catch(e){}
   };
@@ -4669,26 +4685,33 @@ function ensureRecognition(){
 function startListening(){
   if(!hasSpeechRecognition()){
     _listenState = "error";
-    _listenText = curLang==="ja" ? "このブラウザは音声認識に対応していません" : "Speech recognition is not supported in this browser";
+    _listenText = curLang==="ja"
+      ? "このSafariでは音声認識が利用できません。iOSを更新し、SafariでこのHTTPSページを開いてください。"
+      : "Speech recognition is unavailable in this browser. Update iOS and open this HTTPS page in Safari.";
     try{render();}catch(e){}
-    setTimeout(()=>{ _listenState = "idle"; try{render();}catch(e){} }, 3000);
     return;
   }
-  stopSpeak(); // stop TTS while listening
+  stopSpeak();
   const r = ensureRecognition();
   if(!r) return;
+  if(_listenState === "listening" || _recognitionBusy){
+    try{r.stop();}catch(e){}
+    _recognitionBusy = false;
+    _listenState = "idle";
+    try{render();}catch(e){}
+    return;
+  }
+  _listenText = "";
+  _listenState = "listening";
   try{
     r.lang = preferredBCP47();
-    if(_listenState === "listening"){
-      try{ r.stop(); }catch(e){}
-      _listenState = "idle";
-      try{render();}catch(e){}
-      return;
-    }
     r.start();
   }catch(e){
+    _recognitionBusy = false;
     _listenState = "error";
-    _listenText = String(e.message || e);
+    _listenText = curLang==="ja"
+      ? "マイクを開始できませんでした。もう一度マイクを押してください。"
+      : "Could not start the microphone. Tap the microphone and try again.";
     try{render();}catch(e){}
   }
 }
@@ -4700,24 +4723,20 @@ function stopListening(){
 
 /** Normalize spoken numbers / choice labels across languages */
 function parseChoiceIndex(raw){
-  const s = String(raw||"").toLowerCase().replace(/\s+/g,"").replace(/[。．.、,]/g,"");
-  // digit / letter
-  if(/^[1-4]$/.test(s)) return parseInt(s,10) - 1;
-  if(/^[a-d]$/.test(s)) return s.charCodeAt(0) - 97;
-  // Japanese
-  const jaMap = {"いち":0,"一":0,"ひとつ":0,"い":0,"に":1,"二":1,"ふたつ":1,"さん":2,"三":2,"みっつ":2,"よん":3,"し":3,"四":3,"よっつ":3};
+  let s = String(raw||"").toLowerCase().normalize("NFKC").trim();
+  s = s.replace(/[。．.、,，\s]/g, "");
+  // Accept common spoken phrases such as 「答えは2番」「Bです」「1つ目」.
+  s = s.replace(/^(答えは|答え|正解は|選ぶのは|私は|それは)/, "");
+  s = s.replace(/(です|だと思います|を選びます|番目|番|つ目|つ|です)$/g, "");
+  if(/^[1-4]$/.test(s)) return parseInt(s,10)-1;
+  if(/^[a-d]$/.test(s)) return s.charCodeAt(0)-97;
+  const jaMap = {"いち":0,"一":0,"ひとつ":0,"ひとつめ":0,"い":0,"に":1,"二":1,"ふたつ":1,"ふたつめ":1,"さん":2,"三":2,"みっつ":2,"みっつめ":2,"よん":3,"し":3,"四":3,"よっつ":3,"よっつめ":3};
   if(jaMap[s] !== undefined) return jaMap[s];
-  // English ordinals / words
-  const enMap = {"one":0,"first":0,"two":1,"second":1,"three":2,"third":2,"four":3,"fourth":3,"1st":0,"2nd":1,"3rd":2,"4th":3};
-  if(enMap[s] !== undefined) return enMap[s];
-  // French / Spanish / Portuguese / German / Korean / Chinese (common short forms)
-  const multi = {
-    "un":0,"uno":0,"um":0,"eins":0,"하나":0,"일":0,"一":0,
-    "deux":1,"dos":1,"dois":1,"zwei":1,"둘":1,"이":1,"二":1,
-    "trois":2,"tres":2,"três":2,"drei":2,"셋":2,"삼":2,"三":2,
-    "quatre":3,"cuatro":3,"quatro":3,"vier":3,"넷":3,"사":3,"四":3
-  };
-  if(multi[s] !== undefined) return multi[s];
+  const words = {"one":0,"first":0,"1st":0,"two":1,"second":1,"2nd":1,"three":2,"third":2,"3rd":2,"four":3,"fourth":3,"4th":3,"un":0,"uno":0,"um":0,"eins":0,"하나":0,"일":0,"deux":1,"dos":1,"dois":1,"zwei":1,"둘":1,"이":1,"trois":2,"tres":2,"três":2,"drei":2,"셋":2,"삼":2,"quatre":3,"cuatro":3,"quatro":3,"vier":3,"넷":3,"사":3};
+  if(words[s] !== undefined) return words[s];
+  // Embedded spoken digit/letter, e.g. 「2番です」 or 「option C」.
+  const m = s.match(/(?:^|[^a-z0-9])([1-4a-d])(?:$|[^a-z0-9])/i);
+  if(m) return /[1-4]/.test(m[1]) ? Number(m[1])-1 : m[1].toLowerCase().charCodeAt(0)-97;
   return -1;
 }
 
@@ -4777,7 +4796,7 @@ function handleVoiceInput(transcript){
     for(let i=0;i<choices.length;i++){
       const c = norm(choices[i]);
       if(!c) continue;
-      if(tnorm.includes(c) || c.includes(tnorm) || (tnorm.length>=2 && c.indexOf(tnorm)>=0)){
+      if(tnorm === c || (tnorm.length>=3 && (tnorm.includes(c) || c.includes(tnorm)))){
         idx = i; break;
       }
       // also try heritage name fragments
