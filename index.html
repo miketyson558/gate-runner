@@ -4724,17 +4724,36 @@ function stopListening(){
 /** Normalize spoken numbers / choice labels across languages */
 function parseChoiceIndex(raw){
   let s = String(raw||"").toLowerCase().normalize("NFKC").trim();
-  s = s.replace(/[。．.、,，\s]/g, "");
-  // Accept common spoken phrases such as 「答えは2番」「Bです」「1つ目」.
-  s = s.replace(/^(答えは|答え|正解は|選ぶのは|私は|それは)/, "");
-  s = s.replace(/(です|だと思います|を選びます|番目|番|つ目|つ|です)$/g, "");
-  if(/^[1-4]$/.test(s)) return parseInt(s,10)-1;
+  if(!s) return -1;
+  // Normalize punctuation and common conversational lead-ins.
+  s = s.replace(/[。．.、,，!！?？\s]/g, "");
+  s = s.replace(/^(答えは|答え|正解は|選択肢|選ぶのは|私は|それは|第)/, "");
+  s = s.replace(/(を選びます|を選ぶ|にします|だと思います|です|でお願いします|お願いします|番目|番|つ目|つ)$/g, "");
+  if(/^[1-4]$/.test(s)) return Number(s)-1;
   if(/^[a-d]$/.test(s)) return s.charCodeAt(0)-97;
-  const jaMap = {"いち":0,"一":0,"ひとつ":0,"ひとつめ":0,"い":0,"に":1,"二":1,"ふたつ":1,"ふたつめ":1,"さん":2,"三":2,"みっつ":2,"みっつめ":2,"よん":3,"し":3,"四":3,"よっつ":3,"よっつめ":3};
-  if(jaMap[s] !== undefined) return jaMap[s];
+
+  // Japanese spoken numerals, including forms commonly returned by iOS dictation.
+  const ja = {
+    "いち":0,"一":0,"ひとつ":0,"ひとつめ":0,"いっこ":0,"いちばん":0,"一番":0,"一つ目":0,
+    "に":1,"二":1,"ふたつ":1,"ふたつめ":1,"にばん":1,"二番":1,"二つ目":1,
+    "さん":2,"三":2,"みっつ":2,"みっつめ":2,"さんばん":2,"三番":2,"三つ目":2,
+    "よん":3,"し":3,"四":3,"よっつ":3,"よっつめ":3,"よんばん":3,"しばん":3,"四番":3,"四つ目":3
+  };
+  if(Object.prototype.hasOwnProperty.call(ja,s)) return ja[s];
+
+  // Match a spoken number/letter embedded in natural phrases, e.g. "2番を選びます".
+  const jpDigit = s.match(/(?:選択肢|答え|第)?([1-4])(?:番(?:目)?|つ目|つ|です|を選ぶ|を選びます)?/);
+  if(jpDigit) return Number(jpDigit[1])-1;
+  const jpKana = s.match(/(いち|一|ひとつ|に|二|ふたつ|さん|三|みっつ|よん|四|よっつ)(?:ばん|番|つ目|つ)?/);
+  if(jpKana){
+    const key=jpKana[1];
+    if(["いち","一","ひとつ"].includes(key)) return 0;
+    if(["に","二","ふたつ"].includes(key)) return 1;
+    if(["さん","三","みっつ"].includes(key)) return 2;
+    if(["よん","四","よっつ"].includes(key)) return 3;
+  }
   const words = {"one":0,"first":0,"1st":0,"two":1,"second":1,"2nd":1,"three":2,"third":2,"3rd":2,"four":3,"fourth":3,"4th":3,"un":0,"uno":0,"um":0,"eins":0,"하나":0,"일":0,"deux":1,"dos":1,"dois":1,"zwei":1,"둘":1,"이":1,"trois":2,"tres":2,"três":2,"drei":2,"셋":2,"삼":2,"quatre":3,"cuatro":3,"quatro":3,"vier":3,"넷":3,"사":3};
-  if(words[s] !== undefined) return words[s];
-  // Embedded spoken digit/letter, e.g. 「2番です」 or 「option C」.
+  if(Object.prototype.hasOwnProperty.call(words,s)) return words[s];
   const m = s.match(/(?:^|[^a-z0-9])([1-4a-d])(?:$|[^a-z0-9])/i);
   if(m) return /[1-4]/.test(m[1]) ? Number(m[1])-1 : m[1].toLowerCase().charCodeAt(0)-97;
   return -1;
@@ -4791,7 +4810,7 @@ function handleVoiceInput(transcript){
   // 2) match against choice text (partial, case-insensitive)
   if(idx < 0){
     const choices = choicesOf(Z.list[Z.i]);
-    const norm = s => String(s||"").toLowerCase().replace(/\s+/g,"");
+    const norm = s => String(s||"").toLowerCase().normalize("NFKC").replace(/[\s、。・（）()「」『』]/g,"");
     const tnorm = norm(raw);
     for(let i=0;i<choices.length;i++){
       const c = norm(choices[i]);
