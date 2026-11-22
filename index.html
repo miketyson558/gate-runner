@@ -4710,13 +4710,15 @@ function finishVoiceRecognition(generation){
   else { _listenState="error"; _listenText="声を認識できませんでした。もう一度マイクを押して、選択肢の番号を話してください。"; try{render();}catch(e){} }
 }
 function startListening(){
+  // Called directly by the user's tap. Do not defer recognition.start() to a timer/promise:
+  // iOS Safari may reject it after the user-activation window expires.
+  if(_recognitionBusy && _rec){ stopListening(); return; }
   if(!hasSpeechRecognition()){
     _listenState="error";
-    _listenText="このブラウザでは音声認識APIが利用できません。iPhoneのSafariでHTTPSのページを開き、iOSを最新にしてください。対応しない場合は画面の選択肢ボタンで回答できます。";
+    _listenText="このブラウザ／環境では音声認識が使えません。HTTPSのSafariで再試行してください。使えない場合は画面の選択肢をタップして解答してください。";
     try{render();}catch(e){} return;
   }
   stopSpeak();
-  if(_recognitionBusy && _rec){ try{_rec.abort();}catch(e){} }
   clearTimeout(_voiceFinalTimer);
   _recGeneration++;
   _voicePendingTranscript=""; _voiceHandled=false;
@@ -4736,45 +4738,48 @@ function startListening(){
 function stopListening(){
   clearTimeout(_voiceFinalTimer);
   _recGeneration++;
-  try{ if(_rec) _rec.abort(); }catch(e){}
+  const oldRec=_rec; _rec=null;
+  try{ if(oldRec) oldRec.abort(); }catch(e){}
   _recognitionBusy=false; _listenState="idle"; _voicePendingTranscript=""; _voiceHandled=true;
 }
 
 /** Normalize spoken numbers / choice labels across languages */
+function voiceNormalize(value){
+  return String(value||"").normalize("NFKC").toLocaleLowerCase()
+    .replace(/[\u200B-\u200D\uFEFF]/g,"")
+    .replace(/[\s　。、．.,，!！?？:：;；「」『』（）()［］【】]/g,"")
+    .replace(/[‐‑‒–—―]/g,"");
+}
 function parseChoiceIndex(raw){
-  let s = String(raw||"").toLowerCase().normalize("NFKC").trim();
+  const s=voiceNormalize(raw);
   if(!s) return -1;
-  // Normalize punctuation and common conversational lead-ins.
-  s = s.replace(/[。．.、,，!！?？\s]/g, "");
-  s = s.replace(/^(答えは|答え|正解は|選択肢|選ぶのは|私は|それは|第)/, "");
-  s = s.replace(/(を選びます|を選ぶ|にします|だと思います|です|でお願いします|お願いします|番目|番|つ目|つ)$/g, "");
+  // Explicit A-D labels and numeric forms have priority.
+  let m=s.match(/(?:^|[^a-z0-9])([1-4a-d])(?:$|[^a-z0-9])/i);
+  if(m) return /[1-4]/.test(m[1]) ? Number(m[1])-1 : m[1].toLowerCase().charCodeAt(0)-97;
   if(/^[1-4]$/.test(s)) return Number(s)-1;
   if(/^[a-d]$/.test(s)) return s.charCodeAt(0)-97;
-
-  // Japanese spoken numerals, including forms commonly returned by iOS dictation.
-  const ja = {
-    "いち":0,"一":0,"ひとつ":0,"ひとつめ":0,"いっこ":0,"いちばん":0,"一番":0,"一つ目":0,
-    "に":1,"二":1,"ふたつ":1,"ふたつめ":1,"にばん":1,"二番":1,"二つ目":1,
-    "さん":2,"三":2,"みっつ":2,"みっつめ":2,"さんばん":2,"三番":2,"三つ目":2,
-    "よん":3,"し":3,"四":3,"よっつ":3,"よっつめ":3,"よんばん":3,"しばん":3,"四番":3,"四つ目":3
+  const aliases={
+    "いち":0,"一":0,"ひとつ":0,"ひとつめ":0,"いっこ":0,"いちばん":0,"一番":0,"ワン":0,"わん":0,"one":0,"first":0,"ファースト":0,
+    "に":1,"二":1,"ふたつ":1,"ふたつめ":1,"にばん":1,"二番":1,"ツー":1,"つー":1,"two":1,"second":1,"セカンド":1,
+    "さん":2,"三":2,"みっつ":2,"みっつめ":2,"さんばん":2,"三番":2,"スリー":2,"すりー":2,"three":2,"third":2,"サード":2,
+    "よん":3,"し":3,"四":3,"よっつ":3,"よっつめ":3,"よんばん":3,"しばん":3,"四番":3,"フォー":3,"ふぉー":3,"four":3,"fourth":3,"フォース":3
   };
-  if(Object.prototype.hasOwnProperty.call(ja,s)) return ja[s];
-
-  // Match a spoken number/letter embedded in natural phrases, e.g. "2番を選びます".
-  const jpDigit = s.match(/(?:選択肢|答え|第)?([1-4])(?:番(?:目)?|つ目|つ|です|を選ぶ|を選びます)?/);
-  if(jpDigit) return Number(jpDigit[1])-1;
-  const jpKana = s.match(/(いち|一|ひとつ|に|二|ふたつ|さん|三|みっつ|よん|四|よっつ)(?:ばん|番|つ目|つ)?/);
-  if(jpKana){
-    const key=jpKana[1];
-    if(["いち","一","ひとつ"].includes(key)) return 0;
-    if(["に","二","ふたつ"].includes(key)) return 1;
-    if(["さん","三","みっつ"].includes(key)) return 2;
-    if(["よん","四","よっつ"].includes(key)) return 3;
-  }
-  const words = {"one":0,"first":0,"1st":0,"two":1,"second":1,"2nd":1,"three":2,"third":2,"3rd":2,"four":3,"fourth":3,"4th":3,"un":0,"uno":0,"um":0,"eins":0,"하나":0,"일":0,"deux":1,"dos":1,"dois":1,"zwei":1,"둘":1,"이":1,"trois":2,"tres":2,"três":2,"drei":2,"셋":2,"삼":2,"quatre":3,"cuatro":3,"quatro":3,"vier":3,"넷":3,"사":3};
-  if(Object.prototype.hasOwnProperty.call(words,s)) return words[s];
-  const m = s.match(/(?:^|[^a-z0-9])([1-4a-d])(?:$|[^a-z0-9])/i);
-  if(m) return /[1-4]/.test(m[1]) ? Number(m[1])-1 : m[1].toLowerCase().charCodeAt(0)-97;
+  const lead=s.replace(/^(答えは|答え|正解は|選択肢|選ぶのは|私は|それは|第)/,"")
+    .replace(/(を選びます|を選ぶ|にします|だと思います|です|でお願いします|お願いします|番目|番|つ目|つ)$/g,"");
+  if(Object.prototype.hasOwnProperty.call(aliases,lead)) return aliases[lead];
+  // Phrase containment for common dictated forms, but do not interpret arbitrary digits in years.
+  const patterns=[
+    [0,/(?:いちばん|一番|ひとつめ|一つ目|ワン|one|first)/],
+    [1,/(?:にばん|二番|ふたつめ|二つ目|ツー|two|second)/],
+    [2,/(?:さんばん|三番|みっつめ|三つ目|スリー|three|third)/],
+    [3,/(?:よんばん|しばん|四番|よっつめ|四つ目|フォー|four|fourth)/]
+  ];
+  const hits=patterns.filter(([,re])=>re.test(s)).map(([i])=>i);
+  if(hits.length===1) return hits[0];
+  const jp=s.match(/(?:答え|選択肢|第)?([1-4])(?:ばん|番|ばんめ|番目|つめ|つ目|つ|です|を選ぶ|を選びます)/);
+  if(jp) return Number(jp[1])-1;
+  const wordMap={"uno":0,"un":0,"eins":0,"하나":0,"일":0,"deux":1,"dos":1,"dois":1,"zwei":1,"둘":1,"이":1,"trois":2,"tres":2,"três":2,"drei":2,"셋":2,"삼":2,"quatre":3,"cuatro":3,"quatro":3,"vier":3,"넷":3,"사":3};
+  if(Object.prototype.hasOwnProperty.call(wordMap,s)) return wordMap[s];
   return -1;
 }
 
@@ -4829,20 +4834,20 @@ function handleVoiceInput(transcript){
   // 2) match against choice text (partial, case-insensitive)
   if(idx < 0){
     const choices = choicesOf(Z.list[Z.i]);
-    const norm = s => String(s||"").toLowerCase().normalize("NFKC").replace(/[\s、。・（）()「」『』]/g,"");
-    const tnorm = norm(raw);
+    const tnorm = voiceNormalize(raw);
+    const hits=[];
     for(let i=0;i<choices.length;i++){
-      const c = norm(choices[i]);
+      const c=voiceNormalize(choices[i]);
       if(!c) continue;
-      if(tnorm === c || (tnorm.length>=3 && (tnorm.includes(c) || c.includes(tnorm)))){
-        idx = i; break;
-      }
-      // also try heritage name fragments
-      const words = c.split(/[\s・]/);
-      if(words.some(w => w.length>=2 && tnorm.includes(norm(w)))){
-        idx = i; break;
+      if(tnorm===c || (tnorm.length>=3 && (tnorm.includes(c) || c.includes(tnorm)))) hits.push(i);
+      else {
+        // Match meaningful long fragments only; accept only a unique option.
+        const fragments=String(choices[i]||"").normalize("NFKC").split(/[\s・,、:：()（）「」『』]/).map(voiceNormalize).filter(w=>w.length>=4);
+        if(fragments.some(w=>tnorm.includes(w))) hits.push(i);
       }
     }
+    const unique=[...new Set(hits)];
+    if(unique.length===1) idx=unique[0];
   }
 
   if(idx >= 0 && idx <= 3){
@@ -5008,11 +5013,12 @@ function quiz(){
   ${`<button class="lk" style="margin-left:6px" onclick="startListening()">${micLabel} ${curLang==="ja"?"話して答える":"Speak"}</button>`}
   </div>
   ${_voiceNote?`<div class="voice-note">${esc(_voiceNote)}</div>`:""}
-  ${_listenState!=="idle"?`<div class="listen-bar ${_listenState}">${
-    _listenState==="listening" ? (curLang==="ja"?"🎙 聞いています… 番号や選択肢を話してください":"🎙 Listening… say a number or choice")
-    : _listenState==="processing" ? (curLang==="ja"?"処理中…":"Processing…")
-    : esc(_listenText|| (curLang==="ja"?"認識エラー":"Error"))
-  }${_listenText && _listenState!=="listening"?` <span class="lt">${esc(_listenText)}</span>`:""}</div>`:""}
+  ${(_listenState!=="idle" || _listenText)?`<div class="listen-bar ${_listenState}">${
+    _listenState==="listening" ? (curLang==="ja"?"🎙 聞き取り中です。番号・A〜D・選択肢を話してください":"🎙 Listening. Say 1–4, A–D, or an option")
+    : _listenState==="processing" ? (curLang==="ja"?"⌛ 音声を判定しています…":"⌛ Processing speech…")
+    : _listenState==="error" ? (esc(_listenText|| (curLang==="ja"?"音声認識エラー":"Speech recognition error")))
+    : (curLang==="ja"?"聞こえた声：":"Heard:")
+  }${_listenText?` <span class="lt">${esc(_listenText)}</span>`:""}${_listenState==="listening"?` <button class="lk" onclick="stopListening()">停止</button>`:""}</div>`:""}
   <div class="qq">${esc(tt(q.question))}</div>`;
   if(Z.picked===null){
     choices.forEach((c,i)=>{
