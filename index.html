@@ -4622,103 +4622,122 @@ function speakExplanation(q){
 function hasSpeechRecognition(){
   return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 }
-
+let _recGeneration = 0;
+let _voiceFinalTimer = null;
+let _voicePendingTranscript = "";
+let _voiceHandled = false;
 function ensureRecognition(){
-  if(_rec) return _rec;
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SR) return null;
-  _rec = new SR();
-  _rec.continuous = false;
-  _rec.interimResults = true;
-  _rec.maxAlternatives = 5;
-  _rec.onstart = ()=>{ _recognitionBusy = true; _lastVoiceFinal = ""; _listenState = "listening"; _listenText = ""; try{render();}catch(e){} };
-  _rec.onresult = (ev)=>{
-    let interim = "", final = "";
-    for(let i = 0; i < ev.results.length; i++){
-      const result = ev.results[i];
-      const transcript = result && result[0] ? result[0].transcript : "";
-      if(result.isFinal) final += transcript + " ";
-      else interim += transcript + " ";
+  // Create a fresh instance for every attempt. Safari/iOS can leave a reused
+  // SpeechRecognition object in an ended state after permission/network errors.
+  const r = new SR();
+  r.continuous = false;
+  r.interimResults = true;
+  r.maxAlternatives = 5;
+  const generation = _recGeneration;
+  r.onstart = ()=>{
+    if(generation !== _recGeneration) return;
+    _recognitionBusy = true; _listenState = "listening";
+    _listenText = ""; _voicePendingTranscript = ""; _voiceHandled = false;
+    try{render();}catch(e){}
+  };
+  r.onresult = (ev)=>{
+    if(generation !== _recGeneration) return;
+    let interim = "", finals = [];
+    const from = Number.isInteger(ev.resultIndex) ? ev.resultIndex : 0;
+    for(let i=from;i<ev.results.length;i++){
+      const result=ev.results[i]; if(!result) continue;
+      const alternatives=[];
+      for(let a=0;a<Math.min(result.length||1,5);a++){
+        const transcript=result[a] && result[a].transcript;
+        if(transcript && transcript.trim()) alternatives.push(transcript.trim());
+      }
+      if(result.isFinal) finals.push(...alternatives);
+      else if(alternatives.length) interim=alternatives[0];
     }
-    const heard = (final || interim).trim();
-    if(heard) _listenText = heard;
-    if(final.trim()){
-      _lastVoiceFinal = final.trim();
+    if(finals.length){
+      _voicePendingTranscript = finals.join(" ").trim();
+      _listenText = _voicePendingTranscript;
       _listenState = "processing";
       try{render();}catch(e){}
-      handleVoiceInput(_lastVoiceFinal);
-      _lastVoiceFinal = "";
-    }else{
+      clearTimeout(_voiceFinalTimer);
+      // Give iOS a brief moment to deliver a better alternative/final segment.
+      _voiceFinalTimer=setTimeout(()=>finishVoiceRecognition(generation),250);
+    }else if(interim){
+      _listenText=interim;
       try{render();}catch(e){}
     }
   };
-  _rec.onerror = (ev)=>{
-    _recognitionBusy = false;
-    _listenState = "error";
-    const code = (ev && ev.error) || "";
-    const messages = {
-      "not-allowed":"マイクの使用が許可されていません。SafariのWebサイト設定でマイクを許可してください。",
-      "service-not-allowed":"音声認識サービスが利用できません。Safariで開き直してください。",
-      "no-speech":"声を検出できませんでした。マイクに近づいて、もう一度お話しください。",
-      "audio-capture":"マイクが見つかりません。マイクの接続・設定を確認してください。",
-      "network":"音声認識の通信に失敗しました。通信状態を確認してください。",
+  r.onerror = (ev)=>{
+    if(generation !== _recGeneration) return;
+    _recognitionBusy=false;
+    const code=(ev&&ev.error)||"unknown";
+    if(code==="aborted" && _listenState==="idle") return;
+    _listenState="error";
+    const messages={
+      "not-allowed":"マイクの使用が許可されていません。iPhoneの設定とSafariのWebサイト設定でマイクを許可してください。",
+      "service-not-allowed":"音声認識サービスが利用できません。SafariでHTTPSのページを開き、時間をおいて再試行してください。",
+      "no-speech":"声を検出できませんでした。マイクに近づき、ボタンを押してから話してください。",
+      "audio-capture":"マイクを利用できません。他のアプリでマイクを使用していないか確認してください。",
+      "network":"音声認識サービスへの接続に失敗しました。通信状態を確認してください。",
+      "language-not-supported":"この言語の音声認識に対応していません。アプリの表示言語を日本語にしてください。",
+      "bad-grammar":"音声認識の設定エラーです。ページを再読み込みしてください。",
       "aborted":"音声認識を停止しました。"
     };
-    _listenText = curLang==="ja" ? (messages[code] || "音声認識エラー: " + code) : ("Speech recognition error: " + code);
+    _listenText=messages[code]||("音声認識エラー: "+code);
     try{render();}catch(e){}
-    setTimeout(()=>{ if(_listenState === "error"){_listenState = "idle";try{render();}catch(e){}} }, 4000);
   };
-  _rec.onend = ()=>{
-    _recognitionBusy = false;
-    // Some mobile browsers end with only an interim result. Use it as a fallback.
-    if(_listenState === "listening" && _listenText.trim()){
-      const heard = _listenText.trim();
-      _listenState = "processing";
-      try{handleVoiceInput(heard);}catch(e){}
+  r.onend = ()=>{
+    if(generation !== _recGeneration) return;
+    _recognitionBusy=false;
+    if(!_voiceHandled && (_voicePendingTranscript || (_listenState==="listening" && _listenText.trim()))){
+      finishVoiceRecognition(generation);
+      return;
     }
-    if(_listenState === "listening") _listenState = "idle";
+    if(_listenState==="listening") _listenState="idle";
     try{render();}catch(e){}
   };
-  return _rec;
+  return r;
 }
-
+function finishVoiceRecognition(generation){
+  if(generation!==_recGeneration || _voiceHandled) return;
+  clearTimeout(_voiceFinalTimer);
+  const heard=(_voicePendingTranscript || _listenText || "").trim();
+  _voiceHandled=true;
+  _recognitionBusy=false;
+  if(heard){ _listenText=heard; _listenState="processing"; try{render();}catch(e){} handleVoiceInput(heard); }
+  else { _listenState="error"; _listenText="声を認識できませんでした。もう一度マイクを押して、選択肢の番号を話してください。"; try{render();}catch(e){} }
+}
 function startListening(){
   if(!hasSpeechRecognition()){
-    _listenState = "error";
-    _listenText = curLang==="ja"
-      ? "このSafariでは音声認識が利用できません。iOSを更新し、SafariでこのHTTPSページを開いてください。"
-      : "Speech recognition is unavailable in this browser. Update iOS and open this HTTPS page in Safari.";
-    try{render();}catch(e){}
-    return;
+    _listenState="error";
+    _listenText="このブラウザでは音声認識APIが利用できません。iPhoneのSafariでHTTPSのページを開き、iOSを最新にしてください。対応しない場合は画面の選択肢ボタンで回答できます。";
+    try{render();}catch(e){} return;
   }
   stopSpeak();
-  const r = ensureRecognition();
-  if(!r) return;
-  if(_listenState === "listening" || _recognitionBusy){
-    try{r.stop();}catch(e){}
-    _recognitionBusy = false;
-    _listenState = "idle";
-    try{render();}catch(e){}
-    return;
-  }
-  _listenText = "";
-  _listenState = "listening";
+  if(_recognitionBusy && _rec){ try{_rec.abort();}catch(e){} }
+  clearTimeout(_voiceFinalTimer);
+  _recGeneration++;
+  _voicePendingTranscript=""; _voiceHandled=false;
+  _listenText=""; _listenState="listening";
+  const r=ensureRecognition();
+  if(!r){ _listenState="error"; _listenText="音声認識を開始できません。"; try{render();}catch(e){} return; }
+  _rec=r;
   try{
-    r.lang = preferredBCP47();
+    r.lang=preferredBCP47();
     r.start();
   }catch(e){
-    _recognitionBusy = false;
-    _listenState = "error";
-    _listenText = curLang==="ja"
-      ? "マイクを開始できませんでした。もう一度マイクを押してください。"
-      : "Could not start the microphone. Tap the microphone and try again.";
+    _recognitionBusy=false; _listenState="error";
+    _listenText="マイクを開始できませんでした。Safariのマイク許可を確認し、少し待ってから再試行してください。";
     try{render();}catch(e){}
   }
 }
-
 function stopListening(){
-  try{ if(_rec) _rec.stop(); }catch(e){}
-  _listenState = "idle";
+  clearTimeout(_voiceFinalTimer);
+  _recGeneration++;
+  try{ if(_rec) _rec.abort(); }catch(e){}
+  _recognitionBusy=false; _listenState="idle"; _voicePendingTranscript=""; _voiceHandled=true;
 }
 
 /** Normalize spoken numbers / choice labels across languages */
@@ -4981,12 +5000,12 @@ function quiz(){
     : (curLang==="ja"?"話して答える":"Speak to answer");
   let h=`<div class="sb"><button onclick="go('home');stopSpeak();stopListening()">←</button><div class="st">${Z.i+1} / ${Z.list.length}${Z.deadline?` · ⏱ <span id="tmr">${fmtT(Z.deadline-Date.now())}</span>`:""}</div>
   <button onclick="DB.set.voice&&_speaking?stopSpeak():speakQuestion(curQ())" title="${t('speak')}">${_speaking?'⏹':'🔊'}</button>
-  ${micSupported?`<button onclick="startListening()" title="${micTitle}" class="${_listenState==="listening"?"on":""}">${micLabel}</button>`:""}
+  ${`<button onclick="startListening()" title="${micTitle}" class="${_listenState==="listening"?"on":""}">${micLabel}</button>`}
   <button onclick="toggleBm('${q.id}')" class="${DB.bm[q.id]?"on":""}">⭐</button></div>
   <main>
   <div>${gtag}${trap}<span class="tag" style="background:var(--card2);color:var(--sub)">${esc(catName(q.category))}</span>
   <button class="lk" style="margin-left:8px" onclick="speakQuestion(curQ())">🔊 ${t('speak')}</button>
-  ${micSupported?`<button class="lk" style="margin-left:6px" onclick="startListening()">${micLabel} ${curLang==="ja"?"話して答える":"Speak"}</button>`:""}
+  ${`<button class="lk" style="margin-left:6px" onclick="startListening()">${micLabel} ${curLang==="ja"?"話して答える":"Speak"}</button>`}
   </div>
   ${_voiceNote?`<div class="voice-note">${esc(_voiceNote)}</div>`:""}
   ${_listenState!=="idle"?`<div class="listen-bar ${_listenState}">${
